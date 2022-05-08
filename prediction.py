@@ -2,57 +2,30 @@ import libraries
 import mapa
 from tensorflow.keras.models import load_model
 
-def Hipredict(inpt):
-    tmap = mapa.himapa
-    model = load_model('./models/binary/himodel.h5')
+
+def preprocessing(inpt,prep):
     inp = []
-    for i in inpt:
-        inp.append(libraries.preprocess_text(i))
+    if(prep == 'qu'):
+        for i in inpt:
+            inp.append(libraries.specialpreprocess_text(i))
+            print(inp)
+    elif(prep == 'command'):
+        for i in inpt:
+            inp.append(libraries.commandpreprocess_text(i))
+            print(inp)
+    else:
+        for i in inpt:
+            inp.append(libraries.preprocess_text(i))
+            print(inp)
+    return inp
+
+def Predict(inpt, tmap, model, tokenizer, prep):
+    tmap = tmap
+    model = load_model(model)
     inn =[]
-    inn.append(inp.pop())
+    inn.append(preprocessing(inpt,prep).pop())
     #print(inn)
-    with open('./tokenizers/binary/hitokenizer.pickle', 'rb') as handle:
-        tokenizer = libraries.p.load(handle)
-    tokenized_inpt = tokenizer.vectorize_input(inn)
-    #print(tokenized_inpt)
-    score = model.predict(tokenized_inpt)
-    outpt = max(libraries.np.round(score).astype(int))
-    outscore = max(score)
-    return(tmap[outpt[0]])
-
-def QuPpredict(inpt):
-    tmap = mapa.qumapa
-    model = load_model('./models/binary/qumodel.h5')
-    inp = []
-    for i in inpt:
-        inp.append(libraries.specialpreprocess_text(i))
-    print(inp)
-    inn =[]
-    inn.append(inp.pop())
-    #print(inn)
-    with open('./tokenizers/binary/qutokenizer.pickle', 'rb') as handle:
-        tokenizer = libraries.p.load(handle)
-    tokenized_inpt = tokenizer.vectorize_input(inn)
-
-
-    #print(tokenized_inpt)
-    score = model.predict(tokenized_inpt)
-    outpt = max(libraries.np.round(score).astype(int))
-    outscore = max(score)
-    print(outscore)
-    return(tmap[outpt[0]])
-
-def ThPpredict(inpt):
-    tmap = mapa.thmapa
-    model = load_model('./models/binary/thmodel.h5')
-    inp = []
-    for i in inpt:
-        inp.append(libraries.specialpreprocess_text(i))
-    print(inp)
-    inn =[]
-    inn.append(inp.pop())
-    #print(inn)
-    with open('./tokenizers/binary/thtokenizer.pickle', 'rb') as handle:
+    with open(tokenizer, 'rb') as handle:
         tokenizer = libraries.p.load(handle)
     tokenized_inpt = tokenizer.vectorize_input(inn)
 

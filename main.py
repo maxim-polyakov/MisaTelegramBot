@@ -41,23 +41,44 @@ def get_user_text(message):
 
 @boto.message_handler(commands = ['hitrain'])
 def get_user_text(message):
-    NLP.ishitrain()
+    
+    filemodel = './models/binary/himodel.h5'
+    filetokenizer = './tokenizers/binary/hitokenizer.pickle'
+    datasetfile = './datasets/dataset.xlsx'
+    NLP.binarytrain(filemodel,filetokenizer, datasetfile , 'hi')
     boto.send_message(message.chat.id, "trained" , parse_mode='html')
+    
 @boto.message_handler(commands = ['qutrain'])
 def get_user_text(message):
-    NLP.isqutrain()
+    
+    filemodel = './models/binary/qumodel.h5'
+    filetokenizer = './tokenizers/binary/qutokenizer.pickle'
+    datasetfile = './datasets/questionset.xlsx'
+    NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'question')
     boto.send_message(message.chat.id, "trained" , parse_mode='html')
+    
 @boto.message_handler(commands = ['thtrain'])
 def get_user_text(message):
-    NLP.thtrain()
+    
+    filemodel = './models/binary/thmodel.h5'
+    filetokenizer = './tokenizers/binary/thtokenizer.pickle'
+    datasetfile = './datasets/thanksset.xlsx'
+    NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'thanks')
     boto.send_message(message.chat.id, "trained" , parse_mode='html')
+    
+@boto.message_handler(commands = ['commandtrain'])
+def get_user_text(message):
+    filemodel = './models/binary/commandmodel.h5'
+    filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
+    datasetfile = './datasets/commandset.xlsx'
+    NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'command')
+    boto.send_message(message.chat.id, "trained" , parse_mode='html')     
+    
 @boto.message_handler(commands = ['multyclasstrain'])
 def get_user_text(message):
     NLP.multyclasstrain()
     boto.send_message(message.chat.id, "trained" , parse_mode='html') 
-
-
- 
+    
 @boto.message_handler(commands = ['multyclean'])
 def get_user_text(message):
     NLP.DataCleaner('./datasets/multyclasesset.xlsx','questionclass')
@@ -70,43 +91,50 @@ def get_user_text(message):
 def get_user_text(message):
     NLP.QuestionsetCleaner('./datasets/questionset.xlsx')
     boto.send_message(message.chat.id, "cleaned" , parse_mode='html') 
-    
 @boto.message_handler(commands = ['thclean'])
 def get_user_text(message):
     NLP.DataCleaner('./datasets/thanksset.xlsx','thanks')
+    boto.send_message(message.chat.id, "cleaned" , parse_mode='html') 
+@boto.message_handler(commands = ['commandclean'])
+def get_user_text(message):
+    NLP.CommandsetCleaner('./datasets/commandset.xlsx')
     boto.send_message(message.chat.id, "cleaned" , parse_mode='html') 
 
 
 @boto.message_handler()
 def get_user_text(message):
-  
-        text = []
-        read = pd.read_excel('./validset/validset.xlsx')
-        data =  {'text': NLP.libraries.preprocess_text(message.text),'agenda': ''}
-        df = pd.DataFrame(read)
-        new_row = pd.Series(data)
-        df = df.append(new_row, ignore_index=True)
-        df.to_excel('./validset/validset.xlsx',index=False)
-        text.append(message.text)
+    text = []
+    text.append(message.text)
+    read = pd.read_excel('./validset/validset.xlsx')
+    for txt in text:
+        data =  {'text': NLP.libraries.preprocess_text(txt),'agenda': ''}
+    df = pd.DataFrame(read)
+    new_row = pd.Series(data)
+    df = df.append(new_row, ignore_index=True)
+    df.to_excel('./validset/validset.xlsx',index=False)
+    
+    
+    if prediction.Predict(text,mapa.himapa,'./models/binary/himodel.h5','./tokenizers/binary/hitokenizer.pickle','') == "Приветствие":
+        subfunctions.add(message.text, './recognized_sets/recognized_hi.xlsx',"Приветствие")
+        boto.send_message(message.chat.id, mapa.randanswhi(), parse_mode='html') 
         
-        if prediction.Hipredict(text) == "Приветствие":
-            subfunctions.add(message.text, './recognized_sets/recognized_hi.xlsx',"Приветствие")
-            boto.send_message(message.chat.id, mapa.randanswhi(), parse_mode='html') 
-        elif(prediction.QuPpredict(text) == "Вопрос"):
-            subfunctions.quadd(message.text, './recognized_sets/recognized_qu.xlsx',"Вопрос")
-            
-            if(prediction.MultyPpredict(text) == "Дело"):
-               boto.send_message(message.chat.id, "Я в порядке" , parse_mode='html') 
-            elif(prediction.MultyPpredict(text) == "Погода"):
-                boto.send_message(message.chat.id, "Погода норм" , parse_mode='html') 
-            else:
-                boto.send_message(message.chat.id, "Вопрос без классификации" , parse_mode='html') 
-        elif(prediction.ThPpredict(text) == "Благодарность"):
-            subfunctions.quadd(message.text, './recognized_sets/recognized_th.xlsx',"Благодарность")
-            boto.send_message(message.chat.id, "Не за что" , parse_mode='html')
+    elif(prediction.Predict(text,mapa.commandmapa,'./models/binary/commandmodel.h5','./tokenizers/binary/thtokenizer.pickle', 'command') == "Команда"):
+        boto.send_message(message.chat.id, "Команда" , parse_mode='html')
+        
+    elif(prediction.Predict(text, mapa.qumapa,'./models/binary/qumodel.h5','./tokenizers/binary/qutokenizer.pickle' , 'qu') == "Вопрос"):
+        subfunctions.quadd(message.text, './recognized_sets/recognized_qu.xlsx',"Вопрос")  
+        if(prediction.MultyPpredict(text) == "Дело"):
+            boto.send_message(message.chat.id, "Я в порядке" , parse_mode='html') 
+        elif(prediction.MultyPpredict(text) == "Погода"):
+            boto.send_message(message.chat.id, "Погода норм" , parse_mode='html') 
         else:
-            boto.send_message(message.chat.id, "Нет класса" , parse_mode='html') 
-  #    try:
+            boto.send_message(message.chat.id, "Вопрос без классификации" , parse_mode='html')         
+    elif(prediction.Predict(text, mapa.thmapa,'./models/binary/thmodel.h5','./tokenizers/binary/thtokenizer.pickle', '') == "Благодарность"):
+        subfunctions.quadd(message.text, './recognized_sets/recognized_th.xlsx',"Благодарность")
+        boto.send_message(message.chat.id, "Не за что" , parse_mode='html')
+    else:
+        boto.send_message(message.chat.id, "Нет класса" , parse_mode='html') 
+#    try:
  #   except:
  #       boto.send_message(message.chat.id, '!?', parse_mode='html')
         

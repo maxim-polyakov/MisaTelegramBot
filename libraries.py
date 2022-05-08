@@ -16,6 +16,7 @@ from keras.preprocessing.sequence import pad_sequences
 from tqdm import tqdm
 from keras.models import Sequential,Input
 from keras.layers import Embedding,LSTM,Dense,Dropout,GRU
+from tensorflow.keras.callbacks import EarlyStopping
 from keras.initializers import Constant
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.optimizers import Adam
@@ -67,7 +68,6 @@ def remove_punctuation(text):
        return text.translate(translator)
    
 def preprocess_text(text):
-    
     try:
         tokens = str(text)
         tokens = mystem.lemmatize(text.lower())
@@ -88,7 +88,6 @@ def preprocess_text(text):
         return "except"
 
 def specialpreprocess_text(text):
-    
     try:
         tokens = str(text)
         tokens = mystem.lemmatize(text.lower())    
@@ -96,6 +95,15 @@ def specialpreprocess_text(text):
         text=re.sub(pattern2, "", text)
         text = remove_punctuation(text)
         text = " ".join(tokens).rstrip(' \n') 
+        return text
+    except:
+        return "except"
+    
+def commandpreprocess_text(text):
+    try:
+        tokens = text.lower().rstrip(' \n')
+        text = "".join(tokens) 
+
         return text
     except:
         return "except"
