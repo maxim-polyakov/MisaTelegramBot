@@ -120,7 +120,6 @@ def get_user_text(message):
         
     elif(prediction.Predict(text,mapa.commandmapa,'./models/binary/commandmodel.h5','./tokenizers/binary/thtokenizer.pickle', 'command') == "Команда"):
         boto.send_message(message.chat.id, "Команда" , parse_mode='html')
-        
     elif(prediction.Predict(text, mapa.qumapa,'./models/binary/qumodel.h5','./tokenizers/binary/qutokenizer.pickle' , 'qu') == "Вопрос"):
         subfunctions.quadd(message.text, './recognized_sets/recognized_qu.xlsx',"Вопрос")  
         if(prediction.MultyPpredict(text) == "Дело"):

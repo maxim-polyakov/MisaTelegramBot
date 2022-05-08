@@ -1,6 +1,17 @@
 import libraries
 import mapa
 
+def showdata(train,target):
+    key_metrics= {'samples' : len(train),
+             'samples_per_class' : train[target].value_counts().median(),
+             'median_of_samples_lengths': libraries.np.median(train['text'].str.split().map(lambda x: len(x))),
+             }
+    key_metrics = libraries.pd.DataFrame.from_dict(key_metrics, orient='index').reset_index()
+    key_metrics.columns = ['metric', 'value']
+    green = '#52BE80'
+    red = '#EC7063'
+    libraries.sns.countplot(train[target], palette=[green, red])
+
 def DataCleaner(filename, string):
     train = libraries.pd.read_excel(filename)
     train.text=train.text.astype(str)
@@ -48,8 +59,7 @@ def CreateModel_mul(tokenizer,n_clases):
     model=libraries.Sequential()
     optimzer=libraries.Adam(clipvalue=0.5)
     model.add(libraries.Embedding(len(tokenizer.tokenizer.word_index)+1, libraries.EMBEDDING_VECTOR_LENGTH, input_length=libraries.MAX_SEQUENCE_LENGTH,trainable=True))
-    model.add(libraries.Dropout(0.1))
-    model.add(libraries.LSTM(64, dropout=0.2, recurrent_dropout=0.5))
+    model.add(libraries.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
     model.add(libraries.Dense(64, activation="sigmoid"))
     model.add(libraries.Dense(32, activation="sigmoid"))
     model.add(libraries.Dense(16, activation="sigmoid"))
@@ -70,7 +80,8 @@ def binarytrain(filemodelname,tokenizerfilename, datafilename, target):
     train[target] = train[target].astype(int)
     train = train.drop_duplicates()
     
-    X_train, X_val, y_train, y_val = libraries.train_test_split(train, train[target], test_size=0.2, random_state=64)
+    showdata(train,target)
+    X_train, X_val, y_train, y_val = libraries.train_test_split(train, train[target], test_size=0.3, random_state=32)
     print('Shape of train',X_train.shape)
     print("Shape of Validation ",X_val.shape)
     tokenizer = libraries.CustomTokenizer(train_texts = X_train['text'])
