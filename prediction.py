@@ -3,7 +3,7 @@ import mapa
 from tensorflow.keras.models import load_model
 
 
-def preprocessing(inpt,prep):
+def preprocessing(inpt, prep):
     inp = []
     if(prep == 'qu'):
         for i in inpt:
@@ -19,16 +19,16 @@ def preprocessing(inpt,prep):
             print(inp)
     return inp
 
+
 def Predict(inpt, tmap, model, tokenizer, prep):
     tmap = tmap
     model = load_model(model)
-    inn =[]
-    inn.append(preprocessing(inpt,prep).pop())
+    inn = []
+    inn.append(preprocessing(inpt, prep).pop())
     #print(inn)
     with open(tokenizer, 'rb') as handle:
         tokenizer = libraries.p.load(handle)
     tokenized_inpt = tokenizer.vectorize_input(inn)
-
 
     #print(tokenized_inpt)
     score = model.predict(tokenized_inpt)
@@ -45,7 +45,7 @@ def MultyPpredict(inpt):
     for i in inpt:
         inp.append(libraries.preprocess_text(i))
     print(inp)
-    inn =[]
+    inn = []
     inn.append(inp.pop())
     with open('./tokenizers/multy/multyclasstokenizer.pickle', 'rb') as handle:
         tokenizer = libraries.p.load(handle)
