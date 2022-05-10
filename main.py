@@ -142,8 +142,8 @@ def get_user_text(message):
                 boto.send_message(
                     message.chat.id, mapa.randanswhi(), parse_mode='html')
 
-            elif(prediction.Predict(text, mapa.qumapa, 
-                                    './models/binary/qumodel.h5', 
+            elif(prediction.Predict(text, mapa.qumapa,
+                                    './models/binary/qumodel.h5',
                                     './tokenizers/binary/qutokenizer.pickle',
                                     'qu') == "Вопрос"):
                 subfunctions.quadd(
@@ -157,10 +157,10 @@ def get_user_text(message):
                         message.chat.id, "Погода норм", parse_mode='html')
                 else:
                     boto.send_message(
-                            message.chat.id, "Вопрос без классификации",
-                            parse_mode='html')
+                        message.chat.id, "Вопрос без классификации",
+                        parse_mode='html')
             elif(prediction.Predict(text, mapa.commandmapa,
-                                    './models/binary/commandmodel.h5', 
+                                    './models/binary/commandmodel.h5',
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
                 boto.send_message(
@@ -171,9 +171,10 @@ def get_user_text(message):
                                     './tokenizers/binary/thtokenizer.pickle',
                                     '') == "Благодарность"):
                 subfunctions.quadd(
-                message.text, './recognized_sets/recognized_th.xlsx',
-                "Благодарность")
-                boto.send_message(message.chat.id, "Не за что", parse_mode='html')
+                    message.text, './recognized_sets/recognized_th.xlsx',
+                    "Благодарность")
+                boto.send_message(message.chat.id, "Не за что",
+                                  parse_mode='html')
             else:
                 boto.send_message(
                     message.chat.id, "Нет класса", parse_mode='html')
