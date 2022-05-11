@@ -121,8 +121,9 @@ def get_user_text(message):
 @boto.message_handler()
 def get_user_text(message):
     inpt = message.text.split(' ')
+    
     text = []
-    text.append(message.text)
+    
     read = pd.read_excel('./validset/validset.xlsx')
     for txt in text:
         data = {'text': NLP.libraries.preprocess_text(txt), 'agenda': ''}
@@ -131,6 +132,8 @@ def get_user_text(message):
         df = df.append(new_row, ignore_index=True)
         df.to_excel('./validset/validset.xlsx', index=False)
     if(inpt[0].lower() == "миса" or inpt[0].lower() == "misa"):
+        tstr = message.text.replace(inpt[0], '')
+        text.append(tstr)
         try:
             if prediction.Predict(text, mapa.himapa,
                                   './models/binary/himodel.h5',
