@@ -127,7 +127,8 @@ def multyclasstrain():
     train = df[~df['questionclass'].isna()]
     train['questionclass'] = train['questionclass'].astype(int)
     train = train.drop_duplicates()
-
+    target = 'questionclass'
+    showdata(train, target)
     X_train, X_val, y_train, y_val = libraries.train_test_split(
         train, train['questionclass'], test_size=0.2, random_state=64)
     print('Shape of train', X_train.shape)
