@@ -80,14 +80,17 @@ def CreateModel_mul(tokenizer, n_clases):
     return model
 
 
-def binarytrain(filemodelname, tokenizerfilename, datafilename, target):
+def binarytrain(filemodelname, tokenizerfilename, datafilename, recognizeddatafilename, target):
 
     es = libraries.EarlyStopping(
         patience=10, monitor='binary_accuracy', restore_best_weights=True)
 
     train = libraries.pd.read_excel(datafilename)
     train.text = train.text.astype(str)
-    df = libraries.pd.concat([train])
+    recognizedtrain = libraries.pd.read_excel(recognizeddatafilename)
+    recognizedtrain.text = train.text.astype(str)
+    
+    df = libraries.pd.concat([train,recognizedtrain])
     train = df[~df[target].isna()]
     train[target] = train[target].astype(int)
     train = train.drop_duplicates()

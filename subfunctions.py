@@ -20,3 +20,12 @@ def quadd(text, file, string, isqu):
     new_row = pd.Series(data)
     df = df.append(new_row, ignore_index=True)
     df.to_excel(file, index=False)
+    
+def commandadd(text, file, string, isqu):
+    read = pd.read_excel(file)
+    data = {'text': NLP.libraries.commandpreprocess_text(
+        text), 'agenda': string, 'command': isqu}
+    df = pd.DataFrame(read)
+    new_row = pd.Series(data)
+    df = df.append(new_row, ignore_index=True)
+    df.to_excel(file, index=False)
