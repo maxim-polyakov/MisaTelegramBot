@@ -126,6 +126,8 @@ def multyclasstrain():
 
     train = libraries.pd.read_excel('./datasets/multyclasesset.xlsx')
     train.text = train.text.astype(str)
+    recognizedtrain = libraries.pd.read_excel('./recognized_sets/recognized_multyclass.xlsx')
+    recognizedtrain.text = train.text.astype(str)
     df = libraries.pd.concat([train])
     train = df[~df['questionclass'].isna()]
     train['questionclass'] = train['questionclass'].astype(int)
@@ -151,7 +153,7 @@ def multyclasstrain():
     model = CreateModel_mul(tokenizer, n_clases)
 
     history = model.fit(tokenized_X_train, y_trainmatrix,
-                        batch_size=64, epochs=600,
+                        batch_size=64, epochs=2000,
                         validation_data=(tokenized_X_val, y_valmatrix),
                         verbose=2)
 

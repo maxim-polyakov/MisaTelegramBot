@@ -98,7 +98,7 @@ def specialpreprocess_text(text):
         pattern2 = "[?]"
         text = re.sub(pattern2, "", text)
         text = remove_punctuation(text)
-        text = " ".join(tokens).rstrip(' \n')
+        text = "".join(tokens).rstrip(' \n')
         return text
     except:
         return "except"

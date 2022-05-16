@@ -6,9 +6,12 @@ import mapa
 import subfunctions
 from telebot import types
 import config
-
+import commands
+from flask import Flask, request
 # Классификация
-boto = telebot.TeleBot('5301739662:AAG4EZfZtvPkku9b9eymTHZW6EITYyKuAbc')
+token = '5301739662:AAHnFP4EcpmdpE-P41YWFdVCBZuBdA55geg'
+boto = telebot.TeleBot(token)
+app = Flask(__name__)
 
 hi_flag = 0
 qu_flag = 0
@@ -23,8 +26,11 @@ mtext = ""
 
 @boto.message_handler(commands=['start'])
 def start(message):
-    mess = f'Hi, <b>{message.from_user.first_name} {message.from_user.last_name}</b>'
-    boto.send_message(message.chat.id, mess,  parse_mode='html')
+
+
+    print(boto.get_chat_members_count(message.chat.id))
+
+    
 
 
 @boto.message_handler(commands=['trainadd'])
@@ -55,47 +61,66 @@ def get_user_text(message):
         boto.send_message(message.chat.id, fram, parse_mode='html')
 
 
-@boto.message_handler(commands=['hitrain'])
-def get_user_text(message):
-
+def hitrain():
     filemodel = './models/binary/himodel.h5'
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
     recognizeddata = './recognized_sets/recognized_hi.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer, datasetfile, recognizeddata, 'hi')
+    NLP.binarytrain(filemodel, filetokenizer,
+                    datasetfile, recognizeddata, 'hi')
+    
+
+
+def qutrain():
+    filemodel = './models/binary/qumodel.h5'
+    filetokenizer = './tokenizers/binary/qutokenizer.pickle'
+    datasetfile = './datasets/questionset.xlsx'
+    recognizeddata = './recognized_sets/recognized_qu.xlsx'
+    NLP.binarytrain(filemodel, filetokenizer, datasetfile,
+                    recognizeddata, 'question')
+
+
+def thtrain():
+    filemodel = './models/binary/thmodel.h5'
+    filetokenizer = './tokenizers/binary/thtokenizer.pickle'
+    datasetfile = './datasets/thanksset.xlsx'
+    recognizeddata = './recognized_sets/recognized_th.xlsx'
+    NLP.binarytrain(filemodel, filetokenizer,
+                    datasetfile, recognizeddata, 'thanks')
+
+
+def commandtrain():
+    filemodel = './models/binary/commandmodel.h5'
+    filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
+    datasetfile = './datasets/commandset.xlsx'
+    recognizeddata = './recognized_sets/recognized_command.xlsx'
+    NLP.binarytrain(filemodel, filetokenizer, datasetfile, recognizeddata, 'command')
+
+
+@boto.message_handler(commands=['hitrain'])
+def get_user_text(message):
+
+    hitrain()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @boto.message_handler(commands=['qutrain'])
 def get_user_text(message):
 
-    filemodel = './models/binary/qumodel.h5'
-    filetokenizer = './tokenizers/binary/qutokenizer.pickle'
-    datasetfile = './datasets/questionset.xlsx'
-    recognizeddata = './recognized_sets/recognized_qu.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer, datasetfile, recognizeddata, 'question')
+    qutrain()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @boto.message_handler(commands=['thtrain'])
 def get_user_text(message):
 
-    filemodel = './models/binary/thmodel.h5'
-    filetokenizer = './tokenizers/binary/thtokenizer.pickle'
-    datasetfile = './datasets/thanksset.xlsx'
-    recognizeddata = './recognized_sets/recognized_th.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer, datasetfile, recognizeddata, 'thanks')
-    boto.send_message(message.chat.id, "trained", parse_mode='html')
+    thtrain()
 
 
 @boto.message_handler(commands=['commandtrain'])
 def get_user_text(message):
-    
-    filemodel = './models/binary/commandmodel.h5'
-    filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
-    datasetfile = './datasets/commandset.xlsx'
-    recognizeddata = './recognized_sets/recognized_command.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'command')
+
+    commandtrain()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
@@ -136,8 +161,9 @@ def get_user_text(message):
 
 
 @boto.message_handler()
+@app.route("/" + token, methods=['POST'])
 def get_user_text(message):
-
+    #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     global hi_flag
     global qu_flag
     global command_flag
@@ -158,13 +184,14 @@ def get_user_text(message):
         b_flag = 0
         qnon_flag = 0
         mtext = ""
-        
+
     def button():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("👍")
         btn2 = types.KeyboardButton("👎")
         markup.add(btn1, btn2)
         return markup
+
     def button2():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Вопрос без класса")
@@ -197,7 +224,7 @@ def get_user_text(message):
 
                 boto.send_message(
                     message.chat.id, mapa.randanswhi(), parse_mode='html', reply_markup=button())
-                
+
                 set_null()
                 hi_flag = 1
                 mtext = tstr
@@ -210,7 +237,7 @@ def get_user_text(message):
                     boto.send_message(
                         message.chat.id, "Я в порядке", parse_mode='html',
                         reply_markup=button2())
-                    
+
                     set_null()
                     b_flag = 1
                     qu_flag = 1
@@ -220,7 +247,7 @@ def get_user_text(message):
                     boto.send_message(
                         message.chat.id, "Погода норм", parse_mode='html',
                         reply_markup=button2())
-                    
+
                     set_null()
                     weater_flag = 1
                     qu_flag = 1
@@ -229,8 +256,8 @@ def get_user_text(message):
                 else:
                     boto.send_message(
                         message.chat.id, "Вопрос без классификации",
-                        parse_mode='html',reply_markup=button2())
-                    
+                        parse_mode='html', reply_markup=button2())
+
                     set_null()
                     qnon_flag = 1
                     qu_flag = 1
@@ -240,10 +267,11 @@ def get_user_text(message):
                                     './models/binary/commandmodel.h5',
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
-                boto.send_message(
-                    message.chat.id, "Команда", parse_mode='html',
-                    reply_markup=button())
-                
+
+                reply_markup = button()
+
+                commands.commandsdesition(boto, message, reply_markup, tstr)
+
                 set_null()
                 command_flag = 1
                 mtext = tstr
@@ -255,7 +283,7 @@ def get_user_text(message):
 
                 boto.send_message(message.chat.id, "Не за что",
                                   parse_mode='html', reply_markup=button())
-                
+
                 set_null()
                 th_flag = 1
                 mtext = tstr
@@ -264,7 +292,7 @@ def get_user_text(message):
                 boto.send_message(
                     message.chat.id, "Нет классификации", parse_mode='html',
                     reply_markup=button())
-                
+
                 set_null()
                 non_flag = 1
                 mtext = tstr
@@ -273,52 +301,64 @@ def get_user_text(message):
 
     elif(message.text == "👍" and hi_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
-            "Приветствие", 'agenda', 'hi', 1)
+                         "Приветствие", 'agenda', 'hi', 1)
+        hitrain()
         set_null()
     elif(message.text == "👎" and hi_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
-            "Не приветствие", 'agenda', 'hi', 0)
+                         "Не приветствие", 'agenda', 'hi', 0)
+        hitrain()
         set_null()
 
     elif(message.text == "Вопрос без класса" and qu_flag == 1):
 
         subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-            "Нет классификации", 'agenda', 'questionclass', 0)
+                         "Нет классификации", 'agenda', 'questionclass', 0)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-            "Вопрос", 1)
+                           "Вопрос", 1)
+        NLP.multyclasstrain()
+        qutrain()
         set_null()
     elif(message.text == "Не вопрос" and qu_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-            "Нет классификации", 'agenda', 'questionclass', 0)
+                         "Нет классификации", 'agenda', 'questionclass', 0)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-            "Не вопрос", 0)
-        
+                           "Не вопрос", 0)
+        qutrain()
+
+        boto.send_message(message.chat.id, "Запомнила", parse_mode='html')
+
         set_null()
     elif(message.text == "Погода" and qu_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-            "Погода", 'agenda', 'questionclass', 1)
+                         "Погода", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-            "Вопрос", 1)
-            
+                           "Вопрос", 1)
+        NLP.multyclasstrain()
+        qutrain()
+
         set_null()
     elif(message.text == "Дело" and qu_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-            "Дело", 'agenda', 'questionclass', 1)
+                         "Дело", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-            "Вопрос", 1)
-                
+                           "Вопрос", 1)
+        NLP.multyclasstrain()
+        qutrain()
         set_null()
-    
-    
+
     elif(message.text == "👍" and command_flag == 1):
         subfunctions.commandadd(
             mtext, './recognized_sets/recognized_command.xlsx',
             "Команда", 1)
+
+        commandtrain()
         set_null()
 
     elif(message.text == "👎" and command_flag == 1):
         subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
-            "Не команда", 0)
+                                "Не команда", 0)
+        commandtrain()
         set_null()
     elif(message.text == "👍" and th_flag == 1):
         subfunctions.add(
@@ -328,17 +368,19 @@ def get_user_text(message):
 
     elif(message.text == "👎" and th_flag == 1):
         subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
-            "Не благодарность", 'agenda', 'thanks', 0)
+                         "Не благодарность", 'agenda', 'thanks', 0)
+        thtrain()
         set_null()
     elif(message.text == "👍" and non_flag == 1):
         subfunctions.add(
             mtext, './recognized_sets/non_recognized.xlsx',
             "Нет классификации", 'agenda', 'nonclass', 1)
-
+        thtrain()
         set_null()
     elif(message.text == "👎" and non_flag == 1):
-        subfunctions.add(mtext, './recognized_sets/non_recognized.xlsx',
-        "Нет классификации", 'agenda', 'nonclass', 0)
         set_null()
 
-boto.polling(none_stop=True)
+
+boto.remove_webhook()
+boto.set_webhook('https://test.com/' + token)
+app.run()
