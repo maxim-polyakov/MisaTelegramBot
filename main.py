@@ -7,11 +7,10 @@ import subfunctions
 from telebot import types
 import config
 import commands
-from flask import Flask, request
+
 # Классификация
-token = '5301739662:AAHnFP4EcpmdpE-P41YWFdVCBZuBdA55geg'
-boto = telebot.TeleBot(token)
-app = Flask(__name__)
+API_TOKEN = '5301739662:AAEY-HVegTEbvraB_6tLN_w-Lii2aiHYylU'
+boto = telebot.TeleBot(API_TOKEN)
 
 hi_flag = 0
 qu_flag = 0
@@ -23,15 +22,11 @@ b_flag = 0
 qnon_flag = 0
 mtext = ""
 
-
 @boto.message_handler(commands=['start'])
 def start(message):
 
 
     print(boto.get_chat_members_count(message.chat.id))
-
-    
-
 
 @boto.message_handler(commands=['trainadd'])
 def get_user_text(message):
@@ -161,7 +156,6 @@ def get_user_text(message):
 
 
 @boto.message_handler()
-@app.route("/" + token, methods=['POST'])
 def get_user_text(message):
     #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     global hi_flag
@@ -348,9 +342,9 @@ def get_user_text(message):
         set_null()
 
     elif(message.text == "👍" and command_flag == 1):
-        subfunctions.commandadd(
-            mtext, './recognized_sets/recognized_command.xlsx',
-            "Команда", 1)
+        subfunctions.commandadd(mtext, 
+                                './recognized_sets/recognized_command.xlsx',
+                                "Команда", 1)
 
         commandtrain()
         set_null()
@@ -381,6 +375,8 @@ def get_user_text(message):
         set_null()
 
 
-boto.remove_webhook()
-boto.set_webhook('https://test.com/' + token)
-app.run()
+if __name__ == '__main__':
+    boto.polling(none_stop=True)
+
+
+
