@@ -194,7 +194,86 @@ def get_user_text(message):
         btn4 = types.KeyboardButton("Не вопрос")
         markup.add(btn1, btn2, btn3, btn4)
         return markup
+    def neurodesc():
+        if prediction.Predict(text, mapa.himapa,
+                              './models/binary/himodel.h5',
+                              './tokenizers/binary/hitokenizer.pickle',
+                              '') == "Приветствие":
 
+            boto.send_message(
+                message.chat.id, mapa.randanswhi(), parse_mode='html', reply_markup=button())
+
+            set_null()
+            hi_flag = 1
+            mtext = tstr
+        elif(prediction.Predict(text, mapa.qumapa,
+                                './models/binary/qumodel.h5',
+                                './tokenizers/binary/qutokenizer.pickle',
+                                'qu') == "Вопрос"):
+
+            if(prediction.MultyPpredict(text) == "Дело"):
+                boto.send_message(
+                    message.chat.id, "Я в порядке", parse_mode='html',
+                    reply_markup=button2())
+
+                set_null()
+                b_flag = 1
+                qu_flag = 1
+                mtext = tstr
+
+            elif(prediction.MultyPpredict(text) == "Погода"):
+                boto.send_message(
+                    message.chat.id, "Погода норм", parse_mode='html',
+                    reply_markup=button2())
+
+                set_null()
+                weater_flag = 1
+                qu_flag = 1
+                mtext = tstr
+
+            else:
+                boto.send_message(
+                    message.chat.id, "Вопрос без классификации",
+                    parse_mode='html', reply_markup=button2())
+
+                set_null()
+                qnon_flag = 1
+                qu_flag = 1
+                mtext = tstr
+
+        elif(prediction.Predict(text, mapa.commandmapa,
+                                './models/binary/commandmodel.h5',
+                                './tokenizers/binary/thtokenizer.pickle',
+                                'command') == "Команда"):
+
+            reply_markup = button()
+
+            commands.commandsdesition(boto, message, reply_markup, tstr)
+
+            set_null()
+            command_flag = 1
+            mtext = tstr
+
+        elif(prediction.Predict(text, mapa.thmapa,
+                                './models/binary/thmodel.h5',
+                                './tokenizers/binary/thtokenizer.pickle',
+                                '') == "Благодарность"):
+
+            boto.send_message(message.chat.id, "Не за что",
+                              parse_mode='html', reply_markup=button())
+
+            set_null()
+            th_flag = 1
+            mtext = tstr
+
+        else:
+            boto.send_message(
+                message.chat.id, "Нет классификации", parse_mode='html',
+                reply_markup=button())
+
+            set_null()
+            non_flag = 1
+            mtext = tstr
     inpt = message.text.split(' ')
 
     text = []
@@ -211,85 +290,7 @@ def get_user_text(message):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
         try:
-            if prediction.Predict(text, mapa.himapa,
-                                  './models/binary/himodel.h5',
-                                  './tokenizers/binary/hitokenizer.pickle',
-                                  '') == "Приветствие":
-
-                boto.send_message(
-                    message.chat.id, mapa.randanswhi(), parse_mode='html', reply_markup=button())
-
-                set_null()
-                hi_flag = 1
-                mtext = tstr
-            elif(prediction.Predict(text, mapa.qumapa,
-                                    './models/binary/qumodel.h5',
-                                    './tokenizers/binary/qutokenizer.pickle',
-                                    'qu') == "Вопрос"):
-
-                if(prediction.MultyPpredict(text) == "Дело"):
-                    boto.send_message(
-                        message.chat.id, "Я в порядке", parse_mode='html',
-                        reply_markup=button2())
-
-                    set_null()
-                    b_flag = 1
-                    qu_flag = 1
-                    mtext = tstr
-
-                elif(prediction.MultyPpredict(text) == "Погода"):
-                    boto.send_message(
-                        message.chat.id, "Погода норм", parse_mode='html',
-                        reply_markup=button2())
-
-                    set_null()
-                    weater_flag = 1
-                    qu_flag = 1
-                    mtext = tstr
-
-                else:
-                    boto.send_message(
-                        message.chat.id, "Вопрос без классификации",
-                        parse_mode='html', reply_markup=button2())
-
-                    set_null()
-                    qnon_flag = 1
-                    qu_flag = 1
-                    mtext = tstr
-
-            elif(prediction.Predict(text, mapa.commandmapa,
-                                    './models/binary/commandmodel.h5',
-                                    './tokenizers/binary/thtokenizer.pickle',
-                                    'command') == "Команда"):
-
-                reply_markup = button()
-
-                commands.commandsdesition(boto, message, reply_markup, tstr)
-
-                set_null()
-                command_flag = 1
-                mtext = tstr
-
-            elif(prediction.Predict(text, mapa.thmapa,
-                                    './models/binary/thmodel.h5',
-                                    './tokenizers/binary/thtokenizer.pickle',
-                                    '') == "Благодарность"):
-
-                boto.send_message(message.chat.id, "Не за что",
-                                  parse_mode='html', reply_markup=button())
-
-                set_null()
-                th_flag = 1
-                mtext = tstr
-
-            else:
-                boto.send_message(
-                    message.chat.id, "Нет классификации", parse_mode='html',
-                    reply_markup=button())
-
-                set_null()
-                non_flag = 1
-                mtext = tstr
+            neurodesc()
         except:
             boto.send_message(message.chat.id, 'А?', parse_mode='html')
 

@@ -1,12 +1,12 @@
-from keras.layers import Embedding, LSTM, Dense, Dropout, GRU
-from keras.models import Sequential, Input
+from keras.layers import Embedding, LSTM, Dense, Dropout, GRU, Input
+from keras.models import Sequential
 import sklearn.metrics
 from nltk.corpus import stopwords
-import pickle as p
+import pickle5 as p
 import keras
 from keras import backend as K
 from keras.preprocessing import text
-from keras.preprocessing import sequence
+#from keras.preprocessing import sequence
 import requests
 import tqdm as tqdm
 from string import punctuation
@@ -16,10 +16,10 @@ from sklearn.model_selection import train_test_split
 from keras.initializers import Constant
 from tensorflow.keras.callbacks import EarlyStopping
 from tqdm import tqdm
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 import string
-import gensim
+#import gensim
 import re
 import pandas as pd
 import tensorflow as tensorflow
@@ -61,7 +61,7 @@ class CustomTokenizer:
         # Fix sequence length to max value. Sequences shorter than the length are
         # padded in the beginning and sequences longer are truncated
         # at the beginning.
-        tweets = sequence.pad_sequences(
+        tweets = pad_sequences(
             tweets, maxlen=self.max_length, truncating='post', padding='post')
         return tweets
 
