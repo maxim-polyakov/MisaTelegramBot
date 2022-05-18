@@ -311,7 +311,7 @@ def get_user_text(message):
                          "Нет классификации", 'agenda', 'questionclass', 0)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
-        NLP.multyclasstrain()
+        #NLP.multyclasstrain()
         qutrain()
         set_null()
     elif(message.text == "Не вопрос" and qu_flag == 1):
@@ -329,7 +329,7 @@ def get_user_text(message):
                          "Погода", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
-        NLP.multyclasstrain()
+        #NLP.multyclasstrain()
         qutrain()
 
         set_null()
@@ -338,7 +338,7 @@ def get_user_text(message):
                          "Дело", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
-        NLP.multyclasstrain()
+        #NLP.multyclasstrain()
         qutrain()
         set_null()
 
@@ -347,13 +347,13 @@ def get_user_text(message):
                                 './recognized_sets/recognized_command.xlsx',
                                 "Команда", 1)
 
-        commandtrain()
+        #commandtrain()
         set_null()
 
     elif(message.text == "👎" and command_flag == 1):
         subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
                                 "Не команда", 0)
-        commandtrain()
+        #commandtrain()
         set_null()
     elif(message.text == "👍" and th_flag == 1):
         subfunctions.add(
@@ -364,13 +364,13 @@ def get_user_text(message):
     elif(message.text == "👎" and th_flag == 1):
         subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
                          "Не благодарность", 'agenda', 'thanks', 0)
-        thtrain()
+        #thtrain()
         set_null()
     elif(message.text == "👍" and non_flag == 1):
         subfunctions.add(
             mtext, './recognized_sets/non_recognized.xlsx',
             "Нет классификации", 'agenda', 'nonclass', 1)
-        thtrain()
+        #thtrain()
         set_null()
     elif(message.text == "👎" and non_flag == 1):
         set_null()
