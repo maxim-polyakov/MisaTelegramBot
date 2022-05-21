@@ -80,7 +80,7 @@ def preprocess_text(text):
                   and token.strip() not in punctuation]
         tokens = [token for token in tokens if token not in english_stopwords]
 
-        text = " ".join(tokens).rstrip(' \n')
+        text = " ".join(tokens).rstrip('\n')
         pattern3 = r"[\d]"
         pattern2 = "[.]"
         text = re.sub(pattern3, "", text)
@@ -96,9 +96,11 @@ def specialpreprocess_text(text):
         tokens = str(text)
         tokens = mystem.lemmatize(text.lower())
         pattern2 = "[?]"
+        pattern3 = r"[\d]"
         text = re.sub(pattern2, "", text)
+        text = re.sub(pattern3, "", text)
         text = remove_punctuation(text)
-        text = "".join(tokens).rstrip(' \n')
+        text = "".join(tokens).rstrip('\n')
         return text
     except:
         return "except"
@@ -106,7 +108,7 @@ def specialpreprocess_text(text):
 
 def commandpreprocess_text(text):
     try:
-        tokens = text.lower().rstrip(' \n')
+        tokens = text.lower().rstrip('\n')
         text = "".join(tokens)
 
         return text
