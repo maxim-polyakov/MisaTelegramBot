@@ -337,14 +337,14 @@ def get_user_text(message):
         df = df.append(new_row, ignore_index=True)
         df.to_excel('./validset/validset.xlsx', index=False)
 
-    if(inpt[0].lower() == "миса" or inpt[0].lower() == "misa"):
+    if(NLP.libraries.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
-        try:
-            neurodesc()
-        except:
-            boto.send_message(message.chat.id, 'А?', parse_mode='html')
-
+  #      try:
+            
+   #     except:
+    #        boto.send_message(message.chat.id, 'А?', parse_mode='html')
+        neurodesc()
     elif(message.text == "👍" and hi_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
                          "Приветствие", 'agenda', 'hi', 1)
@@ -434,6 +434,8 @@ def get_user_text(message):
         set_null()
     elif(message.text == "👎" and non_flag == 1):
         set_null()
+    elif(message.text == "👎"):
+        boto.send_message(message.chat.id, "😒", parse_mode='html')
     
 
 
