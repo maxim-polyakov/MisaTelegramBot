@@ -4,14 +4,15 @@ import RPA
 
 
 def commandsdesition(boto, message, reply_markup, tstr):
-    inpt = message.text.split(' ')
+    preinpt = message.text.split('->')
+    inpt = preinpt[0].split(' ')
     print(inpt)
     if(NLP.libraries.preprocess_text(inpt[1]) == 'атаковать' or
        NLP.libraries.preprocess_text(inpt[1]) == 'фас' or 
        NLP.libraries.preprocess_text(inpt[1]) == 'пизданутьimport rpa as r'):
         fas(boto, message, reply_markup)
     elif NLP.libraries.preprocess_text(inpt[1]) == 'находить':
-        RPA.founder(boto, message, reply_markup, NLP.libraries.preprocess_text(inpt[2]))
+        RPA.founder(boto, message, reply_markup, NLP.libraries.preprocess_text(preinpt[1]))
     else:
         boto.send_message(message.chat.id, "Команда",
                           parse_mode='html', reply_markup=reply_markup)
