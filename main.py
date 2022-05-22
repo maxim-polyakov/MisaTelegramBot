@@ -237,7 +237,6 @@ def get_user_text(message):
     def neurodesc():
         global hi_flag
         global qu_flag
-        global command_flag
         global non_flag
         global th_flag
         global mtext
@@ -340,11 +339,11 @@ def get_user_text(message):
     if(NLP.libraries.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
-  #      try:
-            
-   #     except:
-    #        boto.send_message(message.chat.id, 'А?', parse_mode='html')
-        neurodesc()
+        try:
+            neurodesc()
+        except:
+            boto.send_message(message.chat.id, 'А?', parse_mode='html')
+        
     elif(message.text == "👍" and hi_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
                          "Приветствие", 'agenda', 'hi', 1)
@@ -364,9 +363,9 @@ def get_user_text(message):
                          "Нет классификации", 'agenda', 'questionclass', 0)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
-        #NLP.multyclasstrain()
+        NLP.multyclasstrain()
         #qutrain()
-        quevaluate()
+        #quevaluate()
         set_null()
     elif(message.text == "Не вопрос" and qu_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
