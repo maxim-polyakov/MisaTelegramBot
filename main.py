@@ -436,7 +436,8 @@ def get_user_text(message):
         set_null()
     elif(message.text == "👎"):
         boto.send_message(message.chat.id, "😒", parse_mode='html')
-    
+    elif(message.text == "👍"):
+        boto.send_message(message.chat.id, "😊", parse_mode='html')
 
 
 if __name__ == '__main__':

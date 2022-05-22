@@ -11,7 +11,7 @@ def commandsdesition(boto, message, reply_markup, tstr):
        NLP.libraries.preprocess_text(inpt[1]) == 'пизданутьimport rpa as r'):
         fas(boto, message, reply_markup)
     elif NLP.libraries.preprocess_text(inpt[1]) == 'находить':
-        RPA.founder(boto, message, reply_markup)
+        RPA.founder(boto, message, reply_markup, NLP.libraries.preprocess_text(inpt[2]))
     else:
         boto.send_message(message.chat.id, "Команда",
                           parse_mode='html', reply_markup=reply_markup)
