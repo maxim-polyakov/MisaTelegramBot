@@ -7,7 +7,10 @@ import subfunctions
 from telebot import types
 import config
 import commands
-
+import os
+import sys
+from requests.exceptions import ConnectionError, ReadTimeout
+import time
 #______________________________________________________________________________
 hi_flag = 0
 qu_flag = 0
@@ -20,7 +23,7 @@ qnon_flag = 0
 mtext = ""
 
 #______________________________________________________________________________
-API_TOKEN = '5301739662:AAEY-HVegTEbvraB_6tLN_w-Lii2aiHYylU'
+API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
 boto = telebot.TeleBot(API_TOKEN)
 
 
@@ -44,38 +47,49 @@ def get_user_text(message):
     boto.send_message(message.chat.id, 'text: ' +
                       out[0] + ' agenda: ' + out[1], parse_mode='html')
 
+
 @boto.message_handler(commands=['dataset'])
 def get_user_text(message):
-    
+
     read = pd.read_excel('./datasets/dataset.xlsx')
     df = pd.DataFrame(read)
     for fram in df:
         boto.send_message(message.chat.id, fram, parse_mode='html')
 #______________________________________________________________________________
+
+
 def hitrain():
     filemodel = './models/binary/himodel.h5'
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
     NLP.binarytrain(filemodel, filetokenizer,
                     datasetfile, 'hi')
+
+
 def hievaluate():
     filemodel = './models/binary/himodel.h5'
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
     recognizeddata = './recognized_sets/recognized_hi.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer, datasetfile, recognizeddata, 'hi')
+    NLP.binaryevaluate(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'hi')
+
 
 def qutrain():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer, datasetfile,'question')
+    NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'question')
+
+
 def quevaluate():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
     recognizeddata = './recognized_sets/recognized_qu.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer, datasetfile, recognizeddata, 'question')
+    NLP.binaryevaluate(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'question')
+
 
 def thtrain():
     filemodel = './models/binary/thmodel.h5'
@@ -83,26 +97,34 @@ def thtrain():
     datasetfile = './datasets/thanksset.xlsx'
     NLP.binaryevaluate(filemodel, filetokenizer, datasetfile, 'thanks')
 
+
 def thevaluate():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = './datasets/thanksset.xlsx'
     recognizeddata = './recognized_sets/recognized_th.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer, datasetfile, recognizeddata, 'thanks')
+    NLP.binaryevaluate(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'thanks')
+
 
 def commandtrain():
     filemodel = './models/binary/commandmodel.h5'
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
     NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'command')
+
+
 def commandevaluate():
-    
+
     filemodel = './models/binary/commandmodel.h5'
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
     recognizeddata = './recognized_sets/recognized_command.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer, datasetfile, recognizeddata, 'command')
+    NLP.binaryevaluate(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'command')
 #______________________________________________________________________________
+
+
 @boto.message_handler(commands=['hitrain'])
 def get_user_text(message):
 
@@ -112,26 +134,31 @@ def get_user_text(message):
 
 @boto.message_handler(commands=['qutrain'])
 def get_user_text(message):
-    
 
     qutrain()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
+
+
 @boto.message_handler(commands=['thtrain'])
 def get_user_text(message):
 
     thtrain()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 
+
 @boto.message_handler(commands=['commandtrain'])
 def get_user_text(message):
-    
+
     commandtrain()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 #______________________________________________________________________________
+
+
 @boto.message_handler(commands=['hievaluate'])
 def get_user_text(message):
 
     hievaluate()
+
 
 @boto.message_handler(commands=['quevaluate'])
 def get_user_text(message):
@@ -139,49 +166,60 @@ def get_user_text(message):
     quevaluate()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 
+
 @boto.message_handler(commands=['thevaluate'])
 def get_user_text(message):
 
     thevaluate()
- 
+
+
 @boto.message_handler(commands=['commandevaluate'])
 def get_user_text(message):
 
     commandevaluate()
-
 #______________________________________________________________________________
+
+
 @boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
-    
+
     NLP.multyclasstrain()
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 #______________________________________________________________________________
+
+
 @boto.message_handler(commands=['multyclean'])
 def get_user_text(message):
     NLP.DataCleaner('./datasets/multyclasesset.xlsx', 'questionclass')
     boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+
 
 @boto.message_handler(commands=['hiclean'])
 def get_user_text(message):
     NLP.DataCleaner('./datasets/dataset.xlsx', 'hi')
     boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 
+
 @boto.message_handler(commands=['quclean'])
 def get_user_text(message):
     NLP.QuestionsetCleaner('./datasets/questionset.xlsx')
     boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+
 
 @boto.message_handler(commands=['thclean'])
 def get_user_text(message):
     NLP.DataCleaner('./datasets/thanksset.xlsx', 'thanks')
     boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 
+
 @boto.message_handler(commands=['commandclean'])
 def get_user_text(message):
-    
+
     NLP.CommandsetCleaner('./datasets/commandset.xlsx')
     boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 #______________________________________________________________________________
+
+
 @boto.message_handler()
 def get_user_text(message):
     #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
@@ -221,7 +259,7 @@ def get_user_text(message):
         btn4 = types.KeyboardButton("Не вопрос")
         markup.add(btn1, btn2, btn3, btn4)
         return markup
-    
+
     def button3():
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Приветствие")
@@ -233,7 +271,7 @@ def get_user_text(message):
         btn7 = types.KeyboardButton("Благодарность")
         markup.add(btn1, btn2, btn3, btn4)
         return markup
-    
+
     def neurodesc():
         global hi_flag
         global qu_flag
@@ -322,7 +360,7 @@ def get_user_text(message):
             set_null()
             non_flag = 1
             mtext = tstr
-            
+
 #______________________________________________________________________________
     inpt = message.text.split(' ')
 
@@ -335,7 +373,6 @@ def get_user_text(message):
         new_row = pd.Series(data)
         df = df.append(new_row, ignore_index=True)
         df.to_excel('./validset/validset.xlsx', index=False)
-
     if(NLP.libraries.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
@@ -343,7 +380,6 @@ def get_user_text(message):
             neurodesc()
         except:
             boto.send_message(message.chat.id, 'А?', parse_mode='html')
-        
     elif(message.text == "👍" and hi_flag == 1):
         subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
                          "Приветствие", 'agenda', 'hi', 1)
@@ -356,7 +392,6 @@ def get_user_text(message):
         #hitrain()
         hievaluate()
         set_null()
-
     elif(message.text == "Вопрос без класса" and qu_flag == 1):
 
         subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
@@ -396,16 +431,14 @@ def get_user_text(message):
         #NLP.multyclasstrain()
         qutrain()
         set_null()
-
     elif(message.text == "👍" and command_flag == 1):
-        subfunctions.commandadd(mtext, 
+        subfunctions.commandadd(mtext,
                                 './recognized_sets/recognized_command.xlsx',
                                 "Команда", 1)
 
         #commandtrain()
         commandevaluate()
         set_null()
-
     elif(message.text == "👎" and command_flag == 1):
         subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
                                 "Не команда", 0)
@@ -417,7 +450,6 @@ def get_user_text(message):
             mtext, './recognized_sets/recognized_th.xlsx',
             "Благодарность", 'agenda', 'thanks', 1)
         set_null()
-
     elif(message.text == "👎" and th_flag == 1):
         subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
                          "Не благодарность", 'agenda', 'thanks', 0)
@@ -440,7 +472,8 @@ def get_user_text(message):
 
 
 if __name__ == '__main__':
-    boto.polling(none_stop=True)
+    try:
+        boto.polling(none_stop=True)
 
-
-
+    except Exception as e:
+        time.sleep(150)
