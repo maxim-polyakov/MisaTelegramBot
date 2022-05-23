@@ -62,8 +62,9 @@ def hitrain():
     filemodel = './models/binary/himodel.h5'
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
-    NLP.binary(filemodel, filetokenizer,
-                    datasetfile, 'hi','train')
+    recognizeddata = './recognized_sets/recognized_hi.xlsx'
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('hi','train')
 
 
 def hievaluate():
@@ -71,15 +72,17 @@ def hievaluate():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
     recognizeddata = './recognized_sets/recognized_hi.xlsx'
-    NLP.binary(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'hi','evaluate')
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('hi','evaluate')
 
 
 def qutrain():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
-    NLP.binary(filemodel, filetokenizer, datasetfile, 'question','train')
+    recognizeddata = './recognized_sets/recognized_qu.xlsx'
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('question','train')
 
 
 def quevaluate():
@@ -87,15 +90,17 @@ def quevaluate():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
     recognizeddata = './recognized_sets/recognized_qu.xlsx'
-    NLP.binary(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'question','evaluate')
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('question','evaluate')
 
 
 def thtrain():
     filemodel = './models/binary/thmodel.h5'
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = './datasets/thanksset.xlsx'
-    NLP.binary(filemodel, filetokenizer, datasetfile, 'thanks','train')
+    recognizeddata = './recognized_sets/recognized_th.xlsx'
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('thanks','train')
 
 
 def thevaluate():
@@ -103,25 +108,26 @@ def thevaluate():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = './datasets/thanksset.xlsx'
     recognizeddata = './recognized_sets/recognized_th.xlsx'
-    NLP.binary(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'thanks','evaluate')
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('thanks','evaluate')
 
 
 def commandtrain():
     filemodel = './models/binary/commandmodel.h5'
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
-    NLP.binary(filemodel, filetokenizer, datasetfile, 'command','train')
+    recognizeddata = './recognized_sets/recognized_command.xlsx'
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('command','train')
 
 
 def commandevaluate():
-
     filemodel = './models/binary/commandmodel.h5'
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
     recognizeddata = './recognized_sets/recognized_command.xlsx'
-    NLP.binary(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'command','evaluate')
+    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer.binary('command','evaluate')
 #______________________________________________________________________________
 
 
@@ -183,7 +189,8 @@ def get_user_text(message):
 @boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
-    NLP.multyclasstrain()
+    trainer = NLP.Multy()
+    trainer.multyclasstrain('train')
     boto.send_message(message.chat.id, "trained", parse_mode='html')
 #______________________________________________________________________________
 
@@ -398,8 +405,9 @@ def get_user_text(message):
                          "Нет классификации", 'agenda', 'questionclass', 0)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
-        NLP.multyclasstrain()
-        #qutrain()
+        
+        trainer = NLP.Multy()
+        trainer.multyclasstrain('evaluate')
         #quevaluate()
         set_null()
     elif(message.text == "Не вопрос" and qu_flag == 1):
@@ -418,8 +426,9 @@ def get_user_text(message):
                          "Погода", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
-        #NLP.multyclasstrain()
-        #qutrain()
+        
+        trainer = NLP.Multy()
+        trainer.multyclasstrain('evaluate')
         quevaluate()
 
         set_null()
@@ -428,7 +437,9 @@ def get_user_text(message):
                          "Дело", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
-        #NLP.multyclasstrain()
+        
+        trainer = NLP.Multy()
+        trainer.multyclasstrain('evaluate')
         qutrain()
         set_null()
     elif(message.text == "👍" and command_flag == 1):
@@ -436,13 +447,11 @@ def get_user_text(message):
                                 './recognized_sets/recognized_command.xlsx',
                                 "Команда", 1)
 
-        #commandtrain()
         commandevaluate()
         set_null()
     elif(message.text == "👎" and command_flag == 1):
         subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
                                 "Не команда", 0)
-        #commandtrain()
         commandevaluate()
         set_null()
     elif(message.text == "👍" and th_flag == 1):
@@ -472,8 +481,6 @@ def get_user_text(message):
 
 
 if __name__ == '__main__':
-    try:
-        boto.polling(none_stop=True)
 
-    except Exception as e:
-        time.sleep(150)
+    boto.polling(none_stop=True)
+
