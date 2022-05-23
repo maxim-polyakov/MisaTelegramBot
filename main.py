@@ -429,7 +429,7 @@ def get_user_text(message):
         
         trainer = NLP.Multy()
         trainer.multyclasstrain('evaluate')
-        quevaluate()
+        #quevaluate()
 
         set_null()
     elif(message.text == "Дело" and qu_flag == 1):
