@@ -2,7 +2,7 @@ from keras.layers import Embedding, LSTM, Dense, Dropout, GRU, Input
 from keras.models import Sequential
 import sklearn.metrics
 from nltk.corpus import stopwords
-import pickle5 as p
+import pickle as p
 import keras
 from keras import backend as K
 from keras.preprocessing import text
