@@ -62,8 +62,8 @@ def hitrain():
     filemodel = './models/binary/himodel.h5'
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer,
-                    datasetfile, 'hi')
+    NLP.binary(filemodel, filetokenizer,
+                    datasetfile, 'hi','train')
 
 
 def hievaluate():
@@ -71,15 +71,15 @@ def hievaluate():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
     recognizeddata = './recognized_sets/recognized_hi.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'hi')
+    NLP.binary(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'hi','evaluate')
 
 
 def qutrain():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'question')
+    NLP.binary(filemodel, filetokenizer, datasetfile, 'question','train')
 
 
 def quevaluate():
@@ -87,15 +87,15 @@ def quevaluate():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
     recognizeddata = './recognized_sets/recognized_qu.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'question')
+    NLP.binary(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'question','evaluate')
 
 
 def thtrain():
     filemodel = './models/binary/thmodel.h5'
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = './datasets/thanksset.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer, datasetfile, 'thanks')
+    NLP.binary(filemodel, filetokenizer, datasetfile, 'thanks','train')
 
 
 def thevaluate():
@@ -103,15 +103,15 @@ def thevaluate():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = './datasets/thanksset.xlsx'
     recognizeddata = './recognized_sets/recognized_th.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'thanks')
+    NLP.binary(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'thanks','evaluate')
 
 
 def commandtrain():
     filemodel = './models/binary/commandmodel.h5'
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
-    NLP.binarytrain(filemodel, filetokenizer, datasetfile, 'command')
+    NLP.binary(filemodel, filetokenizer, datasetfile, 'command','train')
 
 
 def commandevaluate():
@@ -120,8 +120,8 @@ def commandevaluate():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
     recognizeddata = './recognized_sets/recognized_command.xlsx'
-    NLP.binaryevaluate(filemodel, filetokenizer,
-                       datasetfile, recognizeddata, 'command')
+    NLP.binary(filemodel, filetokenizer,
+                       datasetfile, recognizeddata, 'command','evaluate')
 #______________________________________________________________________________
 
 
