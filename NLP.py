@@ -97,9 +97,9 @@ class Binary:
         else:
             tokenizer = libraries.CustomTokenizer(train_texts=X_train['text'])
             # fit o the train
-            tokenizer.train_tokenize()
-            tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
-            tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
+        tokenizer.train_tokenize()
+        tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
+        tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
 
         if(mode == 'evaluate'):
             model = load_model(self.filemodelname)
