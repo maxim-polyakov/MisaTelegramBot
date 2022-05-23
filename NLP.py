@@ -1,6 +1,6 @@
 import libraries
 import mapa
-
+from tensorflow.keras.models import load_model
 
 def showdata(train, target):
     key_metrics = {'samples': len(train),
@@ -80,17 +80,16 @@ def CreateModel_mul(tokenizer, n_clases):
     return model
 
 
-def binarytrain(filemodelname, tokenizerfilename, datafilename, recognizeddatafilename, target):
+def binarytrain(filemodelname, tokenizerfilename, datafilename,  target):
 
     es = libraries.EarlyStopping(
         patience=10, monitor='binary_accuracy', restore_best_weights=True)
 
     train = libraries.pd.read_excel(datafilename)
     train.text = train.text.astype(str)
-    recognizedtrain = libraries.pd.read_excel(recognizeddatafilename)
-    recognizedtrain.text = train.text.astype(str)
+
     
-    df = libraries.pd.concat([train,recognizedtrain])
+    df = libraries.pd.concat([train])
     train = df[~df[target].isna()]
     train[target] = train[target].astype(int)
     train = train.drop_duplicates()
@@ -127,8 +126,8 @@ def multyclasstrain():
     train = libraries.pd.read_excel('./datasets/multyclasesset.xlsx')
     train.text = train.text.astype(str)
     recognizedtrain = libraries.pd.read_excel('./recognized_sets/recognized_multyclass.xlsx')
-    recognizedtrain.text = train.text.astype(str)
-    df = libraries.pd.concat([train])
+    recognizedtrain.text = recognizedtrain.text.astype(str)
+    df = libraries.pd.concat([train,recognizedtrain])
     train = df[~df['questionclass'].isna()]
     train['questionclass'] = train['questionclass'].astype(int)
     train = train.drop_duplicates()
@@ -162,5 +161,41 @@ def multyclasstrain():
     model.save('./models/multy/multyclassmodel.h5')
 
     with open('./tokenizers/multy/multyclasstokenizer.pickle', 'wb') as handle:
+        libraries.p.dump(tokenizer, handle,
+                         protocol=libraries.p.HIGHEST_PROTOCOL)
+def binaryevaluate(filemodelname, tokenizerfilename, datafilename, recognizeddatafilename, target):
+    recognizedtrain = libraries.pd.read_excel(recognizeddatafilename)
+    recognizedtrain.text = recognizedtrain.text.astype(str)
+    
+    train = libraries.pd.read_excel(datafilename)
+    train.text = train.text.astype(str)
+    
+    df = libraries.pd.concat([train, recognizedtrain])
+    train = df[~df[target].isna()]
+    train[target] = train[target].astype(int)
+    train = train.drop_duplicates()
+    
+    showdata(train, target)
+    X_train, X_val, y_train, y_val = libraries.train_test_split(
+        train, train[target], test_size=0.3, random_state=32)
+    
+    with open(tokenizerfilename, 'rb') as handle:
+        tokenizer = libraries.p.load(handle)
+    # fit o the train
+    tokenizer.train_tokenize()
+    tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
+    tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
+    
+    model = load_model(filemodelname)
+    
+    history = model.fit(tokenized_X_train, y_train,
+                        validation_data=(tokenized_X_val, y_val),
+                        batch_size=512,
+                        epochs=2000,
+                        verbose=2,
+                        )
+    model.save(filemodelname)
+
+    with open(tokenizerfilename, 'wb') as handle:
         libraries.p.dump(tokenizer, handle,
                          protocol=libraries.p.HIGHEST_PROTOCOL)

@@ -1,0 +1,5 @@
+FROM python:3
+RUN mkdir -p C:/Users/maxim/OneDrive/Документы/GitHub\MisaTelegramBot | bash -s
+WORKDIR C:/Users/maxim/OneDrive/Документы/GitHub/MisaTelegramBot
+COPY . .
+CMD /entrypoint.sh python main.py
