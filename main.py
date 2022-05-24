@@ -11,6 +11,8 @@ import os
 import sys
 from requests.exceptions import ConnectionError, ReadTimeout
 import time
+from flask import Flask,request
+import requests
 #______________________________________________________________________________
 hi_flag = 0
 qu_flag = 0
@@ -26,6 +28,22 @@ mtext = ""
 API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
 boto = telebot.TeleBot(API_TOKEN)
 
+app = Flask(__name__)
+
+
+def send_message(chat_id, text):
+    method = "sendMessage"
+    token = API_TOKEN
+    url = f"https://api.telegram.org/bot{token}/{method}"
+    data = {"chat_id": chat_id, "text": text}
+    requests.post(url, data=data)
+
+@app.route("/", methods=["GET", "POST"])
+def receive_update():
+    if request.method == "POST":
+        print(request.json)
+        chat_id = request.json["message"]["chat"]["id"]
+    return {"ok": True}
 
 #______________________________________________________________________________
 @boto.message_handler(commands=['trainadd'])
@@ -46,6 +64,8 @@ def get_user_text(message):
 
     boto.send_message(message.chat.id, 'text: ' +
                       out[0] + ' agenda: ' + out[1], parse_mode='html')
+
+
 
 
 @boto.message_handler(commands=['dataset'])
@@ -480,7 +500,10 @@ def get_user_text(message):
         boto.send_message(message.chat.id, "😊", parse_mode='html')
 
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     boto.polling(none_stop=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
+
+
 
