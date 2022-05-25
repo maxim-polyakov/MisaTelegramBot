@@ -11,8 +11,9 @@ import os
 import sys
 from requests.exceptions import ConnectionError, ReadTimeout
 import time
-from flask import Flask,request
+import flask
 import requests
+import logging
 #______________________________________________________________________________
 hi_flag = 0
 qu_flag = 0
@@ -26,24 +27,24 @@ mtext = ""
 
 #______________________________________________________________________________
 API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
+APP_HOST = '127.0.0.1'
+APP_PORT = '80'
+WEB_HOOK_URL = 'https://049a-2a00-1fa1-c4c1-a937-8c9-4be1-e4a8-3363.eu.ngrok.io -> http://localhost:80'
+
+logger = telebot.logger
+telebot.logger.setLevel(logging.DEBUG)
 boto = telebot.TeleBot(API_TOKEN)
+app = flask.Flask(__name__)
 
-app = Flask(__name__)
-
-
-def send_message(chat_id, text):
-    method = "sendMessage"
-    token = API_TOKEN
-    url = f"https://api.telegram.org/bot{token}/{method}"
-    data = {"chat_id": chat_id, "text": text}
-    requests.post(url, data=data)
-
-@app.route("/", methods=["GET", "POST"])
-def receive_update():
-    if request.method == "POST":
-        print(request.json)
-        chat_id = request.json["message"]["chat"]["id"]
-    return {"ok": True}
+@app.route('/',methods = ['POST'])
+def webhook(chat_id, text):
+    if(flask.request.headers.get('content-type') == 'application/json'):
+        json_string = flask.request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        boto.process_new_updates([update])
+        return ''
+    else:
+        flask.abort(403)
 
 #______________________________________________________________________________
 @boto.message_handler(commands=['trainadd'])
@@ -501,9 +502,11 @@ def get_user_text(message):
 
 
 if __name__ == "__main__":
-    boto.polling(none_stop=True)
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    #boto.polling(none_stop=True)
+    boto.remove_webhook()
+    time.sleep(1)
+    boto.setwebhook(url = WEB_HOOK_URL)
+    app.run(host = APP_HOST, port = APP_PORT, debug = False)
 
 
 
