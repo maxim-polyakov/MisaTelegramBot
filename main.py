@@ -1,10 +1,10 @@
-import telebot
+#import telebot
 import pandas as pd
 import NLP
 import prediction
 import mapa
 import subfunctions
-from telebot import types
+#from telebot import types
 import config
 import commands
 import os
@@ -29,7 +29,7 @@ mtext = ""
 API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
 APP_HOST = '127.0.0.1'
 APP_PORT = '80'
-WEB_HOOK_URL = 'https://049a-2a00-1fa1-c4c1-a937-8c9-4be1-e4a8-3363.eu.ngrok.io -> http://localhost:80'
+WEB_HOOK_URL = 'https://28c8-31-204-109-41.eu.ngrok.io'
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)
