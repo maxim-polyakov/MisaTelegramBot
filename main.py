@@ -4,14 +4,14 @@ import NLP
 import prediction
 import mapa
 import subfunctions
-#from telebot import types
+from telebot import types
 import config
 import commands
 import os
 import sys
 from requests.exceptions import ConnectionError, ReadTimeout
 import time
-from flask import Flask
+import flask
 #import requests
 import logging
 #import pyTelegramBotAPI
@@ -29,23 +29,23 @@ mtext = ""
 #______________________________________________________________________________
 API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
 APP_HOST = '127.0.0.1'
-APP_PORT = '80'
-WEB_HOOK_URL = 'https://28c8-31-204-109-41.eu.ngrok.io'
+APP_PORT = '9000'
+WEB_HOOK_URL = 'https://9883-31-204-109-41.eu.ngrok.io'
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)
 boto = telebot.TeleBot(API_TOKEN)
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 @app.route('/',methods = ['POST'])
-def webhook(chat_id, text):
-    if(Flask.request.headers.get('content-type') == 'application/json'):
-        json_string = Flask.request.get_data().decode('utf-8')
+def webhook():
+    if(flask.request.headers.get('content-type') == 'application/json'):
+        json_string = flask.request.get_data().decode('utf-8')
         update = telebot.types.Update.de_json(json_string)
         boto.process_new_updates([update])
         return ''
     else:
-        Flask.abort(403)
+        flask.abort(403)
 
 #______________________________________________________________________________
 @boto.message_handler(commands=['trainadd'])
@@ -506,7 +506,7 @@ if __name__ == "__main__":
     #boto.polling(none_stop=True)
     boto.remove_webhook()
     time.sleep(1)
-    boto.setwebhook(url = WEB_HOOK_URL)
+    boto.set_webhook(url = WEB_HOOK_URL)
     app.run(host = APP_HOST, port = APP_PORT, debug = False)
 
 
