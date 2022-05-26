@@ -1,4 +1,4 @@
-#import telebot
+import telebot
 import pandas as pd
 import NLP
 import prediction
@@ -11,9 +11,10 @@ import os
 import sys
 from requests.exceptions import ConnectionError, ReadTimeout
 import time
-import flask
-import requests
+from flask import Flask
+#import requests
 import logging
+#import pyTelegramBotAPI
 #______________________________________________________________________________
 hi_flag = 0
 qu_flag = 0
@@ -34,17 +35,17 @@ WEB_HOOK_URL = 'https://28c8-31-204-109-41.eu.ngrok.io'
 logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)
 boto = telebot.TeleBot(API_TOKEN)
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 @app.route('/',methods = ['POST'])
 def webhook(chat_id, text):
-    if(flask.request.headers.get('content-type') == 'application/json'):
-        json_string = flask.request.get_data().decode('utf-8')
+    if(Flask.request.headers.get('content-type') == 'application/json'):
+        json_string = Flask.request.get_data().decode('utf-8')
         update = telebot.types.Update.de_json(json_string)
         boto.process_new_updates([update])
         return ''
     else:
-        flask.abort(403)
+        Flask.abort(403)
 
 #______________________________________________________________________________
 @boto.message_handler(commands=['trainadd'])

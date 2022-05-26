@@ -1,5 +1,5 @@
 import NLP
-import telebot
+#import pyTelegramBotAPI
 import RPA
 
 
