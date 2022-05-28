@@ -1,82 +1,39 @@
-import telebot
-import pandas as pd
-import NLP
-import prediction
-import mapa
-import subfunctions
-from telebot import types
-import config
-import commands
-import os
-import sys
-from requests.exceptions import ConnectionError, ReadTimeout
-import time
-import flask
-#import requests
-import logging
+import core
+import messagemonitor
 #import pyTelegramBotAPI
 #______________________________________________________________________________
-hi_flag = 0
-qu_flag = 0
-command_flag = 0
-non_flag = 0
-th_flag = 0
-weater_flag = 0
-b_flag = 0
-qnon_flag = 0
-mtext = ""
+
 
 #______________________________________________________________________________
-API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
-APP_HOST = '127.0.0.1'
-APP_PORT = '9000'
-WEB_HOOK_URL = 'https://9883-31-204-109-41.eu.ngrok.io'
-
-logger = telebot.logger
-telebot.logger.setLevel(logging.DEBUG)
-boto = telebot.TeleBot(API_TOKEN)
-app = flask.Flask(__name__)
-
-@app.route('/',methods = ['POST'])
-def webhook():
-    if(flask.request.headers.get('content-type') == 'application/json'):
-        json_string = flask.request.get_data().decode('utf-8')
-        update = telebot.types.Update.de_json(json_string)
-        boto.process_new_updates([update])
-        return ''
-    else:
-        flask.abort(403)
-
-#______________________________________________________________________________
-@boto.message_handler(commands=['trainadd'])
+@core.boto.message_handler(commands=['trainadd'])
 def get_user_text(message):
-    read = pd.read_excel('./datasets/dataset.xlsx')
+    read = core.pd.read_excel('./datasets/dataset.xlsx')
     tstr = message.text.replace('/trainadd ', '')
     out = tstr.split('|')
     idx = 0
-    for i in range(0, len(mapa.himapa)):
-        if(out[1] == mapa.himapa[i]):
+    for i in range(0, len(core.mapa.himapa)):
+        if(out[1] == core.mapa.himapa[i]):
             idx = i
-    data = {'text': NLP.libraries.preprocess_text(
+    data = {'text': core.NLP.libraries.preprocess_text(
         out[0]), 'agenda': out[1], 'hi': idx}
-    df = pd.DataFrame(read)
-    new_row = pd.Series(data)
+    df = core.pd.DataFrame(read)
+    new_row = core.pd.Series(data)
     df = df.append(new_row, ignore_index=True)
     df.to_excel('./datasets/dataset.xlsx', index=False)
 
-    boto.send_message(message.chat.id, 'text: ' +
+    core.boto.send_message(message.chat.id, 'text: ' +
                       out[0] + ' agenda: ' + out[1], parse_mode='html')
 
 
 
 
-@boto.message_handler(commands=['dataset'])
+@core.boto.message_handler(commands=['dataset'])
 def get_user_text(message):
 
-    read = pd.read_excel('./datasets/dataset.xlsx')
-    df = pd.DataFrame(read)
+    read = core.pd.read_excel('./datasets/dataset.xlsx')
+    df = core.pd.DataFrame(read)
     for fram in df:
-        boto.send_message(message.chat.id, fram, parse_mode='html')
+        core.boto.send_message(message.chat.id, fram, parse_mode='html')
 #______________________________________________________________________________
 
 
@@ -85,7 +42,7 @@ def hitrain():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
     recognizeddata = './recognized_sets/recognized_hi.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('hi','train')
 
 
@@ -94,7 +51,7 @@ def hievaluate():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = './datasets/dataset.xlsx'
     recognizeddata = './recognized_sets/recognized_hi.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('hi','evaluate')
 
 
@@ -103,7 +60,7 @@ def qutrain():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
     recognizeddata = './recognized_sets/recognized_qu.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('question','train')
 
 
@@ -112,7 +69,7 @@ def quevaluate():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = './datasets/questionset.xlsx'
     recognizeddata = './recognized_sets/recognized_qu.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('question','evaluate')
 
 
@@ -121,7 +78,7 @@ def thtrain():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = './datasets/thanksset.xlsx'
     recognizeddata = './recognized_sets/recognized_th.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('thanks','train')
 
 
@@ -130,7 +87,7 @@ def thevaluate():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = './datasets/thanksset.xlsx'
     recognizeddata = './recognized_sets/recognized_th.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('thanks','evaluate')
 
 
@@ -139,7 +96,7 @@ def commandtrain():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
     recognizeddata = './recognized_sets/recognized_command.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('command','train')
 
 
@@ -148,366 +105,116 @@ def commandevaluate():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = './datasets/commandset.xlsx'
     recognizeddata = './recognized_sets/recognized_command.xlsx'
-    trainer = NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('command','evaluate')
 #______________________________________________________________________________
 
 
-@boto.message_handler(commands=['hitrain'])
+@core.boto.message_handler(commands=['hitrain'])
 def get_user_text(message):
 
     hitrain()
-    boto.send_message(message.chat.id, "trained", parse_mode='html')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@boto.message_handler(commands=['qutrain'])
+@core.boto.message_handler(commands=['qutrain'])
 def get_user_text(message):
 
     qutrain()
-    boto.send_message(message.chat.id, "trained", parse_mode='html')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@boto.message_handler(commands=['thtrain'])
+@core.boto.message_handler(commands=['thtrain'])
 def get_user_text(message):
 
     thtrain()
-    boto.send_message(message.chat.id, "trained", parse_mode='html')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@boto.message_handler(commands=['commandtrain'])
+@core.boto.message_handler(commands=['commandtrain'])
 def get_user_text(message):
 
     commandtrain()
-    boto.send_message(message.chat.id, "trained", parse_mode='html')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
 #______________________________________________________________________________
 
 
-@boto.message_handler(commands=['hievaluate'])
+@core.boto.message_handler(commands=['hievaluate'])
 def get_user_text(message):
 
     hievaluate()
 
 
-@boto.message_handler(commands=['quevaluate'])
+@core.boto.message_handler(commands=['quevaluate'])
 def get_user_text(message):
 
     quevaluate()
-    boto.send_message(message.chat.id, "trained", parse_mode='html')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@boto.message_handler(commands=['thevaluate'])
+@core.boto.message_handler(commands=['thevaluate'])
 def get_user_text(message):
 
     thevaluate()
 
 
-@boto.message_handler(commands=['commandevaluate'])
+@core.boto.message_handler(commands=['commandevaluate'])
 def get_user_text(message):
 
     commandevaluate()
 #______________________________________________________________________________
 
 
-@boto.message_handler(commands=['multyclasstrain'])
+@core.boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
-    trainer = NLP.Multy()
+    trainer = core.NLP.Multy()
     trainer.multyclasstrain('train')
-    boto.send_message(message.chat.id, "trained", parse_mode='html')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
 #______________________________________________________________________________
 
 
-@boto.message_handler(commands=['multyclean'])
+@core.boto.message_handler(commands=['multyclean'])
 def get_user_text(message):
-    NLP.DataCleaner('./datasets/multyclasesset.xlsx', 'questionclass')
-    boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+    core.NLP.DataCleaner('./datasets/multyclasesset.xlsx', 'questionclass')
+    core.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 
 
-@boto.message_handler(commands=['hiclean'])
+@core.boto.message_handler(commands=['hiclean'])
 def get_user_text(message):
-    NLP.DataCleaner('./datasets/dataset.xlsx', 'hi')
-    boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+    core.NLP.DataCleaner('./datasets/dataset.xlsx', 'hi')
+    core.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 
 
-@boto.message_handler(commands=['quclean'])
+@core.boto.message_handler(commands=['quclean'])
 def get_user_text(message):
-    NLP.QuestionsetCleaner('./datasets/questionset.xlsx')
-    boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+    core.NLP.QuestionsetCleaner('./datasets/questionset.xlsx')
+    core.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 
 
-@boto.message_handler(commands=['thclean'])
+@core.boto.message_handler(commands=['thclean'])
 def get_user_text(message):
-    NLP.DataCleaner('./datasets/thanksset.xlsx', 'thanks')
-    boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+    core.NLP.DataCleaner('./datasets/thanksset.xlsx', 'thanks')
+    core.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 
 
-@boto.message_handler(commands=['commandclean'])
+@core.boto.message_handler(commands=['commandclean'])
 def get_user_text(message):
 
-    NLP.CommandsetCleaner('./datasets/commandset.xlsx')
-    boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+    core.NLP.CommandsetCleaner('./datasets/commandset.xlsx')
+    core.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 #______________________________________________________________________________
 
 
-@boto.message_handler()
-def get_user_text(message):
-    #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    global hi_flag
-    global qu_flag
-    global command_flag
-    global non_flag
-    global th_flag
-    global mtext
-    global weater_flag
-    global b_flag
-    global qnon_flag
 
-    def set_null():
-        hi_flag = 0
-        qu_flag = 0
-        command_flag = 0
-        non_flag = 0
-        th_flag = 0
-        weater_flag = 0
-        b_flag = 0
-        qnon_flag = 0
-        mtext = ""
-
-    def button():
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("👍")
-        btn2 = types.KeyboardButton("👎")
-        markup.add(btn1, btn2)
-        return markup
-
-    def button2():
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Вопрос без класса")
-        btn2 = types.KeyboardButton("Погода")
-        btn3 = types.KeyboardButton("Дело")
-        btn4 = types.KeyboardButton("Не вопрос")
-        markup.add(btn1, btn2, btn3, btn4)
-        return markup
-
-    def button3():
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Приветствие")
-        btn2 = types.KeyboardButton("Вопрос без класса")
-        btn3 = types.KeyboardButton("Погода")
-        btn4 = types.KeyboardButton("Дело")
-        btn5 = types.KeyboardButton("Не вопрос")
-        btn6 = types.KeyboardButton("Команда")
-        btn7 = types.KeyboardButton("Благодарность")
-        markup.add(btn1, btn2, btn3, btn4)
-        return markup
-
-    def neurodesc():
-        global hi_flag
-        global qu_flag
-        global non_flag
-        global th_flag
-        global mtext
-        global weater_flag
-        global b_flag
-        global qnon_flag
-        if prediction.Predict(text, mapa.himapa,
-                              './models/binary/himodel.h5',
-                              './tokenizers/binary/hitokenizer.pickle',
-                              '') == "Приветствие":
-
-            boto.send_message(
-                message.chat.id, mapa.randanswhi(), parse_mode='html', reply_markup=button())
-
-            set_null()
-            hi_flag = 1
-            mtext = tstr
-        elif(prediction.Predict(text, mapa.qumapa,
-                                './models/binary/qumodel.h5',
-                                './tokenizers/binary/qutokenizer.pickle',
-                                'qu') == "Вопрос"):
-
-            if(prediction.MultyPpredict(text) == "Дело"):
-                boto.send_message(
-                    message.chat.id, "Я в порядке", parse_mode='html',
-                    reply_markup=button2())
-
-                set_null()
-                b_flag = 1
-                qu_flag = 1
-                mtext = tstr
-
-            elif(prediction.MultyPpredict(text) == "Погода"):
-                boto.send_message(
-                    message.chat.id, "Погода норм", parse_mode='html',
-                    reply_markup=button2())
-
-                set_null()
-                weater_flag = 1
-                qu_flag = 1
-                mtext = tstr
-
-            else:
-                boto.send_message(
-                    message.chat.id, "Вопрос без классификации",
-                    parse_mode='html', reply_markup=button2())
-
-                set_null()
-                qnon_flag = 1
-                qu_flag = 1
-                mtext = tstr
-
-        elif(prediction.Predict(text, mapa.commandmapa,
-                                './models/binary/commandmodel.h5',
-                                './tokenizers/binary/thtokenizer.pickle',
-                                'command') == "Команда"):
-
-            reply_markup = button()
-
-            commands.commandsdesition(boto, message, reply_markup, tstr)
-
-            set_null()
-            command_flag = 1
-            mtext = tstr
-
-        elif(prediction.Predict(text, mapa.thmapa,
-                                './models/binary/thmodel.h5',
-                                './tokenizers/binary/thtokenizer.pickle',
-                                '') == "Благодарность"):
-
-            boto.send_message(message.chat.id, "Не за что",
-                              parse_mode='html', reply_markup=button())
-
-            set_null()
-            th_flag = 1
-            mtext = tstr
-
-        else:
-            boto.send_message(
-                message.chat.id, "Нет классификации", parse_mode='html',
-                reply_markup=button())
-
-            set_null()
-            non_flag = 1
-            mtext = tstr
-
-#______________________________________________________________________________
-    inpt = message.text.split(' ')
-
-    text = []
-    print(message.text)
-    read = pd.read_excel('./validset/validset.xlsx')
-    for txt in text:
-        data = {'text': NLP.libraries.preprocess_text(txt), 'agenda': ''}
-        df = pd.DataFrame(read)
-        new_row = pd.Series(data)
-        df = df.append(new_row, ignore_index=True)
-        df.to_excel('./validset/validset.xlsx', index=False)
-    if(NLP.libraries.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
-        tstr = message.text.replace(inpt[0], '')
-        text.append(tstr)
-        try:
-            neurodesc()
-        except:
-            boto.send_message(message.chat.id, 'А?', parse_mode='html')
-    elif(message.text == "👍" and hi_flag == 1):
-        subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
-                         "Приветствие", 'agenda', 'hi', 1)
-        #hitrain()
-        hievaluate()
-        set_null()
-    elif(message.text == "👎" and hi_flag == 1):
-        subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
-                         "Не приветствие", 'agenda', 'hi', 0)
-        #hitrain()
-        hievaluate()
-        set_null()
-    elif(message.text == "Вопрос без класса" and qu_flag == 1):
-
-        subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-                         "Нет классификации", 'agenda', 'questionclass', 0)
-        subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-                           "Вопрос", 1)
-        
-        trainer = NLP.Multy()
-        trainer.multyclasstrain('evaluate')
-        #quevaluate()
-        set_null()
-    elif(message.text == "Не вопрос" and qu_flag == 1):
-        subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-                         "Нет классификации", 'agenda', 'questionclass', 0)
-        subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-                           "Не вопрос", 0)
-        #qutrain()
-        quevaluate()
-
-        boto.send_message(message.chat.id, "Запомнила", parse_mode='html')
-
-        set_null()
-    elif(message.text == "Погода" and qu_flag == 1):
-        subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-                         "Погода", 'agenda', 'questionclass', 1)
-        subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-                           "Вопрос", 1)
-        
-        trainer = NLP.Multy()
-        trainer.multyclasstrain('evaluate')
-        #quevaluate()
-
-        set_null()
-    elif(message.text == "Дело" and qu_flag == 1):
-        subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
-                         "Дело", 'agenda', 'questionclass', 1)
-        subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
-                           "Вопрос", 1)
-        
-        trainer = NLP.Multy()
-        trainer.multyclasstrain('evaluate')
-        qutrain()
-        set_null()
-    elif(message.text == "👍" and command_flag == 1):
-        subfunctions.commandadd(mtext,
-                                './recognized_sets/recognized_command.xlsx',
-                                "Команда", 1)
-
-        commandevaluate()
-        set_null()
-    elif(message.text == "👎" and command_flag == 1):
-        subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
-                                "Не команда", 0)
-        commandevaluate()
-        set_null()
-    elif(message.text == "👍" and th_flag == 1):
-        subfunctions.add(
-            mtext, './recognized_sets/recognized_th.xlsx',
-            "Благодарность", 'agenda', 'thanks', 1)
-        set_null()
-    elif(message.text == "👎" and th_flag == 1):
-        subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
-                         "Не благодарность", 'agenda', 'thanks', 0)
-        #thtrain()
-        thevaluate()
-        set_null()
-    elif(message.text == "👍" and non_flag == 1):
-        subfunctions.add(
-            mtext, './recognized_sets/non_recognized.xlsx',
-            "Нет классификации", 'agenda', 'nonclass', 1)
-        #thtrain()
-        #thevaluate()
-        set_null()
-    elif(message.text == "👎" and non_flag == 1):
-        set_null()
-    elif(message.text == "👎"):
-        boto.send_message(message.chat.id, "😒", parse_mode='html')
-    elif(message.text == "👍"):
-        boto.send_message(message.chat.id, "😊", parse_mode='html')
 
 
 if __name__ == "__main__":
     #boto.polling(none_stop=True)
-    boto.remove_webhook()
-    time.sleep(1)
-    boto.set_webhook(url = WEB_HOOK_URL)
-    app.run(host = APP_HOST, port = APP_PORT, debug = False)
+    core.boto.remove_webhook()
+    core.time.sleep(1)
+    core.boto.set_webhook(url = core.WEB_HOOK_URL)
+    core.app.run(host = core.APP_HOST, port = core.APP_PORT, debug = False)
 
 
 
