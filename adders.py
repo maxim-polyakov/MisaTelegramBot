@@ -1,8 +1,9 @@
 import core
-import messagemonitor
-import bototrain
-import botoclean
+#import messagemonitor
+#import bototrain
+#import botoclean
 #import pyTelegramBotAPI
+
 
 
 

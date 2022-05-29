@@ -1,10 +1,23 @@
 import core
-import messagemonitor
+import adders
 import bototrain
 import botoclean
-import adders
+
+import messagemonitor
+
+
+#______________________________________________________________________________
+
+
+@core.boto.message_handler(commands=['multyclasstrain'])
+def get_user_text(message):
+
+    trainer = core.NLP.Multy()
+    trainer.multyclasstrain('train')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 if __name__ == "__main__":
+    
     #boto.polling(none_stop=True)
     core.boto.remove_webhook()
     core.time.sleep(1)

@@ -1,7 +1,7 @@
 import NLP
 #import pyTelegramBotAPI
 import RPA
-
+import psycopg2
 
 def commandsdesition(boto, message, reply_markup, tstr):
     global command_flag
@@ -16,7 +16,12 @@ def commandsdesition(boto, message, reply_markup, tstr):
     elif NLP.libraries.preprocess_text(inpt[1]) == 'находить':
         RPA.founder(boto, message, reply_markup, NLP.libraries.preprocess_text(preinpt[1]))
         command_flag = 0
+
     else:
+        conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        cur = conn.cursor()
+        c = cur.execute("SELECT * FROM commandset")
+        print (cur.fetchall())
         boto.send_message(message.chat.id, "Команда",
                           parse_mode='html', reply_markup=reply_markup)
 

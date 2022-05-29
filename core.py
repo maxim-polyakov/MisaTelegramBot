@@ -29,7 +29,7 @@ mtext = ""
 API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
 APP_HOST = '127.0.0.1'
 APP_PORT = '9000'
-WEB_HOOK_URL = 'https://b83f-31-204-109-41.eu.ngrok.io'
+WEB_HOOK_URL = 'https://c94e-31-204-109-41.eu.ngrok.io'
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)

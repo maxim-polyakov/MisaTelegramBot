@@ -55,7 +55,7 @@ class Binary:
         self.datafilename = datafilename
         self.recognizeddatafilename = recognizeddatafilename
 
-    def CreateModel_bin(tokenizer):
+    def CreateModel_bin(self, tokenizer):
         optimzer = libraries.Adam(clipvalue=0.5)
         model = libraries.Sequential()
         model.add(libraries.Embedding(len(tokenizer.tokenizer.word_index)+1,

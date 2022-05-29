@@ -1,5 +1,5 @@
 import core
-import messagemonitor
+#import messagemonitor
 
 #______________________________________________________________________________
 
@@ -129,12 +129,3 @@ def get_user_text(message):
 def get_user_text(message):
 
     commandevaluate()
-#______________________________________________________________________________
-
-
-@core.boto.message_handler(commands=['multyclasstrain'])
-def get_user_text(message):
-
-    trainer = core.NLP.Multy()
-    trainer.multyclasstrain('train')
-    core.boto.send_message(message.chat.id, "trained", parse_mode='html')

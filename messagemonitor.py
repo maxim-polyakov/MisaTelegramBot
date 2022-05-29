@@ -1,6 +1,7 @@
 import core
+import bototrain
 
-@core.boto.message_handler()
+@core.boto.message_handler(content_types=['text'])
 def get_user_text(message):
     #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     global hi_flag
@@ -156,21 +157,22 @@ def get_user_text(message):
     if(core.NLP.libraries.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
-        try:
-            neurodesc()
-        except:
-            core.boto.send_message(message.chat.id, 'А?', parse_mode='html')
+        neurodesc()
+      #  try:
+            
+      #  except:
+     #       core.boto.send_message(message.chat.id, 'А?', parse_mode='html')
     elif(message.text == "👍" and hi_flag == 1):
         core.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
                          "Приветствие", 'agenda', 'hi', 1)
         #hitrain()
-        core.hievaluate()
+        bototrain.hievaluate()
         set_null()
     elif(message.text == "👎" and hi_flag == 1):
         core.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
                          "Не приветствие", 'agenda', 'hi', 0)
         #hitrain()
-        core.hievaluate()
+        bototrain.hievaluate()
         set_null()
     elif(message.text == "Вопрос без класса" and qu_flag == 1):
 
@@ -189,7 +191,7 @@ def get_user_text(message):
         core.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Не вопрос", 0)
         #qutrain()
-        core.quevaluate()
+        bototrain.quevaluate()
 
         core.boto.send_message(message.chat.id, "Запомнила", parse_mode='html')
 
@@ -202,8 +204,6 @@ def get_user_text(message):
         
         trainer = core.NLP.Multy()
         trainer.multyclasstrain('evaluate')
-        #quevaluate()
-
         set_null()
     elif(message.text == "Дело" and qu_flag == 1):
         core.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
@@ -213,19 +213,18 @@ def get_user_text(message):
         
         trainer = core.NLP.Multy()
         trainer.multyclasstrain('evaluate')
-        core.qutrain()
+        bototrain.qutrain()
         set_null()
     elif(message.text == "👍" and command_flag == 1):
         core.subfunctions.commandadd(mtext,
                                 './recognized_sets/recognized_command.xlsx',
                                 "Команда", 1)
-
-        core.commandevaluate()
+        bototrain.commandevaluate()
         set_null()
     elif(message.text == "👎" and command_flag == 1):
         core.subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
                                 "Не команда", 0)
-        core.commandevaluate()
+        bototrain.commandevaluate()
         set_null()
     elif(message.text == "👍" and th_flag == 1):
         core.subfunctions.add(
@@ -235,15 +234,12 @@ def get_user_text(message):
     elif(message.text == "👎" and th_flag == 1):
         core.subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
                          "Не благодарность", 'agenda', 'thanks', 0)
-        #thtrain()
-        core.thevaluate()
+        bototrain.thevaluate()
         set_null()
     elif(message.text == "👍" and non_flag == 1):
         core.subfunctions.add(
             mtext, './recognized_sets/non_recognized.xlsx',
             "Нет классификации", 'agenda', 'nonclass', 1)
-        #thtrain()
-        #thevaluate()
         set_null()
     elif(message.text == "👎" and non_flag == 1):
         set_null()
