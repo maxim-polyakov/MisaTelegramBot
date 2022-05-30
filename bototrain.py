@@ -7,8 +7,8 @@ import core
 def hitrain():
     filemodel = './models/binary/himodel.h5'
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
-    datasetfile = './datasets/dataset.xlsx'
-    recognizeddata = './recognized_sets/recognized_hi.xlsx'
+    datasetfile = 'SELECT * FROM hiset'
+    recognizeddata = 'SELECT * FROM recognized_hi'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('hi','train')
 
@@ -16,8 +16,8 @@ def hitrain():
 def hievaluate():
     filemodel = './models/binary/himodel.h5'
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
-    datasetfile = './datasets/dataset.xlsx'
-    recognizeddata = './recognized_sets/recognized_hi.xlsx'
+    datasetfile = 'SELECT * FROM hiset'
+    recognizeddata = 'SELECT * FROM recognized_hi'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('hi','evaluate')
 
@@ -25,8 +25,8 @@ def hievaluate():
 def qutrain():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
-    datasetfile = './datasets/questionset.xlsx'
-    recognizeddata = './recognized_sets/recognized_qu.xlsx'
+    datasetfile = 'SELECT * FROM questionset'
+    recognizeddata = 'SELECT * FROM recognized_qu'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('question','train')
 
@@ -34,8 +34,8 @@ def qutrain():
 def quevaluate():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
-    datasetfile = './datasets/questionset.xlsx'
-    recognizeddata = './recognized_sets/recognized_qu.xlsx'
+    datasetfile = 'SELECT * FROM questionset'
+    recognizeddata = 'SELECT * FROM recognized_qu'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('question','evaluate')
 
@@ -43,8 +43,8 @@ def quevaluate():
 def thtrain():
     filemodel = './models/binary/thmodel.h5'
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
-    datasetfile = './datasets/thanksset.xlsx'
-    recognizeddata = './recognized_sets/recognized_th.xlsx'
+    datasetfile = 'SELECT * FROM thanksset'
+    recognizeddata = 'SELECT * FROM recognized_th'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('thanks','train')
 
@@ -52,8 +52,8 @@ def thtrain():
 def thevaluate():
     filemodel = './models/binary/qumodel.h5'
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
-    datasetfile = './datasets/thanksset.xlsx'
-    recognizeddata = './recognized_sets/recognized_th.xlsx'
+    datasetfile = 'SELECT * FROM thanksset'
+    recognizeddata = 'SELECT * FROM recognized_th'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('thanks','evaluate')
 
@@ -61,8 +61,8 @@ def thevaluate():
 def commandtrain():
     filemodel = './models/binary/commandmodel.h5'
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
-    datasetfile = './datasets/commandset.xlsx'
-    recognizeddata = './recognized_sets/recognized_command.xlsx'
+    datasetfile = 'SELECT * FROM commandset'
+    recognizeddata = 'SELECT * FROM recognized_command'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('command','train')
 
@@ -70,8 +70,8 @@ def commandtrain():
 def commandevaluate():
     filemodel = './models/binary/commandmodel.h5'
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
-    datasetfile = './datasets/commandset.xlsx'
-    recognizeddata = './recognized_sets/recognized_command.xlsx'
+    datasetfile = 'SELECT * FROM commandset'
+    recognizeddata = 'SELECT * FROM recognized_command'
     trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('command','evaluate')
 #______________________________________________________________________________
@@ -129,3 +129,10 @@ def get_user_text(message):
 def get_user_text(message):
 
     commandevaluate()
+    
+@core.boto.message_handler(commands=['multyclasstrain'])
+def get_user_text(message):
+
+    trainer = core.NLP.Multy()
+    trainer.multyclasstrain('train')
+    core.boto.send_message(message.chat.id, "trained", parse_mode='html')

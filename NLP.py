@@ -1,6 +1,7 @@
 import libraries
 import mapa
 from tensorflow.keras.models import load_model
+import psycopg2
 
 
 def showdata(train, target):
@@ -14,7 +15,6 @@ def showdata(train, target):
     green = '#52BE80'
     red = '#EC7063'
     libraries.sns.countplot(train[target], palette=[green, red])
-
 
 def DataCleaner(filename, string):
     train = libraries.pd.read_excel(filename)
@@ -48,12 +48,13 @@ def CommandsetCleaner(filename):
 
 class Binary:
 
-    def __init__(self, filemodelname, tokenizerfilename, datafilename,
-                 recognizeddatafilename):
+    def __init__(self, filemodelname, tokenizerfilename, dataselect,
+                 recognizeddataselect):
+        self.conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
         self.filemodelname = filemodelname
         self.tokenizerfilename = tokenizerfilename
-        self.datafilename = datafilename
-        self.recognizeddatafilename = recognizeddatafilename
+        self.dataselect = dataselect
+        self.recognizeddataselect = recognizeddataselect
 
     def CreateModel_bin(self, tokenizer):
         optimzer = libraries.Adam(clipvalue=0.5)
@@ -75,14 +76,17 @@ class Binary:
         return model
 
     def binary(self, target, mode):
-        self.recognizedtrain = libraries.pd.read_excel(
-            self.recognizeddatafilename)
-        self.recognizedtrain.text = self.recognizedtrain.text.astype(str)
-
-        train = libraries.pd.read_excel(self.datafilename)
+        
+       
+        recognizedtrain = libraries.pd.read_sql(self.recognizeddataselect, self.conn)
+        recognizedtrain.text = recognizedtrain.text.astype(str)
+        
+        
+        
+        train = libraries.pd.read_sql(self.dataselect, self.conn)
         train.text = train.text.astype(str)
-
-        df = libraries.pd.concat([train, self.recognizedtrain])
+        
+        df = libraries.pd.concat([train,recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
         train = train.drop_duplicates()
@@ -124,8 +128,8 @@ class Multy:
     def __init__(self):
         self.filemodelname = './models/multy/multyclassmodel.h5'
         self.tokenizerfilename = './tokenizers/multy/multyclasstokenizer.pickle'
-        self.datafilename = './datasets/multyclasesset.xlsx'
-        self.recognizeddatafilename = './recognized_sets/recognized_multyclass.xlsx'
+        self.datafilename = 'SELECT * FROM multyclasesset'
+        self.recognizeddatafilename = 'SELECT * FROM recognized_multyclass'
 
     def CreateModel_mul(self, tokenizer, n_clases):
         model = libraries.Sequential()
@@ -155,6 +159,7 @@ class Multy:
         train['questionclass'] = train['questionclass'].astype(int)
         train = train.drop_duplicates()
         target = 'questionclass'
+        
         showdata(train, target)
         X_train, X_val, y_train, y_val = libraries.train_test_split(
             train, train['questionclass'], test_size=0.2, random_state=64)

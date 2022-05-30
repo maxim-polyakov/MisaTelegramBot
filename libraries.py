@@ -1,6 +1,6 @@
 from keras.layers import Embedding, LSTM, Dense, Dropout, GRU, Input
 from keras.models import Sequential
-import sklearn.metrics
+
 from nltk.corpus import stopwords
 import pickle as p
 import keras
