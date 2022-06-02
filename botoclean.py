@@ -43,3 +43,8 @@ def get_user_text(message):
 
 
 
+@core.boto.message_handler(commands=['weatherclean'])
+def get_user_text(message):
+    print('here')
+    core.NLP.DataCleaner('./datasets/weather.xlsx', 'questionclass')
+    core.boto.send_message(message.chat.id, "cleaned", parse_mode='html')

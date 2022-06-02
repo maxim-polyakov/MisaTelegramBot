@@ -1,7 +1,7 @@
 import core
 import bototrain
 
-@core.boto.message_handler(content_types=['text'])
+@core.boto.message_handler(content_types = ['text'])
 def get_user_text(message):
     #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     global hi_flag

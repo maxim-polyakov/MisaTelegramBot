@@ -126,6 +126,7 @@ class Binary:
 class Multy:
 
     def __init__(self):
+        self.conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
         self.filemodelname = './models/multy/multyclassmodel.h5'
         self.tokenizerfilename = './tokenizers/multy/multyclasstokenizer.pickle'
         self.datafilename = 'SELECT * FROM multyclasesset'
@@ -149,10 +150,10 @@ class Multy:
 
     def multyclasstrain(self, mode):
 
-        train = libraries.pd.read_excel(self.datafilename)
+        train = libraries.pd.read_sql(self.datafilename, self.conn)
         train.text = train.text.astype(str)
-        recognizedtrain = libraries.pd.read_excel(
-            self.recognizeddatafilename)
+        recognizedtrain = libraries.pd.read_sql(
+            self.recognizeddatafilename, self.conn)
         recognizedtrain.text = recognizedtrain.text.astype(str)
         df = libraries.pd.concat([train, recognizedtrain])
         train = df[~df['questionclass'].isna()]
