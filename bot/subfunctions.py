@@ -4,7 +4,7 @@ import NLP
 
 def add(text, file, string, agenda, classification, classtype):
     read = pd.read_excel(file)
-    data = {'text': NLP.libraries.preprocess_text(
+    data = {'text': NLP.NLP.preprocess_text(
         text), agenda: string, classification: classtype}
     df = pd.DataFrame(read)
     new_row = pd.Series(data)
@@ -14,7 +14,7 @@ def add(text, file, string, agenda, classification, classtype):
 
 def quadd(text, file, string, isqu):
     read = pd.read_excel(file)
-    data = {'text': NLP.libraries.specialpreprocess_text(
+    data = {'text': NLP.NLP.specialpreprocess_text(
         text), 'agenda': string, 'question': isqu}
     df = pd.DataFrame(read)
     new_row = pd.Series(data)
@@ -23,7 +23,7 @@ def quadd(text, file, string, isqu):
     
 def commandadd(text, file, string, isqu):
     read = pd.read_excel(file)
-    data = {'text': NLP.libraries.commandpreprocess_text(
+    data = {'text': NLP.NLP.commandpreprocess_text(
         text), 'agenda': string, 'command': isqu}
     df = pd.DataFrame(read)
     new_row = pd.Series(data)

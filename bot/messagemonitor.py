@@ -1,7 +1,7 @@
-import core
-import bototrain
+import bot
 
-@core.boto.message_handler(content_types = ['text'])
+
+@bot.boto.message_handler(content_types = ['text'])
 def get_user_text(message):
     #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     global hi_flag
@@ -26,30 +26,30 @@ def get_user_text(message):
         mtext = ""
 
     def button():
-        markup = core.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = core.types.KeyboardButton("👍")
-        btn2 = core.types.KeyboardButton("👎")
+        markup = bot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = bot.types.KeyboardButton("👍")
+        btn2 = bot.types.KeyboardButton("👎")
         markup.add(btn1, btn2)
         return markup
 
     def button2():
-        markup = core.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = core.types.KeyboardButton("Вопрос без класса")
-        btn2 = core.types.KeyboardButton("Погода")
-        btn3 = core.types.KeyboardButton("Дело")
-        btn4 = core.types.KeyboardButton("Не вопрос")
+        markup = bot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = bot.types.KeyboardButton("Вопрос без класса")
+        btn2 = bot.types.KeyboardButton("Погода")
+        btn3 = bot.types.KeyboardButton("Дело")
+        btn4 = bot.types.KeyboardButton("Не вопрос")
         markup.add(btn1, btn2, btn3, btn4)
         return markup
 
     def button3():
-        markup = core.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = core.types.KeyboardButton("Приветствие")
-        btn2 = core.types.KeyboardButton("Вопрос без класса")
-        btn3 = core.types.KeyboardButton("Погода")
-        btn4 = core.types.KeyboardButton("Дело")
-        btn5 = core.types.KeyboardButton("Не вопрос")
-        btn6 = core.types.KeyboardButton("Команда")
-        btn7 = core.types.KeyboardButton("Благодарность")
+        markup = bot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = bot.types.KeyboardButton("Приветствие")
+        btn2 = bot.types.KeyboardButton("Вопрос без класса")
+        btn3 = bot.types.KeyboardButton("Погода")
+        btn4 = bot.types.KeyboardButton("Дело")
+        btn5 = bot.types.KeyboardButton("Не вопрос")
+        btn6 = bot.types.KeyboardButton("Команда")
+        btn7 = bot.types.KeyboardButton("Благодарность")
         markup.add(btn1, btn2, btn3, btn4)
         return markup
 
@@ -62,24 +62,24 @@ def get_user_text(message):
         global weater_flag
         global b_flag
         global qnon_flag
-        if core.prediction.Predict(text, core.mapa.himapa,
+        if bot.prediction.Predict(text, bot.mapa.himapa,
                               './models/binary/himodel.h5',
                               './tokenizers/binary/hitokenizer.pickle',
                               '') == "Приветствие":
 
-            core.boto.send_message(
-                message.chat.id, core.mapa.randanswhi(), parse_mode='html', reply_markup=button())
+            bot.boto.send_message(
+                message.chat.id, bot.mapa.randanswhi(), parse_mode='html', reply_markup=button())
 
             set_null()
             hi_flag = 1
             mtext = tstr
-        elif(core.prediction.Predict(text, core.mapa.qumapa,
+        elif(bot.prediction.Predict(text, bot.mapa.qumapa,
                                 './models/binary/qumodel.h5',
                                 './tokenizers/binary/qutokenizer.pickle',
                                 'qu') == "Вопрос"):
 
-            if(core.prediction.MultyPpredict(text) == "Дело"):
-                core.boto.send_message(
+            if(bot.prediction.MultyPpredict(text) == "Дело"):
+                bot.boto.send_message(
                     message.chat.id, "Я в порядке", parse_mode='html',
                     reply_markup=button2())
 
@@ -88,8 +88,8 @@ def get_user_text(message):
                 qu_flag = 1
                 mtext = tstr
 
-            elif(core.prediction.MultyPpredict(text) == "Погода"):
-                core.boto.send_message(
+            elif(bot.prediction.MultyPpredict(text) == "Погода"):
+                bot.boto.send_message(
                     message.chat.id, "Погода норм", parse_mode='html',
                     reply_markup=button2())
 
@@ -99,7 +99,7 @@ def get_user_text(message):
                 mtext = tstr
 
             else:
-                core.boto.send_message(
+                bot.boto.send_message(
                     message.chat.id, "Вопрос без классификации",
                     parse_mode='html', reply_markup=button2())
 
@@ -108,25 +108,25 @@ def get_user_text(message):
                 qu_flag = 1
                 mtext = tstr
 
-        elif(core.prediction.Predict(text, core.mapa.commandmapa,
+        elif(bot.prediction.Predict(text, bot.mapa.commandmapa,
                                 './models/binary/commandmodel.h5',
                                 './tokenizers/binary/thtokenizer.pickle',
                                 'command') == "Команда"):
 
             reply_markup = button()
 
-            core.commands.commandsdesition(core.boto, message, reply_markup, tstr)
+            bot.commands.commandsdesition(bot.boto, message, reply_markup, tstr)
 
             set_null()
             command_flag = 1
             mtext = tstr
 
-        elif(core.prediction.Predict(text, core.mapa.thmapa,
+        elif(bot.prediction.Predict(text, bot.mapa.thmapa,
                                 './models/binary/thmodel.h5',
                                 './tokenizers/binary/thtokenizer.pickle',
                                 '') == "Благодарность"):
 
-            core.boto.send_message(message.chat.id, "Не за что",
+            bot.boto.send_message(message.chat.id, "Не за что",
                               parse_mode='html', reply_markup=button())
 
             set_null()
@@ -134,7 +134,7 @@ def get_user_text(message):
             mtext = tstr
 
         else:
-            core.boto.send_message(
+            bot.boto.send_message(
                 message.chat.id, "Нет классификации", parse_mode='html',
                 reply_markup=button())
 
@@ -147,103 +147,103 @@ def get_user_text(message):
 
     text = []
     print(message.text)
-    read = core.pd.read_excel('./validset/validset.xlsx')
+    read = bot.pd.read_excel('./validset/validset.xlsx')
     for txt in text:
-        data = {'text': core.NLP.libraries.preprocess_text(txt), 'agenda': ''}
-        df = core.pd.DataFrame(read)
-        new_row = core.pd.Series(data)
+        data = {'text': bot.NLP.preprocess_text(txt), 'agenda': ''}
+        df = bot.pd.DataFrame(read)
+        new_row = bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
         df.to_excel('./validset/validset.xlsx', index=False)
-    if(core.NLP.libraries.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
+    if(bot.NLP.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
         neurodesc()
       #  try:
             
       #  except:
-     #       core.boto.send_message(message.chat.id, 'А?', parse_mode='html')
+     #       bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
     elif(message.text == "👍" and hi_flag == 1):
-        core.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
+        bot.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
                          "Приветствие", 'agenda', 'hi', 1)
         #hitrain()
-        bototrain.hievaluate()
+        bot.hievaluate()
         set_null()
     elif(message.text == "👎" and hi_flag == 1):
-        core.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
+        bot.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
                          "Не приветствие", 'agenda', 'hi', 0)
         #hitrain()
-        bototrain.hievaluate()
+        bot.hievaluate()
         set_null()
     elif(message.text == "Вопрос без класса" and qu_flag == 1):
 
-        core.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
                          "Нет классификации", 'agenda', 'questionclass', 0)
-        core.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
         
-        trainer = core.NLP.Multy()
+        trainer = bot.NLP.Multy()
         trainer.multyclasstrain('evaluate')
         #quevaluate()
         set_null()
     elif(message.text == "Не вопрос" and qu_flag == 1):
-        core.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
                          "Нет классификации", 'agenda', 'questionclass', 0)
-        core.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Не вопрос", 0)
         #qutrain()
-        bototrain.quevaluate()
+        bot.quevaluate()
 
-        core.boto.send_message(message.chat.id, "Запомнила", parse_mode='html')
+        bot.boto.send_message(message.chat.id, "Запомнила", parse_mode='html')
 
         set_null()
     elif(message.text == "Погода" and qu_flag == 1):
-        core.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
                          "Погода", 'agenda', 'questionclass', 1)
-        core.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
         
-        trainer = core.NLP.Multy()
+        trainer = bot.NLP.Multy()
         trainer.multyclasstrain('evaluate')
         set_null()
     elif(message.text == "Дело" and qu_flag == 1):
-        core.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
                          "Дело", 'agenda', 'questionclass', 1)
-        core.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
                            "Вопрос", 1)
         
-        trainer = core.NLP.Multy()
+        trainer = bot.NLP.Multy()
         trainer.multyclasstrain('evaluate')
-        bototrain.qutrain()
+        bot.qutrain()
         set_null()
     elif(message.text == "👍" and command_flag == 1):
-        core.subfunctions.commandadd(mtext,
+        bot.subfunctions.commandadd(mtext,
                                 './recognized_sets/recognized_command.xlsx',
                                 "Команда", 1)
-        bototrain.commandevaluate()
+        bot.commandevaluate()
         set_null()
     elif(message.text == "👎" and command_flag == 1):
-        core.subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
+        bot.subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
                                 "Не команда", 0)
-        bototrain.commandevaluate()
+        bot.commandevaluate()
         set_null()
     elif(message.text == "👍" and th_flag == 1):
-        core.subfunctions.add(
+        bot.subfunctions.add(
             mtext, './recognized_sets/recognized_th.xlsx',
             "Благодарность", 'agenda', 'thanks', 1)
         set_null()
     elif(message.text == "👎" and th_flag == 1):
-        core.subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
+        bot.subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
                          "Не благодарность", 'agenda', 'thanks', 0)
-        bototrain.thevaluate()
+        bot.thevaluate()
         set_null()
     elif(message.text == "👍" and non_flag == 1):
-        core.subfunctions.add(
+        bot.subfunctions.add(
             mtext, './recognized_sets/non_recognized.xlsx',
             "Нет классификации", 'agenda', 'nonclass', 1)
         set_null()
     elif(message.text == "👎" and non_flag == 1):
         set_null()
     elif(message.text == "👎"):
-        core.boto.send_message(message.chat.id, "😒", parse_mode='html')
+        bot.boto.send_message(message.chat.id, "😒", parse_mode='html')
     elif(message.text == "👍"):
-        core.boto.send_message(message.chat.id, "😊", parse_mode='html')
+        bot.boto.send_message(message.chat.id, "😊", parse_mode='html')

@@ -1,13 +1,7 @@
-import core
-
-import adders
-import botoclean
-import bototrain
-
-
-import messagemonitor
-
-
+import bot
+from bot import botoclean
+from bot import bototrain
+from bot import messagemonitor
 #______________________________________________________________________________
 
 
@@ -16,10 +10,10 @@ import messagemonitor
 if __name__ == "__main__":
     
     #boto.polling(none_stop=True)
-    core.boto.remove_webhook()
-    core.time.sleep(1)
-    core.boto.set_webhook(url = core.WEB_HOOK_URL)
-    core.app.run(host = core.APP_HOST, port = core.APP_PORT, debug = False)
+    bot.boto.remove_webhook()
+    bot.time.sleep(1)
+    bot.boto.set_webhook(url = bot.WEB_HOOK_URL)
+    bot.app.run(host = bot.APP_HOST, port = bot.APP_PORT, debug = False)
 
 
 

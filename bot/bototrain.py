@@ -1,4 +1,4 @@
-import core
+import bot
 #import messagemonitor
 
 #______________________________________________________________________________
@@ -9,7 +9,7 @@ def hitrain():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = 'SELECT * FROM hiset'
     recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('hi','train')
 
 
@@ -18,7 +18,7 @@ def hievaluate():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = 'SELECT * FROM hiset'
     recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('hi','evaluate')
 
 
@@ -27,7 +27,7 @@ def qutrain():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = 'SELECT * FROM questionset'
     recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('question','train')
 
 
@@ -36,7 +36,7 @@ def quevaluate():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = 'SELECT * FROM questionset'
     recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('question','evaluate')
 
 
@@ -45,7 +45,7 @@ def thtrain():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = 'SELECT * FROM thanksset'
     recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('thanks','train')
 
 
@@ -54,7 +54,7 @@ def thevaluate():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = 'SELECT * FROM thanksset'
     recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('thanks','evaluate')
 
 
@@ -63,7 +63,7 @@ def commandtrain():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = 'SELECT * FROM commandset'
     recognizeddata = 'SELECT * FROM recognized_command'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('command','train')
 
 
@@ -72,67 +72,67 @@ def commandevaluate():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = 'SELECT * FROM commandset'
     recognizeddata = 'SELECT * FROM recognized_command'
-    trainer = core.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
+    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
     trainer.binary('command','evaluate')
 #______________________________________________________________________________
 
 
-@core.boto.message_handler(commands=['hitrain'])
+@bot.boto.message_handler(commands=['hitrain'])
 def get_user_text(message):
 
     hitrain()
-    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@core.boto.message_handler(commands=['qutrain'])
+@bot.boto.message_handler(commands=['qutrain'])
 def get_user_text(message):
 
     qutrain()
-    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@core.boto.message_handler(commands=['thtrain'])
+@bot.boto.message_handler(commands=['thtrain'])
 def get_user_text(message):
 
     thtrain()
-    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@core.boto.message_handler(commands=['commandtrain'])
+@bot.boto.message_handler(commands=['commandtrain'])
 def get_user_text(message):
 
     commandtrain()
-    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 #______________________________________________________________________________
 
 
-@core.boto.message_handler(commands=['hievaluate'])
+@bot.boto.message_handler(commands=['hievaluate'])
 def get_user_text(message):
 
     hievaluate()
 
 
-@core.boto.message_handler(commands=['quevaluate'])
+@bot.boto.message_handler(commands=['quevaluate'])
 def get_user_text(message):
 
     quevaluate()
-    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
-@core.boto.message_handler(commands=['thevaluate'])
+@bot.boto.message_handler(commands=['thevaluate'])
 def get_user_text(message):
 
     thevaluate()
 
 
-@core.boto.message_handler(commands=['commandevaluate'])
+@bot.boto.message_handler(commands=['commandevaluate'])
 def get_user_text(message):
 
     commandevaluate()
     
-@core.boto.message_handler(commands=['multyclasstrain'])
+@bot.boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
-    trainer = core.NLP.Multy()
+    trainer = bot.NLP.Multy()
     trainer.multyclasstrain('train')
-    core.boto.send_message(message.chat.id, "trained", parse_mode='html')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')

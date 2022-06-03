@@ -1,9 +1,9 @@
 import telebot
 import pandas as pd
-import NLP
-import prediction
-import mapa
-import subfunctions
+from NLP import NLP
+from NLP import prediction
+from NLP import mapa
+#import subfunctions
 from telebot import types
 import config
 import commands
@@ -14,6 +14,8 @@ import time
 import flask
 #import requests
 import logging
+from bot import *
+
 
 hi_flag = 0
 qu_flag = 0
@@ -29,7 +31,7 @@ mtext = ""
 API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
 APP_HOST = '127.0.0.1'
 APP_PORT = '9000'
-WEB_HOOK_URL = 'https://8661-31-204-109-41.eu.ngrok.io'
+WEB_HOOK_URL = 'https://2d66-31-204-109-41.eu.ngrok.io'
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.DEBUG)
@@ -44,4 +46,4 @@ def webhook():
         boto.process_new_updates([update])
         return ''
     else:
-        flask.abort(403)
+        bot.flask.abort(403)
