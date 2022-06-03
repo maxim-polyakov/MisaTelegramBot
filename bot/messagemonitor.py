@@ -1,5 +1,17 @@
 import bot
+from bot import subfunctions
+from bot import bototrain
 
+
+hi_flag = 0
+qu_flag = 0
+command_flag = 0
+non_flag = 0
+th_flag = 0
+weater_flag = 0
+b_flag = 0
+qnon_flag = 0
+mtext = ""
 
 @bot.boto.message_handler(content_types = ['text'])
 def get_user_text(message):
@@ -157,28 +169,28 @@ def get_user_text(message):
     if(bot.NLP.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
-        neurodesc()
-      #  try:
-            
-      #  except:
-     #       bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
+        
+        try:
+            neurodesc()
+        except:
+            bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
     elif(message.text == "👍" and hi_flag == 1):
-        bot.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
+        subfunctions.add(mtext, 'recognized_hi',
                          "Приветствие", 'agenda', 'hi', 1)
         #hitrain()
-        bot.hievaluate()
+        bototrain.hievaluate()
         set_null()
     elif(message.text == "👎" and hi_flag == 1):
-        bot.subfunctions.add(mtext, './recognized_sets/recognized_hi.xlsx',
+        subfunctions.add(mtext, 'recognized_hi',
                          "Не приветствие", 'agenda', 'hi', 0)
         #hitrain()
-        bot.hievaluate()
+        bototrain.hievaluate()
         set_null()
     elif(message.text == "Вопрос без класса" and qu_flag == 1):
 
-        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        subfunctions.add(mtext, 'recognized_multyclass',
                          "Нет классификации", 'agenda', 'questionclass', 0)
-        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
         
         trainer = bot.NLP.Multy()
@@ -186,59 +198,59 @@ def get_user_text(message):
         #quevaluate()
         set_null()
     elif(message.text == "Не вопрос" and qu_flag == 1):
-        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        subfunctions.add(mtext, 'recognized_multyclass',
                          "Нет классификации", 'agenda', 'questionclass', 0)
-        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        subfunctions.quadd(mtext, 'recognized_qu',
                            "Не вопрос", 0)
         #qutrain()
-        bot.quevaluate()
+        bototrain.quevaluate()
 
         bot.boto.send_message(message.chat.id, "Запомнила", parse_mode='html')
 
         set_null()
     elif(message.text == "Погода" and qu_flag == 1):
-        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        subfunctions.add(mtext, 'recognized_multyclass',
                          "Погода", 'agenda', 'questionclass', 1)
-        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
         
         trainer = bot.NLP.Multy()
         trainer.multyclasstrain('evaluate')
         set_null()
     elif(message.text == "Дело" and qu_flag == 1):
-        bot.subfunctions.add(mtext, './recognized_sets/recognized_multyclass.xlsx',
+        subfunctions.add(mtext, 'recognized_multyclass',
                          "Дело", 'agenda', 'questionclass', 1)
-        bot.subfunctions.quadd(mtext, './recognized_sets/recognized_qu.xlsx',
+        subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
         
         trainer = bot.NLP.Multy()
         trainer.multyclasstrain('evaluate')
-        bot.qutrain()
+        bototrain.qutrain()
         set_null()
     elif(message.text == "👍" and command_flag == 1):
-        bot.subfunctions.commandadd(mtext,
-                                './recognized_sets/recognized_command.xlsx',
+        subfunctions.commandadd(mtext,
+                                'recognized_command',
                                 "Команда", 1)
-        bot.commandevaluate()
+        bototrain.commandevaluate()
         set_null()
     elif(message.text == "👎" and command_flag == 1):
-        bot.subfunctions.commandadd(mtext, './recognized_sets/recognized_command.xlsx',
+        subfunctions.commandadd(mtext, 'recognized_command',
                                 "Не команда", 0)
-        bot.commandevaluate()
+        bototrain.commandevaluate()
         set_null()
     elif(message.text == "👍" and th_flag == 1):
-        bot.subfunctions.add(
-            mtext, './recognized_sets/recognized_th.xlsx',
-            "Благодарность", 'agenda', 'thanks', 1)
+        subfunctions.add(
+            mtext, 'recognized_th',
+            "Благодарность", 'agwwenda', 'thanks', 1)
         set_null()
     elif(message.text == "👎" and th_flag == 1):
-        bot.subfunctions.add(mtext, './recognized_sets/r  ecognized_th.xlsx',
+        subfunctions.add(mtext, 'recognized_th',
                          "Не благодарность", 'agenda', 'thanks', 0)
-        bot.thevaluate()
+        bototrain.thevaluate()
         set_null()
     elif(message.text == "👍" and non_flag == 1):
-        bot.subfunctions.add(
-            mtext, './recognized_sets/non_recognized.xlsx',
+        subfunctions.add(
+            mtext, 'non_recognized',
             "Нет классификации", 'agenda', 'nonclass', 1)
         set_null()
     elif(message.text == "👎" and non_flag == 1):

@@ -1,4 +1,5 @@
 import bot
+from bot import adders
 from bot import botoclean
 from bot import bototrain
 from bot import messagemonitor

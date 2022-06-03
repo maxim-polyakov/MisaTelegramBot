@@ -17,15 +17,7 @@ import logging
 from bot import *
 
 
-hi_flag = 0
-qu_flag = 0
-command_flag = 0
-non_flag = 0
-th_flag = 0
-weater_flag = 0
-b_flag = 0
-qnon_flag = 0
-mtext = ""
+
 
 #______________________________________________________________________________
 API_TOKEN = '5301739662:AAGWfetEsSQNUUiykxU9WL0pL5D2-9imlec'
