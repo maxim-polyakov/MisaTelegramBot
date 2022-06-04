@@ -8,6 +8,94 @@ MAX_SEQUENCE_LENGTH = 33
 russian_stopwords = NLP.stopwords.words("russian")
 english_stopwords = NLP.stopwords.words("english")
 
+def showdata(train, target):
+    key_metrics = {'samples': len(train),
+                   'samples_per_class': train[target].value_counts().median(),
+                   'median_of_samples_lengths': NLP.np.median(train['text'].str.split().map(lambda x: len(x))),
+                   }
+    key_metrics = NLP.pd.DataFrame.from_dict(
+        key_metrics, orient='index').reset_index()
+    key_metrics.columns = ['metric', 'value']
+    green = '#52BE80'
+    red = '#EC7063'
+    NLP.sns.countplot(train[target], palette=[green, red])
+
+def remove_punctuation(text):
+    
+    translator = str.maketrans('', '', NLP.string.punctuation)
+    return text.translate(translator)
+def preprocess_text(text):
+    try:
+        tokens = str(text)
+        tokens = mystem.lemmatize(text.lower())
+        tokens = [token for token in tokens if token not in russian_stopwords
+                  and token != " "
+                  and token.strip() not in NLP.punctuation]
+        tokens = [token for token in tokens if token not in english_stopwords]
+
+        text = " ".join(tokens).rstrip('\n')
+        pattern3 = r"[\d]"
+        pattern2 = "[.]"
+        text = NLP.re.sub(pattern3, "", text)
+        text = NLP.re.sub(pattern2, "", text)
+        text = remove_punctuation(text)
+        return text
+    except:
+        return "except"
+
+def specialpreprocess_text(text):
+    try:
+        tokens = str(text)
+        tokens = mystem.lemmatize(text.lower())
+        pattern2 = "[?]"
+        pattern3 = r"[\d]"
+        text = NLP.re.sub(pattern2, "", text)
+        text = NLP.re.sub(pattern3, "", text)
+        text = remove_punctuation(text)
+        text = "".join(tokens).rstrip('\n')
+        return text
+    except:
+        return "except"
+
+def commandpreprocess_text(text):
+    try:
+        tokens = text.lower().rstrip('\n')
+        text = "".join(tokens)
+
+        return text
+    except:
+        return "except"
+
+
+
+def DataCleaner(filename, string):
+    train = NLP.pd.read_excel(filename)
+    train.text = train.text.astype(str)
+    df = NLP.pd.concat([train])
+    df['text'] = df['text'].apply(preprocess_text)
+    train = df[~df[string].isna()]
+    train[string] = train[string].astype(int)
+    train.to_excel(filename, index=False)
+
+def QuestionsetCleaner(filename):
+    train = NLP.pd.read_excel(filename)
+    train.text = train.text.astype(str)
+    df = NLP.pd.concat([train])
+    df['text'] = df['text'].apply(specialpreprocess_text)
+    train = df[~df['question'].isna()]
+    train['question'] = train['question'].astype(int)
+    train.to_excel(filename, index=False)
+
+def CommandsetCleaner(filename):
+    train = NLP.pd.read_excel(filename)
+    train.text = train.text.astype(str)
+    df = NLP.pd.concat([train])
+    df['text'] = df['text'].apply(commandpreprocess_text)
+    train = df[~df['command'].isna()]
+    train['command'] = train['command'].astype(int)
+    train.to_excel(filename, index=False)
+
+
 class CustomTokenizer:
     def __init__(self, train_texts):
         self.train_texts = train_texts
@@ -31,98 +119,6 @@ class CustomTokenizer:
         tweets = NLP.pad_sequences(
             tweets, maxlen=self.max_length, truncating='post', padding='post')
         return tweets
-
-
-def remove_punctuation(text):
-    translator = str.maketrans('', '', NLP.string.punctuation)
-    return text.translate(translator)
-
-
-def preprocess_text(text):
-    try:
-        tokens = str(text)
-        tokens = mystem.lemmatize(text.lower())
-        tokens = [token for token in tokens if token not in russian_stopwords
-                  and token != " "
-                  and token.strip() not in NLP.punctuation]
-        tokens = [token for token in tokens if token not in english_stopwords]
-
-        text = " ".join(tokens).rstrip('\n')
-        pattern3 = r"[\d]"
-        pattern2 = "[.]"
-        text = NLP.re.sub(pattern3, "", text)
-        text = NLP.re.sub(pattern2, "", text)
-        text = remove_punctuation(text)
-        return text
-    except:
-        return "except"
-
-
-def specialpreprocess_text(text):
-    try:
-        tokens = str(text)
-        tokens = mystem.lemmatize(text.lower())
-        pattern2 = "[?]"
-        pattern3 = r"[\d]"
-        text = NLP.re.sub(pattern2, "", text)
-        text = NLP.re.sub(pattern3, "", text)
-        text = remove_punctuation(text)
-        text = "".join(tokens).rstrip('\n')
-        return text
-    except:
-        return "except"
-
-
-def commandpreprocess_text(text):
-    try:
-        tokens = text.lower().rstrip('\n')
-        text = "".join(tokens)
-
-        return text
-    except:
-        return "except"
-
-def showdata(train, target):
-    key_metrics = {'samples': len(train),
-                   'samples_per_class': train[target].value_counts().median(),
-                   'median_of_samples_lengths': NLP.np.median(train['text'].str.split().map(lambda x: len(x))),
-                   }
-    key_metrics = NLP.pd.DataFrame.from_dict(
-        key_metrics, orient='index').reset_index()
-    key_metrics.columns = ['metric', 'value']
-    green = '#52BE80'
-    red = '#EC7063'
-    NLP.sns.countplot(train[target], palette=[green, red])
-
-def DataCleaner(filename, string):
-    train = NLP.pd.read_excel(filename)
-    train.text = train.text.astype(str)
-    df = NLP.pd.concat([train])
-    df['text'] = df['text'].apply(preprocess_text)
-    train = df[~df[string].isna()]
-    train[string] = train[string].astype(int)
-    train.to_excel(filename, index=False)
-
-
-def QuestionsetCleaner(filename):
-    train = NLP.pd.read_excel(filename)
-    train.text = train.text.astype(str)
-    df = NLP.pd.concat([train])
-    df['text'] = df['text'].apply(specialpreprocess_text)
-    train = df[~df['question'].isna()]
-    train['question'] = train['question'].astype(int)
-    train.to_excel(filename, index=False)
-
-
-def CommandsetCleaner(filename):
-    train = NLP.pd.read_excel(filename)
-    train.text = train.text.astype(str)
-    df = NLP.pd.concat([train])
-    df['text'] = df['text'].apply(commandpreprocess_text)
-    train = df[~df['command'].isna()]
-    train['command'] = train['command'].astype(int)
-    train.to_excel(filename, index=False)
-
 
 class Binary:
 
