@@ -1,7 +1,7 @@
 import bot
 #import messagemonitor
 
-#______________________________________________________________________________
+# ______________________________________________________________________________
 
 
 def hitrain():
@@ -9,8 +9,9 @@ def hitrain():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = 'SELECT * FROM hiset'
     recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('hi','train')
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('hi', 'train')
 
 
 def hievaluate():
@@ -18,8 +19,9 @@ def hievaluate():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = 'SELECT * FROM hiset'
     recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('hi','evaluate')
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('hi', 'evaluate')
 
 
 def qutrain():
@@ -27,8 +29,9 @@ def qutrain():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = 'SELECT * FROM questionset'
     recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('question','train')
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('question', 'train')
 
 
 def quevaluate():
@@ -36,17 +39,19 @@ def quevaluate():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = 'SELECT * FROM questionset'
     recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('question','evaluate')
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('question', 'evaluate')
 
 
 def thtrain():
     filemodel = './models/binary/thmodel.h5'
-    filetokenizer = './tokenizers/binary/thtokenizer.pickle'
+    filetokenizer = '../tokenizers/binary/thtokenizer.pickle'
     datasetfile = 'SELECT * FROM thanksset'
     recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('thanks','train')
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('thanks', 'train')
 
 
 def thevaluate():
@@ -54,8 +59,9 @@ def thevaluate():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = 'SELECT * FROM thanksset'
     recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('thanks','evaluate')
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('thanks', 'evaluate')
 
 
 def commandtrain():
@@ -63,8 +69,9 @@ def commandtrain():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = 'SELECT * FROM commandset'
     recognizeddata = 'SELECT * FROM recognized_command'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('command','train')
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('command', 'train')
 
 
 def commandevaluate():
@@ -72,9 +79,10 @@ def commandevaluate():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = 'SELECT * FROM commandset'
     recognizeddata = 'SELECT * FROM recognized_command'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer, datasetfile, recognizeddata)
-    trainer.binary('command','evaluate')
-#______________________________________________________________________________
+    trainer = bot.NLP.Binary(filemodel, filetokenizer,
+                             datasetfile, recognizeddata)
+    trainer.train('command', 'evaluate')
+# ______________________________________________________________________________
 
 
 @bot.boto.message_handler(commands=['hitrain'])
@@ -103,7 +111,7 @@ def get_user_text(message):
 
     commandtrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
-#______________________________________________________________________________
+# ______________________________________________________________________________
 
 
 @bot.boto.message_handler(commands=['hievaluate'])
@@ -129,10 +137,11 @@ def get_user_text(message):
 def get_user_text(message):
 
     commandevaluate()
-    
+
+
 @bot.boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
     trainer = bot.NLP.Multy()
-    trainer.multyclasstrain('train')
+    trainer.train('train')
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')

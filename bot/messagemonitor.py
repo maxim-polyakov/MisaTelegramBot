@@ -166,14 +166,15 @@ def get_user_text(message):
         new_row = bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
         df.to_excel('./validset/validset.xlsx', index=False)
-    if(bot.NLP.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
+    pr = bot.NLP.TextPreprocessers.CommonPreprocessing()
+    if(pr.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
-        
-        try:
-            neurodesc()
-        except:
-            bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
+        neurodesc()
+      #  try:
+            
+     #   except:
+     #       bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
     elif(message.text == "👍" and hi_flag == 1):
         subfunctions.add(mtext, 'recognized_hi',
                          "Приветствие", 'agenda', 'hi', 1)
@@ -215,7 +216,7 @@ def get_user_text(message):
                            "Вопрос", 1)
         
         trainer = bot.NLP.Multy()
-        trainer.multyclasstrain('evaluate')
+        trainer.train('evaluate')
         set_null()
     elif(message.text == "Дело" and qu_flag == 1):
         subfunctions.add(mtext, 'recognized_multyclass',

@@ -7,15 +7,18 @@ def preprocessing(inpt, prep):
     inp = []
     if(prep == 'qu'):
         for i in inpt:
-            inp.append(NLP.NLP.specialpreprocess_text(i))
+            pr = NLP.TextPreprocessers.QuestionPreprocessing()
+            inp.append(pr.preprocess_text(i))
             print(inp)
     elif(prep == 'command'):
         for i in inpt:
-            inp.append(NLP.NLP.commandpreprocess_text(i))
+            pr = NLP.TextPreprocessers.CommandPreprocessing()
+            inp.append(pr.preprocess_text(i))
             print(inp)
     else:
         for i in inpt:
-            inp.append(NLP.NLP.preprocess_text(i))
+            pr = NLP.TextPreprocessers.CommonPreprocessing()
+            inp.append(pr.preprocess_text(i))
             print(inp)
     return inp
 
@@ -42,8 +45,9 @@ def MultyPpredict(inpt):
     tmap = NLP.mapa.multymapa
     model = load_model('./models/multy/multyclassmodel.h5')
     inp = []
+    pr = NLP.TextPreprocessers.CommonPreprocessing()
     for i in inpt:
-        inp.append(NLP.NLP.preprocess_text(i))
+        inp.append(pr.preprocess_text(i))
     print(inp)
     inn = []
     inn.append(inp.pop())
