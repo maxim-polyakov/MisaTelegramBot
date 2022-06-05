@@ -41,6 +41,7 @@ class CommonPreprocessing(Preprocessing):
             text = NLP.re.sub(pattern3, "", text)
             text = NLP.re.sub(pattern2, "", text)
             text = self.remove_punctuation(text)
+            text = NLP.re.sub('  ', ' ', text)
             return text
         except:
             return "except"
@@ -52,18 +53,20 @@ class QuestionPreprocessing(Preprocessing):
         pass
 
     def preprocess_text(self, text):
-        try:
-            tokens = str(text)
-            tokens = self.mystem.lemmatize(text.lower())
-            pattern2 = "[?]"
-            pattern3 = r"[\d]"
-            text = NLP.re.sub(pattern2, "", text)
-            text = NLP.re.sub(pattern3, "", text)
-            text = self.remove_punctuation(text)
-            text = "".join(tokens).rstrip('\n')
-            return text
-        except:
-            return "except"
+       
+        tokens = str(text)
+        tokens = self.mystem.lemmatize(text.lower())
+        
+        text = self.remove_punctuation(text)
+        text = "".join(tokens).rstrip('\n')
+        text = NLP.re.sub('[!@#$-><%^&*()_=+/\|:;~,.]', '', text)
+        text = NLP.re.sub('  ', ' ', text)
+        
+
+        return text
+ #№       try:
+  # №     except:
+  #          return "except"
 
 
 class CommandPreprocessing(Preprocessing):
@@ -75,7 +78,7 @@ class CommandPreprocessing(Preprocessing):
         try:
             tokens = text.lower().rstrip('\n')
             text = "".join(tokens)
-
+            text = NLP.re.sub('  ', ' ', text)
             return text
         except:
             return "except"

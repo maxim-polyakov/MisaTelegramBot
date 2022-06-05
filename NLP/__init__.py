@@ -35,6 +35,5 @@ import seaborn as sns
 from sklearn.feature_extraction.text import CountVectorizer
 from collections import defaultdict
 from collections import Counter
-from NLP import *
 plt.style.use('ggplot')
 
