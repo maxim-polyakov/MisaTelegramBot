@@ -6,7 +6,7 @@ from NLP import TextPreprocessers
 
 
 
-class Train:
+class Model:
     
     EMBEDDING_VECTOR_LENGTH = 33
     
@@ -20,7 +20,7 @@ class Train:
         pass
     
 
-class Binary(Train):
+class Binary(Model):
 
     def __init__(self, filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
@@ -96,7 +96,7 @@ class Binary(Train):
                        protocol=NLP.p.HIGHEST_PROTOCOL)
 
 
-class Multy(Train):
+class Multy(Model):
 
     def __init__(self):
         self.conn = NLP.psycopg2.connect(

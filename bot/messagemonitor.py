@@ -13,9 +13,10 @@ b_flag = 0
 qnon_flag = 0
 mtext = ""
 
-@bot.boto.message_handler(content_types = ['text'])
+
+@bot.boto.message_handler(content_types=['text'])
 def get_user_text(message):
-    #boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    # boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     global hi_flag
     global qu_flag
     global command_flag
@@ -74,23 +75,27 @@ def get_user_text(message):
         global weater_flag
         global b_flag
         global qnon_flag
-        if bot.prediction.Predict(text, bot.mapa.himapa,
-                              './models/binary/himodel.h5',
-                              './tokenizers/binary/hitokenizer.pickle',
-                              '') == "Приветствие":
 
+        bpred = bot.Predictors.Binary()
+        mpred = bot.Predictors.Multy()
+        if bpred.predict(text, bot.mapa.himapa,
+                         './models/binary/himodel.h5',
+                         './tokenizers/binary/hitokenizer.pickle',
+                         '') == "Приветствие":
+
+            ra = bot.Answers.RandomAnswer()
             bot.boto.send_message(
-                message.chat.id, bot.mapa.randanswhi(), parse_mode='html', reply_markup=button())
+                message.chat.id, ra.answer(), parse_mode='html', reply_markup=button())
 
             set_null()
             hi_flag = 1
             mtext = tstr
-        elif(bot.prediction.Predict(text, bot.mapa.qumapa,
-                                './models/binary/qumodel.h5',
-                                './tokenizers/binary/qutokenizer.pickle',
-                                'qu') == "Вопрос"):
+        elif(bpred.predict(text, bot.mapa.qumapa,
+                           './models/binary/qumodel.h5',
+                           './tokenizers/binary/qutokenizer.pickle',
+                           'qu') == "Вопрос"):
 
-            if(bot.prediction.MultyPpredict(text) == "Дело"):
+            if(mpred.predict(text) == "Дело"):
                 bot.boto.send_message(
                     message.chat.id, "Я в порядке", parse_mode='html',
                     reply_markup=button2())
@@ -100,7 +105,7 @@ def get_user_text(message):
                 qu_flag = 1
                 mtext = tstr
 
-            elif(bot.prediction.MultyPpredict(text) == "Погода"):
+            elif(mpred.predict(text) == "Погода"):
                 bot.boto.send_message(
                     message.chat.id, "Погода норм", parse_mode='html',
                     reply_markup=button2())
@@ -120,26 +125,27 @@ def get_user_text(message):
                 qu_flag = 1
                 mtext = tstr
 
-        elif(bot.prediction.Predict(text, bot.mapa.commandmapa,
-                                './models/binary/commandmodel.h5',
-                                './tokenizers/binary/thtokenizer.pickle',
-                                'command') == "Команда"):
+        elif(bpred.predict(text, bot.mapa.commandmapa,
+                           './models/binary/commandmodel.h5',
+                           './tokenizers/binary/thtokenizer.pickle',
+                           'command') == "Команда"):
 
             reply_markup = button()
 
-            bot.commands.commandsdesition(bot.boto, message, reply_markup, tstr)
+            bot.commands.commandsdesition(
+                bot.boto, message, reply_markup, tstr)
 
             set_null()
             command_flag = 1
             mtext = tstr
 
-        elif(bot.prediction.Predict(text, bot.mapa.thmapa,
-                                './models/binary/thmodel.h5',
-                                './tokenizers/binary/thtokenizer.pickle',
-                                '') == "Благодарность"):
+        elif(bpred.predict(text, bot.mapa.thmapa,
+                           './models/binary/thmodel.h5',
+                           './tokenizers/binary/thtokenizer.pickle',
+                           '') == "Благодарность"):
 
             bot.boto.send_message(message.chat.id, "Не за что",
-                              parse_mode='html', reply_markup=button())
+                                  parse_mode='html', reply_markup=button())
 
             set_null()
             th_flag = 1
@@ -154,7 +160,7 @@ def get_user_text(message):
             non_flag = 1
             mtext = tstr
 
-#______________________________________________________________________________
+# ______________________________________________________________________________
     inpt = message.text.split(' ')
 
     text = []
@@ -166,25 +172,25 @@ def get_user_text(message):
         new_row = bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
         df.to_excel('./validset/validset.xlsx', index=False)
-    pr = bot.NLP.TextPreprocessers.CommonPreprocessing()
+    pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     if(pr.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
         neurodesc()
       #  try:
-            
+
      #   except:
      #       bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
     elif(message.text == "👍" and hi_flag == 1):
         subfunctions.add(mtext, 'recognized_hi',
                          "Приветствие", 'agenda', 'hi', 1)
-        #hitrain()
+        # hitrain()
         bototrain.hievaluate()
         set_null()
     elif(message.text == "👎" and hi_flag == 1):
         subfunctions.add(mtext, 'recognized_hi',
                          "Не приветствие", 'agenda', 'hi', 0)
-        #hitrain()
+        # hitrain()
         bototrain.hievaluate()
         set_null()
     elif(message.text == "Вопрос без класса" and qu_flag == 1):
@@ -193,17 +199,17 @@ def get_user_text(message):
                          "Нет классификации", 'agenda', 'questionclass', 0)
         subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
-        
-        trainer = bot.NLP.Multy()
+
+        trainer = bot.Models.Multy()
         trainer.multyclasstrain('evaluate')
-        #quevaluate()
+        # quevaluate()
         set_null()
     elif(message.text == "Не вопрос" and qu_flag == 1):
         subfunctions.add(mtext, 'recognized_multyclass',
                          "Нет классификации", 'agenda', 'questionclass', 0)
         subfunctions.quadd(mtext, 'recognized_qu',
                            "Не вопрос", 0)
-        #qutrain()
+        # qutrain()
         bototrain.quevaluate()
 
         bot.boto.send_message(message.chat.id, "Запомнила", parse_mode='html')
@@ -214,7 +220,7 @@ def get_user_text(message):
                          "Погода", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
-        
+
         trainer = bot.NLP.Multy()
         trainer.train('evaluate')
         set_null()
@@ -223,8 +229,8 @@ def get_user_text(message):
                          "Дело", 'agenda', 'questionclass', 1)
         subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
-        
-        trainer = bot.NLP.Multy()
+
+        trainer = bot.Models.Multy()
         trainer.multyclasstrain('evaluate')
         bototrain.qutrain()
         set_null()

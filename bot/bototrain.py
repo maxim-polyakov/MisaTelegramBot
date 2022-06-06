@@ -9,8 +9,8 @@ def hitrain():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = 'SELECT * FROM hiset'
     recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+    trainer = bot.Models.Binary(filemodel, filetokenizer,
+                                datasetfile, recognizeddata)
     trainer.train('hi', 'train')
 
 
@@ -19,8 +19,8 @@ def hievaluate():
     filetokenizer = './tokenizers/binary/hitokenizer.pickle'
     datasetfile = 'SELECT * FROM hiset'
     recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+    trainer = bot.Models.Binary(filemodel, filetokenizer,
+                                datasetfile, recognizeddata)
     trainer.train('hi', 'evaluate')
 
 
@@ -29,8 +29,8 @@ def qutrain():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = 'SELECT * FROM questionset'
     recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+    trainer = bot.Models.Binary(filemodel, filetokenizer,
+                                datasetfile, recognizeddata)
     trainer.train('question', 'train')
 
 
@@ -39,8 +39,8 @@ def quevaluate():
     filetokenizer = './tokenizers/binary/qutokenizer.pickle'
     datasetfile = 'SELECT * FROM questionset'
     recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+    trainer = bot.Models.Binary(filemodel, filetokenizer,
+                                datasetfile, recognizeddata)
     trainer.train('question', 'evaluate')
 
 
@@ -49,8 +49,8 @@ def thtrain():
     filetokenizer = '../tokenizers/binary/thtokenizer.pickle'
     datasetfile = 'SELECT * FROM thanksset'
     recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+    trainer = bot.Models.Binary(filemodel, filetokenizer,
+                                datasetfile, recognizeddata)
     trainer.train('thanks', 'train')
 
 
@@ -59,8 +59,8 @@ def thevaluate():
     filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = 'SELECT * FROM thanksset'
     recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+    trainer = bot.Models.Binary(filemodel, filetokenizer,
+                                datasetfile, recognizeddata)
     trainer.train('thanks', 'evaluate')
 
 
@@ -69,8 +69,8 @@ def commandtrain():
     filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
     datasetfile = 'SELECT * FROM commandset'
     recognizeddata = 'SELECT * FROM recognized_command'
-    trainer = bot.NLP.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+    trainer = bot.Models.Binary(filemodel, filetokenizer,
+                                datasetfile, recognizeddata)
     trainer.train('command', 'train')
 
 

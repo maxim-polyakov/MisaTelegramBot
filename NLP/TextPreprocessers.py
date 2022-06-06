@@ -53,18 +53,17 @@ class QuestionPreprocessing(Preprocessing):
         pass
 
     def preprocess_text(self, text):
-       
+
         tokens = str(text)
         tokens = self.mystem.lemmatize(text.lower())
-        
+
         text = self.remove_punctuation(text)
         text = "".join(tokens).rstrip('\n')
         text = NLP.re.sub('[!@#$-><%^&*()_=+/\|:;~,.]', '', text)
         text = NLP.re.sub('  ', ' ', text)
-        
 
         return text
- #№       try:
+ # №       try:
   # №     except:
   #          return "except"
 
