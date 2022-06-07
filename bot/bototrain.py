@@ -46,7 +46,7 @@ def quevaluate():
 
 def thtrain():
     filemodel = './models/binary/thmodel.h5'
-    filetokenizer = '../tokenizers/binary/thtokenizer.pickle'
+    filetokenizer = './tokenizers/binary/thtokenizer.pickle'
     datasetfile = 'SELECT * FROM thanksset'
     recognizeddata = 'SELECT * FROM recognized_th'
     trainer = bot.Models.Binary(filemodel, filetokenizer,

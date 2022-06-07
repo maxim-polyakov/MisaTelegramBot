@@ -1,11 +1,14 @@
 import pandas as pd
+from NLP import TextPreprocessers
 import NLP
 from sqlalchemy import create_engine
 
 def add(text, tablename, string, agenda, classification, classtype):
+    
+    pr = TextPreprocessers.CommonPreprocessing()
     conn = NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
     engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    data = {'text': NLP.NLP.preprocess_text(
+    data = {'text': pr.preprocess_text(
         text), agenda: string, classification: classtype}
     df = pd.DataFrame()
     new_row = pd.Series(data)
@@ -14,9 +17,11 @@ def add(text, tablename, string, agenda, classification, classtype):
 
 
 def quadd(text, tablename, string, isqu):
+
+    pr = TextPreprocessers.QuestionPreprocessing()
     conn = NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
     engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    data = {'text': NLP.NLP.specialpreprocess_text(
+    data = {'text': pr.preprocess_text(
         text), 'agenda': string, 'question': isqu}
     df = pd.DataFrame()
     new_row = pd.Series(data)
@@ -24,9 +29,11 @@ def quadd(text, tablename, string, isqu):
     df.to_sql(tablename, con = engine, schema = 'public', index=False, if_exists='append')
     
 def commandadd(text, tablename, string, isqu):
-    conn = NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
+    
+    pr = NLP.CommandPreprocessing()
+    conn = TextPreprocessers.psycopg2.connect("dbname=postgres user=postgres password=postgres")
     engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    data = {'text': NLP.NLP.commandpreprocess_text(
+    data = {'text': pr.preprocess_text(
         text), 'agenda': string, 'command': isqu}
     df = pd.DataFrame()
     new_row = pd.Series(data)

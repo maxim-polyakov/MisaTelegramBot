@@ -1,20 +1,26 @@
 import NLP
+from NLP import TextPreprocessers
 #import pyTelegramBotAPI
-import RPA
+from RPA_module import Founders
 import psycopg2
 
 def commandsdesition(boto, message, reply_markup, tstr):
     global command_flag
+    pr = TextPreprocessers.CommonPreprocessing()
     preinpt = message.text.split('->')
     inpt = preinpt[0].split(' ')
     print(inpt)
-    if(NLP.NLP.preprocess_text(inpt[1]) == 'атаковать' or
-       NLP.NLP.preprocess_text(inpt[1]) == 'фас' or 
-       NLP.NLP.preprocess_text(inpt[1]) == 'пизданутьimport rpa as r'):
+    if(pr.preprocess_text(inpt[1]) == 'атаковать' or
+       pr.preprocess_text(inpt[1]) == 'фас' or 
+       pr.preprocess_text(inpt[1]) == 'пиздануть'):
         fas(boto, message, reply_markup)
         command_flag = 0
-    elif NLP.NLP.preprocess_text(inpt[1]) == 'находить':
-        RPA.founder(boto, message, reply_markup, NLP.NLP.preprocess_text(preinpt[1]))
+    elif pr.preprocess_text(inpt[1]) == 'находить':
+        
+        print(preinpt[1])
+        f = Founders.WikiFounder()
+        f.find(boto, message, reply_markup, pr.preprocess_text(preinpt[1]))
+        
         command_flag = 0
 
     else:

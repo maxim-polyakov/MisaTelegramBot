@@ -248,7 +248,7 @@ def get_user_text(message):
     elif(message.text == "👍" and th_flag == 1):
         subfunctions.add(
             mtext, 'recognized_th',
-            "Благодарность", 'agwwenda', 'thanks', 1)
+            "Благодарность", 'agenda', 'thanks', 1)
         set_null()
     elif(message.text == "👎" and th_flag == 1):
         subfunctions.add(mtext, 'recognized_th',
