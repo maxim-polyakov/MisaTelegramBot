@@ -163,7 +163,7 @@ class Multy(Model):
             model = self.createmodel(tokenizer, n_clases)
 
         history = model.fit(tokenized_X_train, y_trainmatrix,
-                            batch_size=64, epochs=2000,
+                            batch_size=64, epochs=4000,
                             validation_data=(tokenized_X_val, y_valmatrix),
                             verbose=2)
 

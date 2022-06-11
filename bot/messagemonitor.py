@@ -166,13 +166,14 @@ def get_user_text(message):
     text = []
     print(message.text)
     read = bot.pd.read_excel('./validset/validset.xlsx')
+    pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     for txt in text:
-        data = {'text': bot.NLP.preprocess_text(txt), 'agenda': ''}
+        data = {'text': pr.preprocess_text(txt), 'agenda': ''}
         df = bot.pd.DataFrame(read)
         new_row = bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
         df.to_excel('./validset/validset.xlsx', index=False)
-    pr = bot.Models.TextPreprocessers.CommonPreprocessing()
+
     if(pr.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
@@ -231,7 +232,7 @@ def get_user_text(message):
                            "Вопрос", 1)
 
         trainer = bot.Models.Multy()
-        trainer.multyclasstrain('evaluate')
+        trainer.train('evaluate')
         bototrain.qutrain()
         set_null()
     elif(message.text == "👍" and command_flag == 1):

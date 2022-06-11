@@ -5,9 +5,10 @@ from NLP import DataCleaners
 @bot.boto.message_handler(commands=['multyclean'])
 def get_user_text(message):
     cl = DataCleaners.CommonCleaner()
-    
-    cl.clean('./datasets/multyclasesset.xlsx', 'questionclass')
-    bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+    strr = message.text.replace('/multyclean ','')
+
+    cl.clean('./datasets/' + strr, 'questionclass')
+    bot.boto.send_message(message.chat.id, strr + 'is cleaned', parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['hiclean'])
@@ -27,6 +28,8 @@ def get_user_text(message):
 
 @bot.boto.message_handler(commands=['thclean'])
 def get_user_text(message):
+    
+    
     cl = DataCleaners.CommonCleaner()
     cl.clean('./datasets/thanksset.xlsx', 'thanks')
     bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
@@ -38,13 +41,3 @@ def get_user_text(message):
     cl.clean('./datasets/commandset.xlsx')
     bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 #______________________________________________________________________________
-
-
-
-
-@bot.boto.message_handler(commands=['weatherclean'])
-def get_user_text(message):
-    cl = DataCleaners.CommonCleaner()
-    
-    cl.clean('./datasets/weather.xlsx', 'questionclass')
-    bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
