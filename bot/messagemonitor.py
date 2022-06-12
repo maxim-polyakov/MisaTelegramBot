@@ -21,7 +21,7 @@ def get_user_text(message):
         elif(bpred.predict(text, bot.mapa.qumapa,
                            './models/binary/qumodel.h5',
                            './tokenizers/binary/qutokenizer.pickle',
-                           'qu') == "Вопрос" or message.text.count('?')>0):
+                           'qu') == "Вопрос"):
 
             if(mpred.predict(text) == "Дело"):
                 bot.boto.send_message(
@@ -84,12 +84,13 @@ def get_user_text(message):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
         
-        neurodesc()
-     #   try:
-      #  except:
-      #      bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
+
+        try:
+            neurodesc()
+        except:
+            bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
         
     elif(message.text == "👍"):
         bot.boto.send_message(message.chat.id, "😊", parse_mode='html')
-    else:
+    elif(message.text == "👎"):
         bot.boto.send_message(message.chat.id, "😒", parse_mode='html')
