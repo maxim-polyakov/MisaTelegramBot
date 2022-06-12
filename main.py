@@ -12,6 +12,6 @@ if __name__ == "__main__":
     # boto.polling(none_stop=True)
     bot.boto.remove_webhook()
     bot.time.sleep(1)
-    bot.boto.set_webhook(url = sys.argv[1])
- #   bot.boto.set_webhook(url = 'https://4aba-31-204-109-41.eu.ngrok.io')
+   # bot.boto.set_webhook(url = sys.argv[1])
+    bot.boto.set_webhook(url = 'https://eb32-31-204-109-41.eu.ngrok.io')
     bot.app.run(host=bot.APP_HOST, port=bot.APP_PORT, debug=False)

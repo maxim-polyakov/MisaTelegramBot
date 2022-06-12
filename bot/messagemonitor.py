@@ -1,6 +1,7 @@
 import bot
 from bot import subfunctions
 from bot import bototrain
+from sqlalchemy import create_engine
 
 @bot.boto.message_handler(content_types=['text'])
 def get_user_text(message):
@@ -20,7 +21,7 @@ def get_user_text(message):
         elif(bpred.predict(text, bot.mapa.qumapa,
                            './models/binary/qumodel.h5',
                            './tokenizers/binary/qutokenizer.pickle',
-                           'qu') == "Вопрос"):
+                           'qu') == "Вопрос" or message.text.count('?')>0):
 
             if(mpred.predict(text) == "Дело"):
                 bot.boto.send_message(
@@ -50,30 +51,45 @@ def get_user_text(message):
             bot.boto.send_message(message.chat.id, "Не за что",
                                   parse_mode='html')
         else:
-            bot.boto.send_message(
-                message.chat.id, "Нет классификации", parse_mode='html',)
+            
+            if(mpred.predict(text) == "Дело"):
+                bot.boto.send_message(
+                    message.chat.id, "Утверждение про дела", parse_mode='html')
+
+            elif(mpred.predict(text) == "Погода"):
+                bot.boto.send_message(
+                    message.chat.id, "Утверждение про погоду", parse_mode='html')
+            else:
+                bot.boto.send_message(
+                    message.chat.id, "Нет классификации",
+                    parse_mode='html')
 
 # ______________________________________________________________________________
     inpt = message.text.split(' ')
 
     text = []
     print(message.text)
-    read = bot.pd.read_excel('./validset/validset.xlsx')
     pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     for txt in text:
+        conn = bot.NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
+        
         data = {'text': pr.preprocess_text(txt), 'agenda': ''}
-        df = bot.pd.DataFrame(read)
+        df = bot.pd.DataFrame()
         new_row = bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
-        df.to_excel('./validset/validset.xlsx', index=False)
+        df.to_sql('validset', con = engine, schema = 'public', index=False, if_exists='append')
 
     if(pr.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
         text.append(tstr)
-        try:
-            neurodesc()
-        except:
-            bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
-        bot.boto.send_message(message.chat.id, "😒", parse_mode='html')
+        
+        neurodesc()
+     #   try:
+      #  except:
+      #      bot.boto.send_message(message.chat.id, 'А?', parse_mode='html')
+        
     elif(message.text == "👍"):
         bot.boto.send_message(message.chat.id, "😊", parse_mode='html')
+    else:
+        bot.boto.send_message(message.chat.id, "😒", parse_mode='html')

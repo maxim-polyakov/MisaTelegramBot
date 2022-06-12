@@ -8,7 +8,7 @@ def get_user_text(message):
     strr = message.text.replace('/multyclean ','')
 
     cl.clean('./datasets/' + strr, 'questionclass')
-    bot.boto.send_message(message.chat.id, strr + 'is cleaned', parse_mode='html')
+    bot.boto.send_message(message.chat.id, strr + ' is cleaned', parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['hiclean'])
@@ -17,6 +17,14 @@ def get_user_text(message):
     
     cl.clean('./datasets/dataset.xlsx', 'hi')
     bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+
+@bot.boto.message_handler(commands=['clean'])
+def get_user_text(message):
+    cl = DataCleaners.CommonCleaner()
+    strr = message.text.replace('/clean ','')
+    strr = strr.split(' ')
+    cl.clean('./datasets/' + strr[0], strr[1])
+    bot.boto.send_message(message.chat.id, strr[0] + " is cleaned", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['quclean'])
