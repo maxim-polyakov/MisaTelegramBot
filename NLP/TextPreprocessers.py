@@ -54,13 +54,15 @@ class QuestionPreprocessing(Preprocessing):
 
     def preprocess_text(self, text):
 
-        tokens = str(text)
+        tokens = str(text).split(' ')
         tokens = self.mystem.lemmatize(text.lower())
-
-        text = self.remove_punctuation(text)
-        text = "".join(tokens).rstrip('\n')
+        tokens = [token for token in tokens if token != " "]
+        
+       # text = self.remove_punctuation(text)
+        text = " ".join(tokens).rstrip('\n')
         text = NLP.re.sub('[!@#$-><%^&*()_=+/\|:;~,.]', '', text)
         text = NLP.re.sub('  ', ' ', text)
+        text = text.replace(' ? ', '?')
 
         return text
  # №       try:
@@ -75,9 +77,15 @@ class CommandPreprocessing(Preprocessing):
 
     def preprocess_text(self, text):
         try:
-            tokens = text.lower().rstrip('\n')
-            text = "".join(tokens)
-            text = NLP.re.sub('  ', ' ', text)
+            text = self.remove_punctuation(text)
+            tokens = str(text)
+            tokens = text.lower().split(' ')
+            tokens = [token for token in tokens if token not in self.russian_stopwords
+                     and token != " "
+                     and token.strip() not in NLP.punctuation]
+        
+       # text = self.remove_punctuation(text)
+            text = " ".join(tokens).rstrip('\n')
             return text
         except:
             return "except"

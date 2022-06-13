@@ -1,6 +1,7 @@
 import bot
 from bot import subfunctions
 from bot import bototrain
+from sqlalchemy import create_engine
 
 
 hi_flag = 0
@@ -132,11 +133,11 @@ def get_user_text(message):
 
             reply_markup = button()
 
-            bot.commands.commandsdesition(
+            command_flag = bot.commands.commandsdesition(
                 bot.boto, message, reply_markup, tstr)
 
             set_null()
-            command_flag = 1
+
             mtext = tstr
 
         elif(bpred.predict(text, bot.mapa.thmapa,
@@ -152,9 +153,17 @@ def get_user_text(message):
             mtext = tstr
 
         else:
-            bot.boto.send_message(
-                message.chat.id, "Нет классификации", parse_mode='html',
-                reply_markup=button())
+            if(mpred.predict(text) == "Дело"):
+                bot.boto.send_message(
+                    message.chat.id, "Утверждение про дела", parse_mode='html')
+
+            elif(mpred.predict(text) == "Погода"):
+                bot.boto.send_message(
+                    message.chat.id, "Утверждение про погоду", parse_mode='html')
+            else:
+                bot.boto.send_message(
+                    message.chat.id, "Нет классификации",
+                    parse_mode='html')
 
             set_null()
             non_flag = 1
@@ -168,11 +177,14 @@ def get_user_text(message):
     read = bot.pd.read_excel('./validset/validset.xlsx')
     pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     for txt in text:
+        conn = bot.NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
+        
         data = {'text': pr.preprocess_text(txt), 'agenda': ''}
-        df = bot.pd.DataFrame(read)
+        df = bot.pd.DataFrame()
         new_row = bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
-        df.to_excel('./validset/validset.xlsx', index=False)
+        df.to_sql('validset', con = engine, schema = 'public', index=False, if_exists='append')
 
     if(pr.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
         tstr = message.text.replace(inpt[0], '')
