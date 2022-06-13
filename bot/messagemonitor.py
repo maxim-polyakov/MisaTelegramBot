@@ -176,7 +176,6 @@ def get_user_text(message):
 
     text = []
     print(message.text)
-    read = bot.pd.read_excel('./validset/validset.xlsx')
     pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     for txt in text:
         conn = bot.NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
