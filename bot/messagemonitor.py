@@ -132,11 +132,13 @@ def get_user_text(message):
                            'command') == "Команда"):
 
             reply_markup = button()
-
-            command_flag = bot.commands.commandsdesition(
-                bot.boto, message, reply_markup, tstr)
-
             set_null()
+            command_flag = 1
+            print(command_flag)
+            bot.commands.commandsdesition(
+                bot.boto, message, reply_markup, tstr)
+            
+            
 
             mtext = tstr
 

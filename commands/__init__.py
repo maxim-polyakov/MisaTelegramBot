@@ -26,14 +26,13 @@ def commandsdesition(boto, message, reply_markup, tstr):
     else:
 
         boto.send_message(message.chat.id, "Команда",
-                          parse_mode='html', reply_markup=reply_markup)
+                          parse_mode='html')
         command_flag = 1
 
-    return command_flag
 
 def fas(boto, message, reply_markup):
 
     inpt = message.text.split(' ')
 
     boto.send_message(message.chat.id, inpt[2] + " - пидор.",
-                      parse_mode='html', reply_markup=reply_markup)
+                      parse_mode='html')
