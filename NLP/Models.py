@@ -80,15 +80,26 @@ class Binary(Model):
 
         if(mode == 'evaluate'):
             model = NLP.load_model(self.filemodelname)
+            
+            es = NLP.EarlyStopping(patience=10, monitor='binary_accuracy', restore_best_weights=True)
+            
+            history = model.fit(tokenized_X_train, y_train,
+                                validation_data=(tokenized_X_val, y_val),
+                                batch_size=512,
+                                epochs=2000,
+                                verbose=2,
+                                callbacks=[es]
+                                )
         else:
             model = self.createmodel(tokenizer)
+            
+            history = model.fit(tokenized_X_train, y_train,
+                                validation_data=(tokenized_X_val, y_val),
+                                batch_size=512,
+                                epochs=2000,
+                                verbose=2,
+                                )
 
-        history = model.fit(tokenized_X_train, y_train,
-                            validation_data=(tokenized_X_val, y_val),
-                            batch_size=512,
-                            epochs=2000,
-                            verbose=2,
-                            )
         model.save(self.filemodelname)
 
         with open(self.tokenizerfilename, 'wb') as handle:
@@ -158,14 +169,25 @@ class Multy(Model):
         y_valmatrix = NLP.tensorflow.keras.utils.to_categorical(
             y_val, n_clases)
         if(mode == 'evaluate'):
+            
+            es = NLP.EarlyStopping(patience=10, monitor='val_accuracy', restore_best_weights=True)
+            
             model = NLP.load_model(self.filemodelname)
+            
+            history = model.fit(tokenized_X_train, y_trainmatrix,
+                                batch_size=64, epochs=4000,
+                                validation_data=(tokenized_X_val, y_valmatrix),
+                                callbacks=[es],
+                                verbose=2)
         else:
             model = self.createmodel(tokenizer, n_clases)
+            
+            history = model.fit(tokenized_X_train, y_trainmatrix,
+                                batch_size=64, epochs=4000,
+                                validation_data=(tokenized_X_val, y_valmatrix),
+                                verbose=2)
 
-        history = model.fit(tokenized_X_train, y_trainmatrix,
-                            batch_size=64, epochs=4000,
-                            validation_data=(tokenized_X_val, y_valmatrix),
-                            verbose=2)
+
 
         #loss, acc = model.evaluate(tokenized_X_val, y_valmatrix, verbose=2)
 
