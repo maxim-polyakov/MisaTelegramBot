@@ -124,7 +124,6 @@ def get_user_text(message):
 def get_user_text(message):
 
     quevaluate()
-    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['thevaluate'])

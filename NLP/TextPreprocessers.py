@@ -17,7 +17,17 @@ class Preprocessing:
         return text.translate(translator)
 
     def preprocess_text(self, text):
-        pass
+        try:
+            tokens = str(text)
+            tokens = text.lower().split(' ')
+            tokens = [token for token in tokens if token not in self.russian_stopwords
+                     and token != " "]
+        
+       # text = self.remove_punctuation(text)
+            text = " ".join(tokens).rstrip('\n')
+            return text
+        except:
+            return "except"
 
 
 class CommonPreprocessing(Preprocessing):

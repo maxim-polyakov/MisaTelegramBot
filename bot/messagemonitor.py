@@ -39,33 +39,7 @@ def get_user_text(message):
         qnon_flag = 0
         mtext = ""
 
-    def button():
-        markup = bot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = bot.types.KeyboardButton("👍")
-        btn2 = bot.types.KeyboardButton("👎")
-        markup.add(btn1, btn2)
-        return markup
 
-    def button2():
-        markup = bot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = bot.types.KeyboardButton("Вопрос без класса")
-        btn2 = bot.types.KeyboardButton("Погода")
-        btn3 = bot.types.KeyboardButton("Дело")
-        btn4 = bot.types.KeyboardButton("Не вопрос")
-        markup.add(btn1, btn2, btn3, btn4)
-        return markup
-
-    def button3():
-        markup = bot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = bot.types.KeyboardButton("Приветствие")
-        btn2 = bot.types.KeyboardButton("Вопрос без класса")
-        btn3 = bot.types.KeyboardButton("Погода")
-        btn4 = bot.types.KeyboardButton("Дело")
-        btn5 = bot.types.KeyboardButton("Не вопрос")
-        btn6 = bot.types.KeyboardButton("Команда")
-        btn7 = bot.types.KeyboardButton("Благодарность")
-        markup.add(btn1, btn2, btn3, btn4)
-        return markup
 
     def neurodesc():
         global hi_flag
@@ -86,7 +60,7 @@ def get_user_text(message):
 
             ra = bot.Answers.RandomAnswer()
             bot.boto.send_message(
-                message.chat.id, ra.answer(), parse_mode='html', reply_markup=button())
+                message.chat.id, ra.answer(), parse_mode='html')
 
             set_null()
             hi_flag = 1
@@ -98,8 +72,7 @@ def get_user_text(message):
 
             if(mpred.predict(text) == "Дело"):
                 bot.boto.send_message(
-                    message.chat.id, "Я в порядке", parse_mode='html',
-                    reply_markup=button2())
+                    message.chat.id, "Я в порядке", parse_mode='html')
 
                 set_null()
                 b_flag = 1
@@ -108,8 +81,7 @@ def get_user_text(message):
 
             elif(mpred.predict(text) == "Погода"):
                 bot.boto.send_message(
-                    message.chat.id, "Погода норм", parse_mode='html',
-                    reply_markup=button2())
+                    message.chat.id, "Погода норм", parse_mode='html',)
 
                 set_null()
                 weater_flag = 1
@@ -119,7 +91,7 @@ def get_user_text(message):
             else:
                 bot.boto.send_message(
                     message.chat.id, "Вопрос без классификации",
-                    parse_mode='html', reply_markup=button2())
+                    parse_mode='html')
 
                 set_null()
                 qnon_flag = 1
@@ -131,14 +103,11 @@ def get_user_text(message):
                            './tokenizers/binary/thtokenizer.pickle',
                            'command') == "Команда"):
 
-            reply_markup = button()
             set_null()
             command_flag = 1
             print(command_flag)
             bot.commands.commandsdesition(
-                bot.boto, message, reply_markup, tstr)
-            
-            
+                bot.boto, message, tstr)
 
             mtext = tstr
 
@@ -148,7 +117,7 @@ def get_user_text(message):
                            '') == "Благодарность"):
 
             bot.boto.send_message(message.chat.id, "Не за что",
-                                  parse_mode='html', reply_markup=button())
+                                  parse_mode='html')
 
             set_null()
             th_flag = 1
