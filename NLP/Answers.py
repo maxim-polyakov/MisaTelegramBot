@@ -28,11 +28,13 @@ class RandomAnswer(Answer):
 
     def answer(self):
         
-
+        
         
         outmapa = []
         for i in range(0, len(self.data['text'])-1):
             if(self.data['hi'][i] == 1):
                 self.df.append(self.data['text'][i])
-                outmapa = {0: [self.df[random.randint(0, len(self.df))]]}
-                return (outmapa[0])
+        print(self.df)
+        outmapa = {0: [self.df[random.randint(0, len(self.df))]]}
+                
+        return (outmapa[0])
