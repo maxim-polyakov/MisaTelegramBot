@@ -81,7 +81,7 @@ def get_user_text(message):
 
             elif(mpred.predict(text) == "Погода"):
                 bot.boto.send_message(
-                    message.chat.id, "Погода норм", parse_mode='html',)
+                    message.chat.id, "Погода норм", parse_mode='html')
 
                 set_null()
                 weater_flag = 1
