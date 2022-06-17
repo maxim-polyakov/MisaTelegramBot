@@ -55,6 +55,10 @@ def get_user_text(message):
         mpred = bot.Predictors.Multy()
         qpr = bot.Models.TextPreprocessers.QuestionPreprocessing()
         #bpred.predict(text, bot.mapa.qumapa,'./models/binary/qumodel.h5', './tokenizers/binary/qutokenizer.pickle','qu') == "Вопрос" or 
+    #    bpred.predict(text, bot.mapa.commandmapa,
+     #                      './models/binary/commandmodel.h5',
+    ##                       './tokenizers/binary/thtokenizer.pickle',
+     #                      'command') == "Команда"
         ststr = qpr.reversepreprocess_text(message.text)
 
         if bpred.predict(text, bot.mapa.himapa,
@@ -99,9 +103,9 @@ def get_user_text(message):
                 mtext = tstr
 
         elif(bpred.predict(text, bot.mapa.commandmapa,
-                           './models/binary/commandmodel.h5',
-                           './tokenizers/binary/thtokenizer.pickle',
-                           'command') == "Команда"):
+                               './models/binary/commandmodel.h5',
+                              './tokenizers/binary/thtokenizer.pickle',
+                               'command') == "Команда"):
 
             set_null()
             command_flag = 1
@@ -204,8 +208,11 @@ def get_user_text(message):
         subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
 
-        trainer = bot.NLP.Multy()
-        trainer.train('evaluate')
+        trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5', 
+                                   './tokenizers/multy/multyclasstokenizer.pickle',
+                                   'SELECT * FROM multyclasesset', 
+                                   'SELECT * FROM recognized_multyclass')
+        trainer.train('questionclass',3,'evaluate')
         set_null()
     elif(message.text == "Дело" and qu_flag == 1):
         subfunctions.add(mtext, 'recognized_multyclass',
@@ -213,9 +220,13 @@ def get_user_text(message):
         subfunctions.quadd(mtext, 'recognized_qu',
                            "Вопрос", 1)
 
-        trainer = bot.Models.Multy()
-        trainer.train('evaluate')
-        bototrain.qutrain()
+        trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5', 
+                                   './tokenizers/multy/multyclasstokenizer.pickle',
+                                   'SELECT * FROM multyclasesset', 
+                                   'SELECT * FROM recognized_multyclass')
+        trainer.train('questionclass',3,'evaluate')
+        
+      #  bototrain.quevaluate()
         set_null()
     elif(message.text == "👍" and command_flag == 1):
         subfunctions.commandadd(mtext,

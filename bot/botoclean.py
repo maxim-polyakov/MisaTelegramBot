@@ -37,7 +37,7 @@ def get_user_text(message):
 
 @bot.boto.message_handler(commands=['commandclean'])
 def get_user_text(message):
-    cl = DataCleaners.CommandsetCleaner()
+    cl = DataCleaners.CommandCleaner()
     cl.clean('./datasets/commandset.xlsx')
     bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 #______________________________________________________________________________

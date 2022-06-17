@@ -80,7 +80,7 @@ def commandevaluate():
     datasetfile = 'SELECT * FROM commandset'
     recognizeddata = 'SELECT * FROM recognized_command'
     trainer = bot.Models.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+                                datasetfile, recognizeddata)
     trainer.train('command', 'evaluate')
 # ______________________________________________________________________________
 
@@ -141,6 +141,10 @@ def get_user_text(message):
 @bot.boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
-    trainer = bot.Models.Multy()
-    trainer.train('train')
+    trainer = bot.Models.Multy('./models/multy/multyclassmodel.h5', 
+                               './tokenizers/multy/multyclasstokenizer.pickle',
+                               'SELECT * FROM multyclasesset', 
+                               'SELECT * FROM recognized_multyclass')
+
+    trainer.train('questionclass', 3,'train')
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')

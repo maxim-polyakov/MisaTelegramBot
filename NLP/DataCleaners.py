@@ -37,7 +37,7 @@ class QuestionCleaner(Cleaner):
         train['question'] = train['question'].astype(int)
         train.to_excel(filename, index=False)
         
-def CommandCleaner(Cleaner):
+class CommandCleaner(Cleaner):
     def __init__(self):
         pass
     

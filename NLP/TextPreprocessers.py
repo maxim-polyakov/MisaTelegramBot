@@ -1,6 +1,7 @@
 import NLP
 
 
+
 class Preprocessing:
 
     mystem = NLP.Mystem()

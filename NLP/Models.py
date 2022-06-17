@@ -109,13 +109,14 @@ class Binary(Model):
 
 class Multy(Model):
 
-    def __init__(self):
+    def __init__(self, filemodelname, tokenizerfilename, dataselect,
+                 recognizeddataselect):
         self.conn = NLP.psycopg2.connect(
             "dbname=postgres user=postgres password=postgres")
-        self.filemodelname = './models/multy/multyclassmodel.h5'
-        self.tokenizerfilename = './tokenizers/multy/multyclasstokenizer.pickle'
-        self.datafilename = 'SELECT * FROM multyclasesset'
-        self.recognizeddatafilename = 'SELECT * FROM recognized_multyclass'
+        self.filemodelname = filemodelname
+        self.tokenizerfilename = tokenizerfilename
+        self.dataselect = dataselect
+        self.recognizeddataselect = recognizeddataselect
 
     def createmodel(self, tokenizer, n_clases):
         model = NLP.Sequential()
@@ -133,22 +134,22 @@ class Multy(Model):
             'categorical_accuracy'])
         return model
 
-    def train(self, mode):
+    def train(self, target, n_clases, mode):
 
-        train = NLP.pd.read_sql(self.datafilename, self.conn)
+        train = NLP.pd.read_sql(self.dataselect, self.conn)
         train.text = train.text.astype(str)
         recognizedtrain = NLP.pd.read_sql(
-            self.recognizeddatafilename, self.conn)
+            self.recognizeddataselect, self.conn)
         recognizedtrain.text = recognizedtrain.text.astype(str)
         df = NLP.pd.concat([train, recognizedtrain])
-        train = df[~df['questionclass'].isna()]
-        train['questionclass'] = train['questionclass'].astype(int)
+        train = df[~df[target].isna()]
+        train[target] = train[target].astype(int)
         train = train.drop_duplicates()
-        target = 'questionclass'
+
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
         X_train, X_val, y_train, y_val = NLP.train_test_split(
-            train, train['questionclass'], test_size=0.2, random_state=64)
+            train, train[target], test_size=0.2, random_state=64)
         print('Shape of train', X_train.shape)
         print("Shape of Validation ", X_val.shape)
 
@@ -163,7 +164,7 @@ class Multy(Model):
         tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
         tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
 
-        n_clases = 3
+
         y_trainmatrix = NLP.tensorflow.keras.utils.to_categorical(
             y_train, n_clases)
         y_valmatrix = NLP.tensorflow.keras.utils.to_categorical(
