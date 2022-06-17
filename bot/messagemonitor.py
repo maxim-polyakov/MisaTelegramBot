@@ -53,8 +53,10 @@ def get_user_text(message):
 
         bpred = bot.Predictors.Binary()
         mpred = bot.Predictors.Multy()
-        qpr = bot.Models.TextPreprocessers.QuesPreprocessing()
+        qpr = bot.Models.TextPreprocessers.QuestionPreprocessing()
         #bpred.predict(text, bot.mapa.qumapa,'./models/binary/qumodel.h5', './tokenizers/binary/qutokenizer.pickle','qu') == "Вопрос" or 
+        ststr = qpr.reversepreprocess_text(message.text)
+
         if bpred.predict(text, bot.mapa.himapa,
                          './models/binary/himodel.h5',
                          './tokenizers/binary/hitokenizer.pickle',
@@ -67,9 +69,7 @@ def get_user_text(message):
             set_null()
             hi_flag = 1
             mtext = tstr
-            ststr = qpr.reversepreprocess_text(text)
-        elif(ststr > 0 and text.count('?') > 0):
-
+        elif(len(ststr) > 0 and message.text.count('?') > 0):
             if(mpred.predict(text) == "Дело"):
                 bot.boto.send_message(
                     message.chat.id, "Я в порядке", parse_mode='html')
