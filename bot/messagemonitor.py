@@ -53,6 +53,8 @@ def get_user_text(message):
 
         bpred = bot.Predictors.Binary()
         mpred = bot.Predictors.Multy()
+        qpr = bot.Models.TextPreprocessers.QuesPreprocessing()
+        #bpred.predict(text, bot.mapa.qumapa,'./models/binary/qumodel.h5', './tokenizers/binary/qutokenizer.pickle','qu') == "Вопрос" or 
         if bpred.predict(text, bot.mapa.himapa,
                          './models/binary/himodel.h5',
                          './tokenizers/binary/hitokenizer.pickle',
@@ -65,10 +67,8 @@ def get_user_text(message):
             set_null()
             hi_flag = 1
             mtext = tstr
-        elif(bpred.predict(text, bot.mapa.qumapa,
-                           './models/binary/qumodel.h5',
-                           './tokenizers/binary/qutokenizer.pickle',
-                           'qu') == "Вопрос"):
+            ststr = qpr.reversepreprocess_text(text)
+        elif(ststr > 0 and text.count('?') > 0):
 
             if(mpred.predict(text) == "Дело"):
                 bot.boto.send_message(

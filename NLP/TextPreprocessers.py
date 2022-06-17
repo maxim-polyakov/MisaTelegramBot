@@ -29,6 +29,9 @@ class Preprocessing:
         except:
             return "except"
 
+    def reversepreprocess_text(self,text):
+        pass
+
 
 class CommonPreprocessing(Preprocessing):
 
@@ -55,6 +58,8 @@ class CommonPreprocessing(Preprocessing):
             return text
         except:
             return "except"
+    def reversepreprocess_text(self, text):
+        pass
 
 
 class QuestionPreprocessing(Preprocessing):
@@ -63,21 +68,29 @@ class QuestionPreprocessing(Preprocessing):
         pass
 
     def preprocess_text(self, text):
-
-        tokens = str(text).split(' ')
-        tokens = self.mystem.lemmatize(text.lower())
-        tokens = [token for token in tokens if token != " "]
+        try:
+            tokens = str(text).split(' ')
+            tokens = self.mystem.lemmatize(text.lower())
+            tokens = [token for token in tokens if token != " "]
         
        # text = self.remove_punctuation(text)
-        text = " ".join(tokens).rstrip('\n')
-        text = NLP.re.sub('[!@#$-><%^&*()_=+/\|:;~,.]', '', text)
-        text = NLP.re.sub('  ', ' ', text)
-        text = text.replace(' ? ', '?')
+            text = " ".join(tokens).rstrip('\n')
+            text = NLP.re.sub('[!@#$-><%^&*()_=+/\|:;~,.]', '', text)
+            text = NLP.re.sub('  ', ' ', text)
+            text = text.replace(' ? ', '?')
 
-        return text
- # №       try:
-  # №     except:
-  #          return "except"
+            return text
+        except:
+            return "except"
+    def reversepreprocess_text(self, text):
+        tokens = str(text)
+        tokens = self.mystem.lemmatize(text.lower())
+        tokens = [token for token in tokens if token in self.russian_stopwords
+                      and (token != " " or token == "?")]
+        text = " ".join(tokens).rstrip('\n')
+        #text = remove_punctuation(text)
+        text = NLP.re.sub('  ', ' ', text)
+        return text        
 
 
 class CommandPreprocessing(Preprocessing):
@@ -99,3 +112,5 @@ class CommandPreprocessing(Preprocessing):
             return text
         except:
             return "except"
+    def reversepreprocess_text(self, text):
+        pass
