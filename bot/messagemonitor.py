@@ -61,20 +61,8 @@ def get_user_text(message):
      #                      'command') == "Команда"
         ststr = qpr.reversepreprocess_text(message.text)
 
-        if bpred.predict(text, bot.mapa.himapa,
-                         './models/binary/himodel.h5',
-                         './tokenizers/binary/hitokenizer.pickle',
-                         '') == "Приветствие":
-
-            ra = bot.Answers.RandomAnswer()
-            bot.boto.send_message(
-                message.chat.id, ra.answer(), parse_mode='html')
-
-            set_null()
-            hi_flag = 1
-            mtext = tstr
-        elif(len(ststr) > 0 and message.text.count('?') > 0):
-            if(mpred.predict(text) == "Дело"):
+        if (len(ststr) > 0 and message.text.count('?') > 0):
+            if(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './models/tokenizers/multyclasstokenizer.pickle') == "Дело"):
                 bot.boto.send_message(
                     message.chat.id, "Я в порядке", parse_mode='html')
 
@@ -83,9 +71,9 @@ def get_user_text(message):
                 qu_flag = 1
                 mtext = tstr
 
-            elif(mpred.predict(text) == "Погода"):
+            elif(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './models/tokenizers/multyclasstokenizer.pickle') == "Погода"):
                 bot.boto.send_message(
-                    message.chat.id, "Погода норм", parse_mode='html')
+                message.chat.id, "Погода норм", parse_mode='html')
 
                 set_null()
                 weater_flag = 1
@@ -94,19 +82,24 @@ def get_user_text(message):
 
             else:
                 bot.boto.send_message(
-                    message.chat.id, "Вопрос без классификации",
-                    parse_mode='html')
+                message.chat.id, "Вопрос без классификации",
+                parse_mode='html')
 
                 set_null()
                 qnon_flag = 1
                 qu_flag = 1
                 mtext = tstr
+        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Приветствие"):
+            
+            ra = bot.Answers.RandomAnswer()
+            bot.boto.send_message(
+                message.chat.id, ra.answer(), parse_mode='html')
 
-        elif(bpred.predict(text, bot.mapa.commandmapa,
-                               './models/binary/commandmodel.h5',
-                              './tokenizers/binary/thtokenizer.pickle',
-                               'command') == "Команда"):
-
+            set_null()
+            hi_flag = 1
+            mtext = tstr
+        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Команда"):
+            
             set_null()
             command_flag = 1
             print(command_flag)
@@ -114,35 +107,32 @@ def get_user_text(message):
                 bot.boto, message, tstr)
 
             mtext = tstr
-
-        elif(bpred.predict(text, bot.mapa.thmapa,
-                           './models/binary/thmodel.h5',
-                           './tokenizers/binary/thtokenizer.pickle',
-                           '') == "Благодарность"):
-
+            
+        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Благодарность"):
             bot.boto.send_message(message.chat.id, "Не за что",
                                   parse_mode='html')
 
             set_null()
             th_flag = 1
             mtext = tstr
-
-        else:
+        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Утверждение"):
+            
             if(mpred.predict(text) == "Дело"):
-                bot.boto.send_message(
-                    message.chat.id, "Утверждение про дела", parse_mode='html')
+               bot.boto.send_message(
+                   message.chat.id, "Утверждение про дела", parse_mode='html')
 
             elif(mpred.predict(text) == "Погода"):
-                bot.boto.send_message(
-                    message.chat.id, "Утверждение про погоду", parse_mode='html')
+               bot.boto.send_message(
+                   message.chat.id, "Утверждение про погоду", parse_mode='html')
             else:
-                bot.boto.send_message(
-                    message.chat.id, "Нет классификации",
-                    parse_mode='html')
+               bot.boto.send_message(
+                   message.chat.id, "Нет классификации",
+                   parse_mode='html')
 
             set_null()
             non_flag = 1
             mtext = tstr
+      
 
 # ______________________________________________________________________________
     inpt = message.text.split(' ')

@@ -81,7 +81,8 @@ class Binary(Model):
         if(mode == 'evaluate'):
             model = NLP.load_model(self.filemodelname)
             
-            es = NLP.EarlyStopping(patience=10, monitor='binary_accuracy', restore_best_weights=True)
+            es = NLP.EarlyStopping(patience=10, monitor='binary_accuracy',
+                                   restore_best_weights=True)
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
@@ -123,11 +124,14 @@ class Multy(Model):
         optimzer = NLP.Adam(clipvalue=0.5)
         model.add(NLP.Embedding(len(tokenizer.tokenizer.word_index)+1,
                                 self.EMBEDDING_VECTOR_LENGTH,
-                                input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH, trainable=True))
+                                input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
+                                trainable=True))
         model.add(NLP.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
+        model.add(NLP.Dense(128, activation="sigmoid"))
         model.add(NLP.Dense(64, activation="sigmoid"))
         model.add(NLP.Dense(32, activation="sigmoid"))
         model.add(NLP.Dense(16, activation="sigmoid"))
+        model.add(NLP.Dense(8, activation="sigmoid"))
         model.add(NLP.Dense(n_clases, activation='softmax'))
         # compile the model
         model.compile(optimizer=optimzer, loss='categorical_crossentropy', metrics=[
@@ -144,7 +148,7 @@ class Multy(Model):
         df = NLP.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
-        train = train.drop_duplicates()
+      #  train = train.drop_duplicates()
 
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
@@ -171,12 +175,13 @@ class Multy(Model):
             y_val, n_clases)
         if(mode == 'evaluate'):
             
-            es = NLP.EarlyStopping(patience=10, monitor='val_accuracy', restore_best_weights=True)
+            es = NLP.EarlyStopping(patience=10, monitor='val_accuracy',
+                                   restore_best_weights=True)
             
             model = NLP.load_model(self.filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=64, epochs=4000,
+                                batch_size=512, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 callbacks=[es],
                                 verbose=2)
@@ -184,7 +189,7 @@ class Multy(Model):
             model = self.createmodel(tokenizer, n_clases)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=64, epochs=4000,
+                                batch_size=512, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2)
 

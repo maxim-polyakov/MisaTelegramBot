@@ -148,3 +148,14 @@ def get_user_text(message):
 
     trainer.train('questionclass', 3,'train')
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
+
+@bot.boto.message_handler(commands=['hi_th_commandtrain'])
+def get_user_text(message):
+
+    trainer = bot.Models.Multy('./models/multy/hi_th_commandmodel.h5', 
+                               './tokenizers/multy/hi_th_commandtokenizer.pickle',
+                               'SELECT * FROM hi_th_command', 
+                               'SELECT * FROM recognized_hi_th_command')
+
+    trainer.train('hi_th_command', 4,'train')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
