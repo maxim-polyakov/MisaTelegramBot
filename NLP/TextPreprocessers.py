@@ -1,5 +1,5 @@
 import NLP
-
+import spacy
 
 
 class Preprocessing:
@@ -9,6 +9,7 @@ class Preprocessing:
     russian_stopwords = NLP.stopwords.words("russian")
     english_stopwords = NLP.stopwords.words("english")
 
+    nlp = spacy.load('ru_core_news_md')
     def __init__(self):
         pass
 
@@ -114,4 +115,10 @@ class CommandPreprocessing(Preprocessing):
         except:
             return "except"
     def reversepreprocess_text(self, text):
-        pass
+        document = self.nlp(text)
+        tokens = [token.lemma_ for token in document if token.pos_ == 'VERB']
+        
+       # text = self.remove_punctuation(text)
+        text = " ".join(tokens).rstrip('\n')
+        print(text)
+        return text

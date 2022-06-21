@@ -1,6 +1,7 @@
 import bot
 from bot import subfunctions
 from bot import bototrain
+import psycopg2
 from sqlalchemy import create_engine
 
 
@@ -17,7 +18,9 @@ mtext = ""
 
 @bot.boto.message_handler(content_types=['text'])
 def get_user_text(message):
-    # boto.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    
+
+    
     global hi_flag
     global qu_flag
     global command_flag
@@ -50,19 +53,19 @@ def get_user_text(message):
         global weater_flag
         global b_flag
         global qnon_flag
-
+        
+        conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        df = bot.pd.read_sql('SELECT text FROM commands',conn)
+        Cdict = df['text'].to_dict()
+        
         bpred = bot.Predictors.Binary()
         mpred = bot.Predictors.Multy()
         qpr = bot.Models.TextPreprocessers.QuestionPreprocessing()
-        #bpred.predict(text, bot.mapa.qumapa,'./models/binary/qumodel.h5', './tokenizers/binary/qutokenizer.pickle','qu') == "Вопрос" or 
-    #    bpred.predict(text, bot.mapa.commandmapa,
-     #                      './models/binary/commandmodel.h5',
-    ##                       './tokenizers/binary/thtokenizer.pickle',
-     #                      'command') == "Команда"
+        cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
         ststr = qpr.reversepreprocess_text(message.text)
-
+        a = cpr.preprocess_text(text[0])
         if (len(ststr) > 0 and message.text.count('?') > 0):
-            if(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './models/tokenizers/multyclasstokenizer.pickle') == "Дело"):
+            if(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 bot.boto.send_message(
                     message.chat.id, "Я в порядке", parse_mode='html')
 
@@ -71,7 +74,7 @@ def get_user_text(message):
                 qu_flag = 1
                 mtext = tstr
 
-            elif(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './models/tokenizers/multyclasstokenizer.pickle') == "Погода"):
+            elif(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 bot.boto.send_message(
                 message.chat.id, "Погода норм", parse_mode='html')
 
@@ -89,8 +92,23 @@ def get_user_text(message):
                 qnon_flag = 1
                 qu_flag = 1
                 mtext = tstr
-        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Приветствие"):
+        elif(a in Cdict.values()):
+
+
+            set_null()
+            command_flag = 1
+            print(command_flag)
+            bot.commands.commandsdesition(
+                bot.boto, message, tstr)
             
+            
+
+            mtext = tstr
+        elif(bpred.predict(text, bot.mapa.himapa,
+                         './models/binary/himodel.h5',
+                         './tokenizers/binary/hitokenizer.pickle',
+                         '') == "Приветствие"):
+
             ra = bot.Answers.RandomAnswer()
             bot.boto.send_message(
                 message.chat.id, ra.answer(), parse_mode='html')
@@ -98,30 +116,25 @@ def get_user_text(message):
             set_null()
             hi_flag = 1
             mtext = tstr
-        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Команда"):
             
-            set_null()
-            command_flag = 1
-            print(command_flag)
-            bot.commands.commandsdesition(
-                bot.boto, message, tstr)
+        elif(bpred.predict(text, bot.mapa.thmapa,
+                           './models/binary/thmodel.h5',
+                           './tokenizers/binary/thtokenizer.pickle',
+                           '') == "Благодарность"):
 
-            mtext = tstr
-            
-        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Благодарность"):
             bot.boto.send_message(message.chat.id, "Не за что",
                                   parse_mode='html')
 
             set_null()
             th_flag = 1
             mtext = tstr
-        elif(mpred.predict(text, bot.mapa.hi_th_commandmapa,'./models/multy/hi_th_commandmodel.h5', './tokenizers/multy/hi_th_commandtokenizer.pickle') == "Утверждение"):
+        else:
             
-            if(mpred.predict(text) == "Дело"):
+            if(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                bot.boto.send_message(
                    message.chat.id, "Утверждение про дела", parse_mode='html')
 
-            elif(mpred.predict(text) == "Погода"):
+            elif(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                bot.boto.send_message(
                    message.chat.id, "Утверждение про погоду", parse_mode='html')
             else:

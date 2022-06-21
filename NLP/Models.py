@@ -61,7 +61,7 @@ class Binary(Model):
         df = NLP.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
-        train = train.drop_duplicates()
+      #  train = train.drop_duplicates()
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
 
