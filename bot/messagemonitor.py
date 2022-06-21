@@ -67,6 +67,9 @@ def get_user_text(message):
         splta = a.split()
         print("splta = ",splta[0])
         if (len(ststr) > 0 and message.text.count('?') > 0):
+
+            
+                
             if(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 bot.boto.send_message(
                     message.chat.id, "Я в порядке", parse_mode='html')
@@ -96,13 +99,20 @@ def get_user_text(message):
                 mtext = tstr
         elif(splta[0] in Cdict.values()):
 
-
-            set_null()
-            command_flag = 1
-            print(command_flag)
-            bot.commands.commandsdesition(
-                bot.boto, message, tstr)
-            
+            if(bpred.predict(text, bot.mapa.commandmapa,
+                           './models/binary/commandmodel.h5',
+                           './tokenizers/binary/thtokenizer.pickle',
+                           'command') == "Команда"):
+                
+                set_null()
+                command_flag = 1
+                print(command_flag)
+                bot.commands.commandsdesition(
+                    bot.boto, message, tstr)
+            else:
+                bot.boto.send_message(
+                message.chat.id, "Похоже на команду но я не уверена.",
+                parse_mode='html')
             
 
             mtext = tstr
@@ -165,9 +175,10 @@ def get_user_text(message):
         df = df.append(new_row, ignore_index=True)
         df.to_sql('validset', con = engine, schema = 'public', index=False, if_exists='append')
 
-    if(pr.preprocess_text(inpt[0]) == "мис" or inpt[0].lower() == "misa"):
-        tstr = message.text.replace(inpt[0], '')
-        text.append(tstr)
+    if(message.text.lower().count('миса') > 0 or message.text.lower().count('misa') > 0):
+        tstr = message.text.replace("миса", '')
+        ststr = tstr.replace("misa", '')
+        text.append(ststr)
         neurodesc()
       #  try:
 
