@@ -64,6 +64,8 @@ def get_user_text(message):
         cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
         ststr = qpr.reversepreprocess_text(message.text)
         a = cpr.preprocess_text(text[0])
+        splta = a.split()
+        print("splta = ",splta[0])
         if (len(ststr) > 0 and message.text.count('?') > 0):
             if(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 bot.boto.send_message(
@@ -92,7 +94,7 @@ def get_user_text(message):
                 qnon_flag = 1
                 qu_flag = 1
                 mtext = tstr
-        elif(a in Cdict.values()):
+        elif(splta[0] in Cdict.values()):
 
 
             set_null()

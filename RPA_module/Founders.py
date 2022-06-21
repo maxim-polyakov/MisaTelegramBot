@@ -15,7 +15,7 @@ class WikiFounder(Founder):
     def __init__(self):
         pass
     
-    def find(self, boto, message, reply_markup, inptmes):
+    def find(self, boto, message, inptmes):
         r.init(visual_automation = False, chrome_browser = True)
         r.url('https://ru.wikipedia.org/')
         r.type('//*[@name="search"]', inptmes + '[enter]')
