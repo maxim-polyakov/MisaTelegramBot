@@ -19,8 +19,6 @@ mtext = ""
 @bot.boto.message_handler(content_types=['text'])
 def get_user_text(message):
     
-
-    
     global hi_flag
     global qu_flag
     global command_flag
@@ -41,8 +39,6 @@ def get_user_text(message):
         b_flag = 0
         qnon_flag = 0
         mtext = ""
-
-
 
     def neurodesc():
         global hi_flag
@@ -67,9 +63,6 @@ def get_user_text(message):
         splta = a.split()
         print("splta = ",splta[0])
         if (len(ststr) > 0 and message.text.count('?') > 0):
-
-            
-                
             if(mpred.predict(text, bot.mapa.multymapa,'./models/multy/multyclassmodel.h5', './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 bot.boto.send_message(
                     message.chat.id, "Я в порядке", parse_mode='html')
@@ -103,7 +96,6 @@ def get_user_text(message):
                            './models/binary/commandmodel.h5',
                            './tokenizers/binary/thtokenizer.pickle',
                            'command') == "Команда"):
-                
                 set_null()
                 command_flag = 1
                 print(command_flag)
@@ -165,8 +157,9 @@ def get_user_text(message):
     text = []
     print(message.text)
     pr = bot.Models.TextPreprocessers.CommonPreprocessing()
+    text.append(message.text)
     for txt in text:
-        conn = bot.NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
         engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
         
         data = {'text': pr.preprocess_text(txt), 'agenda': ''}

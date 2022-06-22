@@ -41,6 +41,7 @@ class Binary(Model):
         model.add(NLP.Dropout(0.1))
         model.add(NLP.LSTM(64))
         model.add(NLP.Dense(64, activation="sigmoid"))
+        model.add(NLP.Dropout(0.1))
         model.add(NLP.Dense(32, activation="sigmoid"))
         model.add(NLP.Dense(16, activation="sigmoid"))
         model.add(NLP.Dense(1, activation='sigmoid'))
@@ -61,7 +62,7 @@ class Binary(Model):
         df = NLP.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
-      #  train = train.drop_duplicates()
+        train = train.drop_duplicates()
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
 
@@ -87,7 +88,7 @@ class Binary(Model):
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
                                 batch_size=512,
-                                epochs=2000,
+                                epochs=200,
                                 verbose=2,
                                 callbacks=[es]
                                 )
@@ -97,7 +98,7 @@ class Binary(Model):
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
                                 batch_size=512,
-                                epochs=2000,
+                                epochs=200,
                                 verbose=2,
                                 )
 
