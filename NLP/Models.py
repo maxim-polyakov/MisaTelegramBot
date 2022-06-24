@@ -66,6 +66,7 @@ class Binary(Model):
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
 
+        print(train)
         X_train, X_val, y_train, y_val = NLP.train_test_split(
             train, train[target], test_size=0.3, random_state=32)
 
@@ -150,7 +151,7 @@ class Multy(Model):
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
       #  train = train.drop_duplicates()
-
+      
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
         X_train, X_val, y_train, y_val = NLP.train_test_split(

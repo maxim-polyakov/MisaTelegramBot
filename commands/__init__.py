@@ -1,7 +1,7 @@
 import NLP
 from NLP import TextPreprocessers
 #import pyTelegramBotAPI
-from RPA_module import Founders
+from RPA_module import Finders
 from RPA_module import Calculators
 import psycopg2
 
@@ -37,7 +37,7 @@ def commandsdesition(boto, message, tstr):
         tmp = pr.preprocess_text(preinpt[1])
         print("25 ",tmp)
         
-        f = Founders.WikiFounder()
+        f = Finders.WikiFinder()
         f.find(boto, message, tmp)
         
         command_flag = 1

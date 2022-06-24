@@ -157,21 +157,25 @@ def get_user_text(message):
     text = []
     print(message.text)
     pr = bot.Models.TextPreprocessers.CommonPreprocessing()
-    text.append(message.text)
-    for txt in text:
-        conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
-        engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-        
-        data = {'text': pr.preprocess_text(txt), 'agenda': ''}
-        df = bot.pd.DataFrame()
-        new_row = bot.pd.Series(data)
-        df = df.append(new_row, ignore_index=True)
-        df.to_sql('validset', con = engine, schema = 'public', index=False, if_exists='append')
+    
+
 
     if(message.text.lower().count('миса') > 0 or message.text.lower().count('misa') > 0):
         tstr = message.text.replace("миса", '')
         ststr = tstr.replace("misa", '')
         text.append(ststr)
+        
+        for txt in text:
+            conn = psycopg2.connect("dbname=postgres user=postgres password=postgres")
+            engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
+            
+            data = {'text': pr.preprocess_text(txt), 'agenda': ''}
+            df = bot.pd.DataFrame()
+            new_row = bot.pd.Series(data)
+            df = df.append(new_row, ignore_index=True)
+            print(df)
+            df.to_sql('validset', con = engine, schema = 'public', index=False, if_exists='append')
+        
         neurodesc()
       #  try:
 
