@@ -8,36 +8,15 @@ def get_user_text(message):
     strr = message.text.replace('/multyclean ','')
 
     cl.clean('./datasets/' + strr, 'questionclass')
-    bot.boto.send_message(message.chat.id, strr + 'is cleaned', parse_mode='html')
+    bot.boto.send_message(message.chat.id, strr + " is cleaned", parse_mode='html')
 
 
-@bot.boto.message_handler(commands=['hiclean'])
+@bot.boto.message_handler(commands=['clean'])
 def get_user_text(message):
     cl = DataCleaners.CommonCleaner()
-    
-    cl.clean('./datasets/dataset.xlsx', 'hi')
-    bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
+    strr = message.text.replace('/multyclean ','')
+    strrr = strr.split(strr)
+    cl.clean('./datasets/' + strrr[0], strrr[1])
+    bot.boto.send_message(message.chat.id, " is cleaned", parse_mode='html')
 
-
-@bot.boto.message_handler(commands=['quclean'])
-def get_user_text(message):
-    cl = DataCleaners.QuestionCleaner()
-    cl.clean('./datasets/questionset.xlsx')
-    bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
-
-
-@bot.boto.message_handler(commands=['thclean'])
-def get_user_text(message):
-    
-    
-    cl = DataCleaners.CommonCleaner()
-    cl.clean('./datasets/thanksset.xlsx', 'thanks')
-    bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
-
-
-@bot.boto.message_handler(commands=['commandclean'])
-def get_user_text(message):
-    cl = DataCleaners.CommandCleaner()
-    cl.clean('./datasets/commandset.xlsx')
-    bot.boto.send_message(message.chat.id, "cleaned", parse_mode='html')
 #______________________________________________________________________________
