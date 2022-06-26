@@ -6,15 +6,15 @@ from NLP import DataCleaners
 def get_user_text(message):
     cl = DataCleaners.CommonCleaner()
     strr = message.text.replace('/multyclean ','')
-
-    cl.clean('./datasets/' + strr, 'questionclass')
+    strrr = strr.split(strr)
+    cl.clean('./datasets/' + strrr[0], strrr[1])
     bot.boto.send_message(message.chat.id, strr + " is cleaned", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['clean'])
 def get_user_text(message):
     cl = DataCleaners.CommonCleaner()
-    strr = message.text.replace('/multyclean ','')
+    strr = message.text.replace('/clean ','')
     strrr = strr.split(strr)
     cl.clean('./datasets/' + strrr[0], strrr[1])
     bot.boto.send_message(message.chat.id, " is cleaned", parse_mode='html')
