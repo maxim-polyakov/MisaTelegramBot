@@ -7,6 +7,8 @@ import Bot_module
 
 
 class Monitor:
+    
+    
     def __init__(self):
         pass
 
@@ -15,7 +17,7 @@ class Monitor:
 
 
 class MessageMonitor(Monitor):
-
+    
     __hi_flag = 0
     __qu_flag = 0
     __command_flag = 0
@@ -25,6 +27,7 @@ class MessageMonitor(Monitor):
     __b_flag = 0
     __q__non_flag = 0
     __mtext = ""
+
 
     def __init__(self, message):
         self.__message = message
@@ -276,3 +279,114 @@ class MessageMonitor(Monitor):
         elif(self.__message.text == "👍"):
             bot.boto.send_message(self.__message.chat.id,
                                   "😊", parse_mode='html')
+
+class TestMonitor(MessageMonitor):
+    
+    inputtext = ""
+    def __init__(self, message):
+        self.__message = message
+
+
+
+    def __neurodesc(self, text, tstr):
+
+        conn = psycopg2.connect(
+            "dbname=postgres user=postgres password=postgres")
+        df = bot.pd.read_sql('SELECT text FROM commands', conn)
+        Cdict = df['text'].to_dict()
+
+        bpred = bot.Predictors.Binary()
+        mpred = bot.Predictors.Multy()
+        qpr = bot.Models.TextPreprocessers.QuestionPreprocessing()
+        cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
+        ststr = qpr.reversepreprocess_text(text)
+        a = cpr.preprocess_text(text[0])
+        splta = a.split()
+        print("splta = ", splta[0])
+        if (len(ststr) > 0 and self.__message.text.count('?') > 0):
+            if(mpred.predict(text, bot.mapa.multymapa,
+                             './models/multy/multyclassmodel.h5',
+                             './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
+
+                self.__mtext = tstr
+
+            elif(mpred.predict(text, bot.mapa.multymapa,
+                               './models/multy/multyclassmodel.h5',
+                               './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
+
+                self.__mtext = tstr
+
+            else:
+                bot.boto.send_message(
+                    self.__message.chat.id, "Вопрос без классификации",
+                    parse_mode='html')
+
+                self.__mtext = tstr
+        elif(splta[0] in Cdict.values()):
+
+            if(bpred.predict(text, bot.mapa.commandmapa,
+                             './models/binary/commandmodel.h5',
+                             './tokenizers/binary/thtokenizer.pickle',
+                             'command') == "Команда"):
+                 pass
+            else:
+                 pass
+
+            self.__mtext = tstr
+        elif(bpred.predict(text, bot.mapa.himapa,
+                           './models/binary/himodel.h5',
+                           './tokenizers/binary/hitokenizer.pickle',
+                           '') == "Приветствие"):
+
+            ra = bot.Answers.RandomAnswer()
+
+            self.__mtext = tstr
+
+        elif(bpred.predict(text, bot.mapa.thmapa,
+                           './models/binary/thmodel.h5',
+                           './tokenizers/binary/thtokenizer.pickle',
+                           '') == "Благодарность"):
+
+            self.__mtext = tstr
+        else:
+
+            if(mpred.predict(text, bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
+                             './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
+
+                pass
+            elif(mpred.predict(text, bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
+                               './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
+                pass
+            else:
+                pass
+
+            self.__mtext = tstr
+
+    def monitor(self):
+
+        text = []
+
+        pr = bot.Models.TextPreprocessers.CommonPreprocessing()
+
+        if(self.__message.text.lower().count('миса') > 0 or self.__message.text.lower().count('misa') > 0):
+            tstr = self.__message.text.replace("миса", '')
+            ststr = tstr.replace("misa", '')
+            text.append(ststr)
+
+            for txt in text:
+                conn = psycopg2.connect(
+                    "dbname=postgres user=postgres password=postgres")
+                engine = create_engine(
+                    'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
+
+                data = {'text': pr.preprocess_text(txt), 'agenda': ''}
+                df = bot.pd.DataFrame()
+                new_row = bot.pd.Series(data)
+                df = df.append(new_row, ignore_index=True)
+                print(df)
+                df.to_sql('validset', con=engine, schema='public',
+                          index=False, if_exists='append')
+            try:
+                self.__neurodesc(text, tstr)
+            except:
+                pass
