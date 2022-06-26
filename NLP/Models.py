@@ -41,6 +41,7 @@ class Binary(Model):
         model.add(NLP.Dropout(0.1))
         model.add(NLP.LSTM(64))
         model.add(NLP.Dense(64, activation="sigmoid"))
+        model.add(NLP.Dropout(0.1))
         model.add(NLP.Dense(32, activation="sigmoid"))
         model.add(NLP.Dense(16, activation="sigmoid"))
         model.add(NLP.Dense(1, activation='sigmoid'))
@@ -65,6 +66,7 @@ class Binary(Model):
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
 
+        print(train)
         X_train, X_val, y_train, y_val = NLP.train_test_split(
             train, train[target], test_size=0.3, random_state=32)
 
@@ -81,12 +83,13 @@ class Binary(Model):
         if(mode == 'evaluate'):
             model = NLP.load_model(self.filemodelname)
             
-            es = NLP.EarlyStopping(patience=10, monitor='binary_accuracy', restore_best_weights=True)
+            es = NLP.EarlyStopping(patience=10, monitor='binary_accuracy',
+                                   restore_best_weights=True)
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
                                 batch_size=512,
-                                epochs=2000,
+                                epochs=200,
                                 verbose=2,
                                 callbacks=[es]
                                 )
@@ -96,7 +99,7 @@ class Binary(Model):
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
                                 batch_size=512,
-                                epochs=2000,
+                                epochs=200,
                                 verbose=2,
                                 )
 
@@ -109,46 +112,50 @@ class Binary(Model):
 
 class Multy(Model):
 
-    def __init__(self):
+    def __init__(self, filemodelname, tokenizerfilename, dataselect,
+                 recognizeddataselect):
         self.conn = NLP.psycopg2.connect(
             "dbname=postgres user=postgres password=postgres")
-        self.filemodelname = './models/multy/multyclassmodel.h5'
-        self.tokenizerfilename = './tokenizers/multy/multyclasstokenizer.pickle'
-        self.datafilename = 'SELECT * FROM multyclasesset'
-        self.recognizeddatafilename = 'SELECT * FROM recognized_multyclass'
+        self.filemodelname = filemodelname
+        self.tokenizerfilename = tokenizerfilename
+        self.dataselect = dataselect
+        self.recognizeddataselect = recognizeddataselect
 
     def createmodel(self, tokenizer, n_clases):
         model = NLP.Sequential()
         optimzer = NLP.Adam(clipvalue=0.5)
         model.add(NLP.Embedding(len(tokenizer.tokenizer.word_index)+1,
                                 self.EMBEDDING_VECTOR_LENGTH,
-                                input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH, trainable=True))
+                                input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
+                                trainable=True))
         model.add(NLP.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
+        model.add(NLP.Dense(128, activation="sigmoid"))
         model.add(NLP.Dense(64, activation="sigmoid"))
         model.add(NLP.Dense(32, activation="sigmoid"))
         model.add(NLP.Dense(16, activation="sigmoid"))
+        model.add(NLP.Dense(8, activation="sigmoid"))
         model.add(NLP.Dense(n_clases, activation='softmax'))
         # compile the model
         model.compile(optimizer=optimzer, loss='categorical_crossentropy', metrics=[
             'categorical_accuracy'])
         return model
 
-    def train(self, mode):
+    def train(self, target, n_clases, mode):
 
-        train = NLP.pd.read_sql(self.datafilename, self.conn)
+        train = NLP.pd.read_sql(self.dataselect, self.conn)
         train.text = train.text.astype(str)
         recognizedtrain = NLP.pd.read_sql(
-            self.recognizeddatafilename, self.conn)
+            self.recognizeddataselect, self.conn)
         recognizedtrain.text = recognizedtrain.text.astype(str)
         df = NLP.pd.concat([train, recognizedtrain])
-        train = df[~df['questionclass'].isna()]
-        train['questionclass'] = train['questionclass'].astype(int)
-        train = train.drop_duplicates()
-        target = 'questionclass'
+        train = df[~df[target].isna()]
+        train[target] = train[target].astype(int)
+      #  train = train.drop_duplicates()
+      
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
         X_train, X_val, y_train, y_val = NLP.train_test_split(
-            train, train['questionclass'], test_size=0.2, random_state=64)
+            train, train[target], test_size=0.2, random_state=64)
         print('Shape of train', X_train.shape)
         print("Shape of Validation ", X_val.shape)
 
@@ -163,19 +170,20 @@ class Multy(Model):
         tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
         tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
 
-        n_clases = 3
+
         y_trainmatrix = NLP.tensorflow.keras.utils.to_categorical(
             y_train, n_clases)
         y_valmatrix = NLP.tensorflow.keras.utils.to_categorical(
             y_val, n_clases)
         if(mode == 'evaluate'):
             
-            es = NLP.EarlyStopping(patience=10, monitor='val_accuracy', restore_best_weights=True)
+            es = NLP.EarlyStopping(patience=10, monitor='val_accuracy',
+                                   restore_best_weights=True)
             
             model = NLP.load_model(self.filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=64, epochs=4000,
+                                batch_size=512, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 callbacks=[es],
                                 verbose=2)
@@ -183,7 +191,7 @@ class Multy(Model):
             model = self.createmodel(tokenizer, n_clases)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=64, epochs=4000,
+                                batch_size=512, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2)
 

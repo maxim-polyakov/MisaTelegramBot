@@ -56,9 +56,9 @@ class Multy(Predictor):
     def __init__(self):
         pass
 
-    def predict(self, inpt):
-        tmap = NLP.mapa.multymapa
-        model = load_model('./models/multy/multyclassmodel.h5')
+    def predict(self, inpt, tmap, model, tokenizer):
+        tmap = tmap
+        model = load_model(model)
         inp = []
         pr = NLP.TextPreprocessers.CommonPreprocessing()
         for i in inpt:
@@ -66,7 +66,7 @@ class Multy(Predictor):
             print(inp)
             inn = []
             inn.append(inp.pop())
-        with open('./tokenizers/multy/multyclasstokenizer.pickle', 'rb') as handle:
+        with open(tokenizer, 'rb') as handle:
             tokenizer = NLP.p.load(handle)
         tokenized_inpt = tokenizer.vectorize_input(inn)
         scoreplu = model.predict(tokenized_inpt)

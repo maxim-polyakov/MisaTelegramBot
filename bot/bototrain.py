@@ -80,7 +80,7 @@ def commandevaluate():
     datasetfile = 'SELECT * FROM commandset'
     recognizeddata = 'SELECT * FROM recognized_command'
     trainer = bot.Models.Binary(filemodel, filetokenizer,
-                             datasetfile, recognizeddata)
+                                datasetfile, recognizeddata)
     trainer.train('command', 'evaluate')
 # ______________________________________________________________________________
 
@@ -124,7 +124,6 @@ def get_user_text(message):
 def get_user_text(message):
 
     quevaluate()
-    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['thevaluate'])
@@ -142,6 +141,21 @@ def get_user_text(message):
 @bot.boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
-    trainer = bot.Models.Multy()
-    trainer.train('train')
+    trainer = bot.Models.Multy('./models/multy/multyclassmodel.h5', 
+                               './tokenizers/multy/multyclasstokenizer.pickle',
+                               'SELECT * FROM multyclasesset', 
+                               'SELECT * FROM recognized_multyclass')
+
+    trainer.train('questionclass', 3,'train')
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
+
+@bot.boto.message_handler(commands=['hi_th_commandtrain'])
+def get_user_text(message):
+
+    trainer = bot.Models.Multy('./models/multy/hi_th_commandmodel.h5', 
+                               './tokenizers/multy/hi_th_commandtokenizer.pickle',
+                               'SELECT * FROM hi_th_command', 
+                               'SELECT * FROM recognized_hi_th_command')
+
+    trainer.train('hi_th_command', 4,'train')
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
