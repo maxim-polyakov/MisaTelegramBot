@@ -3,28 +3,28 @@ import NLP
 from tensorflow.keras.models import load_model
 
 class Predictor:
-    
+    inp = []
     def __init__(self):
         pass
 
     def preprocessing(self, inpt, prep):
-        inp = []
+        
         if(prep == 'qu'):
             for i in inpt:
                 pr = NLP.TextPreprocessers.QuestionPreprocessing()
-                inp.append(pr.preprocess_text(i))
-                print(inp)
+                self.inp.append(pr.preprocess_text(i))
+               # print(self.inp)
         elif(prep == 'command'):
             for i in inpt:
                 pr = NLP.TextPreprocessers.CommandPreprocessing()
-                inp.append(pr.preprocess_text(i))
-                print(inp)
+                self.inp.append(pr.preprocess_text(i))
+             #   print(self.inp)
         else:
             for i in inpt:
                 pr = NLP.TextPreprocessers.CommonPreprocessing()
-                inp.append(pr.preprocess_text(i))
-                print(inp)
-        return inp
+                self.inp.append(pr.preprocess_text(i))
+            #    print(self.inp)
+        return self.inp
     
     def predict():
         pass
@@ -48,7 +48,8 @@ class Binary(Predictor):
         score = model.predict(tokenized_inpt)
         outpt = max(NLP.np.round(score).astype(int))
         outscore = max(score)
-        print(outscore)
+     #   print(outscore)
+        self.inp = []
         return(tmap[outpt[0]])
 
 class Multy(Predictor):
@@ -59,17 +60,18 @@ class Multy(Predictor):
     def predict(self, inpt, tmap, model, tokenizer):
         tmap = tmap
         model = load_model(model)
-        inp = []
+        self.inp = []
         pr = NLP.TextPreprocessers.CommonPreprocessing()
         for i in inpt:
-            inp.append(pr.preprocess_text(i))
-            print(inp)
+            self.inp.append(pr.preprocess_text(i))
+        #    print(self.inp)
             inn = []
-            inn.append(inp.pop())
+            inn.append(self.inp.pop())
         with open(tokenizer, 'rb') as handle:
             tokenizer = NLP.p.load(handle)
         tokenized_inpt = tokenizer.vectorize_input(inn)
         scoreplu = model.predict(tokenized_inpt)
         outpt = tmap[scoreplu.argmax(axis=-1)[0]]
-        print(outpt)
+      #  print(outpt)
+        self.inp = []
         return outpt
