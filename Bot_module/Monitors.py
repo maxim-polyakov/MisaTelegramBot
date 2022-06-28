@@ -33,9 +33,9 @@ class MessageMonitor(Monitor):
     __cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
     __pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     
-    __engine = create_engine(
+    __engine_ = create_engine(
                     'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    __conn = psycopg2.connect(
+    __conn_ = psycopg2.connect(
         "dbname=postgres user=postgres password=postgres")
 
     def __init__(self, message):
@@ -54,7 +54,7 @@ class MessageMonitor(Monitor):
 
     def __neurodesc(self, text, tstr):
 
-        df = bot.pd.read_sql('SELECT text FROM commands', self.__conn)
+        df = bot.pd.read_sql('SELECT text FROM commands', self.__conn_)
         Cdict = df['text'].to_dict()
 
         ststr = self.__qpr.reversepreprocess_text(tstr)
@@ -183,13 +183,14 @@ class MessageMonitor(Monitor):
                 new_row = bot.pd.Series(data)
                 df = df.append(new_row, ignore_index=True)
                 #print(df)
-                df.to_sql('validset', con= self.__engine, schema='public',
+                df.to_sql('validset', con= self.__engine_, schema='public',
                           index=False, if_exists='append')
-            try:
-                self.__neurodesc(text, ststr)
-            except:
-                bot.boto.send_message(
-                    self.__message.chat.id, 'А?', parse_mode='html')
+            self.__neurodesc(text, ststr)
+        #    try:
+                
+        #    except:
+        #        bot.boto.send_message(
+         #           self.__message.chat.id, 'А?', parse_mode='html')
         elif(self.__message.text == "👍" and self.__hi_flag == 1):
             subfunctions.add(self.__mtext, 'recognized_hi',
                              "Приветствие", 'agenda', 'hi', 1)
@@ -293,10 +294,10 @@ class TestMonitor(MessageMonitor):
     __cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
     __pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     
-    __engine = create_engine(
-                    'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    __conn = psycopg2.connect(
-        "dbname=postgres user=postgres password=postgres")
+  #  __engine = create_engine(
+  #                  'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
+  #  __conn = psycopg2.connect(
+  #      "dbname=postgres user=postgres password=postgres")
     def __init__(self):
         pass
 
@@ -307,12 +308,12 @@ class TestMonitor(MessageMonitor):
         df = bot.pd.DataFrame()
         new_row = bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
-        df.to_sql('markedvalidset', con=self.__engine, schema='public',
+        df.to_sql('markedvalidset', con=self.__engine_, schema='public',
                           index=False, if_exists='append')
     
     def __neurodesc(self, text, tstr):
 
-        df = bot.pd.read_sql('SELECT text FROM commands', self.__conn)
+        df = bot.pd.read_sql('SELECT text FROM commands', self.__conn_)
         Cdict = df['text'].to_dict()
 
         ststr = self.__qpr.reversepreprocess_text(tstr)

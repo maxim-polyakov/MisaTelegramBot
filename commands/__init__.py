@@ -3,14 +3,14 @@ from NLP import TextPreprocessers
 #import pyTelegramBotAPI
 from RPA_module import Finders as RPAFind
 from API_module import Finders as APIFind
-from RPA_module import Calculators
+from API_module import Calculators
 import psycopg2
 
 def commandsdesition(boto, message, tstr):
     
     def insidefunction():
         if pr.preprocess_text(inpt[2]) == 'производная':
-            c = Calculators.WolframCalculator()
+            c = Calculators.SympyCalculator()
             print(inpt[3])
             c.deravative(boto, message, inpt[3])
     
@@ -33,16 +33,15 @@ def commandsdesition(boto, message, tstr):
         insidefunction()
 
     elif pr.preprocess_text(inpt[1]) == 'находить':
-        insidefunction()
-        
-        tmp = pr.preprocess_text(preinpt[1])
-        print("25 ",tmp)
-        
-       # rpaf = RPAFind.WikiFinder()
-        #rpaf.find(boto, message, tmp)
-        apif = APIFind.WikiFinder()
-        apif.find(boto,message, tmp)
-        command_flag = 1
+        if pr.preprocess_text(inpt[2]) == 'производная' or pr.preprocess_text(inpt[2]) == 'интеграл':
+            
+            insidefunction()
+        else: 
+            
+            tmp = pr.preprocess_text(preinpt[1])        
+            apif = APIFind.WikiFinder()
+            apif.find(boto,message, tmp)
+            command_flag = 1
         
     else:
 

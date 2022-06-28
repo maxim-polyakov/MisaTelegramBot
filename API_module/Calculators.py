@@ -10,14 +10,16 @@ class Calculator:
         pass
     
     
-class WolframCalculator(Calculator):
+class SympyCalculator(Calculator):
     
-    __pr = TextPreprocessers.CommonPreprocessing()
+    __pr = TextPreprocessers.QuestionPreprocessing()
     def __init__(self):
         pass
     
-    
     def deravative(self, boto, message, inptmes):
         inp = self.__pr.preprocess_text(inptmes)
-        x = Symbol(inp)
-       # y = 
+        x = Symbol(inp[0])
+        y = sympify(str(inptmes))
+        yprime = y.diff(x)
+        output = str(yprime).replace('**','^')
+        boto.send_message(message.chat.id, output, parse_mode='html')
