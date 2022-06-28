@@ -185,12 +185,12 @@ class MessageMonitor(Monitor):
                 #print(df)
                 df.to_sql('validset', con= self.__engine_, schema='public',
                           index=False, if_exists='append')
-            self.__neurodesc(text, ststr)
-        #    try:
-                
-        #    except:
-        #        bot.boto.send_message(
-         #           self.__message.chat.id, 'А?', parse_mode='html')
+            
+            try:
+                self.__neurodesc(text, ststr)
+            except:
+                bot.boto.send_message(
+                    self.__message.chat.id, 'А?', parse_mode='html')
         elif(self.__message.text == "👍" and self.__hi_flag == 1):
             subfunctions.add(self.__mtext, 'recognized_hi',
                              "Приветствие", 'agenda', 'hi', 1)
