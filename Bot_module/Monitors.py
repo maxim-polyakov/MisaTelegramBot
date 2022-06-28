@@ -61,7 +61,7 @@ class MessageMonitor(Monitor):
         a = self.__cpr.preprocess_text(text[0])
         splta = a.split()
         print("splta = ", splta[0])
-        if (len(ststr) > 0 and tstr.text.count('?') > 0):
+        if (len(ststr) > 0 and tstr.count('?') > 0):
             if(self.__mpred.predict(text, bot.mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
@@ -103,7 +103,7 @@ class MessageMonitor(Monitor):
                                     'command') == "Команда"):
                 self.__set_null()
                 self.__command_flag = 1
-                print(self.__command_flag)
+                #print(self.__command_flag)
                 bot.commands.commandsdesition(
                     bot.boto, self.__message, tstr)
             else:
@@ -178,11 +178,11 @@ class MessageMonitor(Monitor):
             for txt in text:
 
 
-                data = {'text': self.__pr.preprocess_text(txt), 'agenda': ''}
+                data = {'text': txt, 'agenda': ''}
                 df = bot.pd.DataFrame()
                 new_row = bot.pd.Series(data)
                 df = df.append(new_row, ignore_index=True)
-                print(df)
+                #print(df)
                 df.to_sql('validset', con= self.__engine, schema='public',
                           index=False, if_exists='append')
             try:
@@ -281,7 +281,7 @@ class MessageMonitor(Monitor):
         elif(self.__message.text == "👍"):
             bot.boto.send_message(self.__message.chat.id,
                                   "😊", parse_mode='html')
-
+        text = []
 
 class TestMonitor(MessageMonitor):
 
@@ -323,7 +323,7 @@ class TestMonitor(MessageMonitor):
             if(self.__mpred.predict(text, bot.mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
-                insert = "Дело"
+                insert = "Вопрос про дело"
                 self.__insert_to_validset_lablel(tstr,insert)
 
 
@@ -331,9 +331,8 @@ class TestMonitor(MessageMonitor):
                                       './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 
-                insert = "Погода"
+                insert = "Вопрос про погоду"
                 self.__insert_to_validset_lablel(tstr,insert)
-
 
             else:
                 
