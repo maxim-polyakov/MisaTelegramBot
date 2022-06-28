@@ -19,8 +19,6 @@ class WikiFinder(Finder):
         boto.send_message(message.chat.id, w.summary(inptmes),
                            parse_mode='html')
         
-
-                
         for i in range(0,6):
             try:
                 boto.send_photo(message.chat.id, w.page(inptmes).images[i],
