@@ -18,11 +18,20 @@ class SympyCalculator(Calculator):
     
     def deravative(self, boto, message, inptmes, dx):
         
-        
         inp = self.__pr.preprocess_text(dx)
         x = Symbol(inp[0])
         print(x)
         y = sympify(str(inptmes))
         yprime = y.diff(x)
+        output = str(yprime).replace('**','^')
+        boto.send_message(message.chat.id, output, parse_mode='html')
+    
+    def integrate(self, boto, message, inptmes, dx):
+        
+        inp = self.__pr.preprocess_text(dx)
+        x = Symbol(inp[0])
+        print(x)
+        y = sympify(str(inptmes))
+        yprime = y.integrate(x)
         output = str(yprime).replace('**','^')
         boto.send_message(message.chat.id, output, parse_mode='html')
