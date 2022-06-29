@@ -16,9 +16,12 @@ class SympyCalculator(Calculator):
     def __init__(self):
         pass
     
-    def deravative(self, boto, message, inptmes):
-        inp = self.__pr.preprocess_text(inptmes)
+    def deravative(self, boto, message, inptmes, dx):
+        
+        
+        inp = self.__pr.preprocess_text(dx)
         x = Symbol(inp[0])
+        print(x)
         y = sympify(str(inptmes))
         yprime = y.diff(x)
         output = str(yprime).replace('**','^')

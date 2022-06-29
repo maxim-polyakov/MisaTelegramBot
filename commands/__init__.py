@@ -12,7 +12,7 @@ def commandsdesition(boto, message, tstr):
         if pr.preprocess_text(inpt[2]) == 'производная':
             c = Calculators.SympyCalculator()
             print(inpt[3])
-            c.deravative(boto, message, inpt[3])
+            c.deravative(boto, message, inpt[3], inpt[4])
     
     global command_flag
     pred = TextPreprocessers.Preprocessing()
