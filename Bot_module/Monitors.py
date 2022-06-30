@@ -33,9 +33,9 @@ class MessageMonitor(Monitor):
     __cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
     __pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     
-    __engine = create_engine(
+    _engine = create_engine(
                     'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    __conn = psycopg2.connect(
+    _conn = psycopg2.connect(
         "dbname=postgres user=postgres password=postgres")
 
     def __init__(self, message):
@@ -54,7 +54,7 @@ class MessageMonitor(Monitor):
 
     def __neurodesc(self, text, tstr):
 
-        df = bot.pd.read_sql('SELECT text FROM commands', self.__conn)
+        df = bot.pd.read_sql('SELECT text FROM commands', self._conn)
         Cdict = df['text'].to_dict()
 
         ststr = self.__qpr.reversepreprocess_text(tstr)
@@ -183,7 +183,7 @@ class MessageMonitor(Monitor):
                 new_row = bot.pd.Series(data)
                 df = df.append(new_row, ignore_index=True)
                 #print(df)
-                df.to_sql('validset', con= self.__engine, schema='public',
+                df.to_sql('validset', con= self._engine, schema='public',
                           index=False, if_exists='append')
             
             try:
@@ -294,12 +294,9 @@ class TestMonitor(MessageMonitor):
     __cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
     __pr = bot.Models.TextPreprocessers.CommonPreprocessing()
     
-    __engine = create_engine(
-                    'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    __conn = psycopg2.connect(
-        "dbname=postgres user=postgres password=postgres")
     def __init__(self):
-        pass
+        self.__engine = super()._engine
+        self.__conn = super()._conn
 
 
     def __insert_to_validset_lablel(self, txt, insert):
