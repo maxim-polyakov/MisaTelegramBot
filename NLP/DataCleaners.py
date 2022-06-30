@@ -9,44 +9,78 @@ class Cleaner:
     def clean(self):
         pass
     
+    
 class CommonCleaner(Cleaner):
+    
+    __pr = TextPreprocessers.CommonPreprocessing()
+    
     def __init__(self):
         pass
     
+    def __init__(self, type_doc):
+        self.type_doc = type_doc
+    
     def clean(self, filename, string):
-        pr = TextPreprocessers.CommonPreprocessing()
-        train = NLP.pd.read_excel(filename)
+        
+        
+        if(self.type_doc == "csv"):
+            train = NLP.pd.read_csv(filename, encoding="utf-8")
+        else:
+            train = NLP.pd.read_excel(filename)
+        
         train.text = train.text.astype(str)
         df = NLP.pd.concat([train])
-        df['text'] = df['text'].apply(pr.preprocess_text)
+        df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df[string].isna()]
         train[string] = train[string].astype(int)
         train.to_excel(filename, index=False)
 
 class QuestionCleaner(Cleaner):
+    
+    __pr = TextPreprocessers.QuestionPreprocessing()
+    
     def __init__(self):
-        pass
+        pass  
+    
+    def __init__(self, type_doc):
+        self.type_doc = type_doc
     
     def clean(self, filename):
-        pr = TextPreprocessers.QuestionPreprocessing()
-        train = NLP.pd.read_excel(filename)
+        
+        if(self.type_doc == "csv"):
+            
+            train = NLP.pd.read_csv(filename, encoding="utf-8")
+        else:
+            train = NLP.pd.read_excel(filename)
+        
         train.text = train.text.astype(str)
         df = NLP.pd.concat([train])
-        df['text'] = df['text'].apply(pr.preprocess_text)
+        df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df['question'].isna()]
         train['question'] = train['question'].astype(int)
         train.to_excel(filename, index=False)
         
 class CommandCleaner(Cleaner):
+    
+    __pr = TextPreprocessers.CommandPreprocessing()
+    
     def __init__(self):
         pass
     
+    def __init__(self, type_doc):
+        self.type_doc = type_doc
+    
     def clean(self, filename):
-        pr = TextPreprocessers.CommandPreprocessing()
-        train = NLP.pd.read_excel(filename)
+        
+        if(self.type_doc == "csv"):
+            
+            train = NLP.pd.read_csv(filename, encoding="utf-8")
+        else:
+            train = NLP.pd.read_excel(filename)
+            
         train.text = train.text.astype(str)
         df = NLP.pd.concat([train])
-        df['text'] = df['text'].apply(pr.preprocess_text)
+        df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df['command'].isna()]
         train['command'] = train['command'].astype(int)
         train.to_excel(filename, index=False)
