@@ -1,5 +1,4 @@
-from sympy import *
-from NLP import TextPreprocessers
+import API_module
 
 class Calculator:
     
@@ -12,16 +11,16 @@ class Calculator:
     
 class SympyCalculator(Calculator):
     
-    __pr = TextPreprocessers.QuestionPreprocessing()
+    __pr = API_module.tp.QuestionPreprocessing()
     def __init__(self):
         pass
     
     def deravative(self, boto, message, inptmes, dx):
         
         inp = self.__pr.preprocess_text(dx)
-        x = Symbol(inp[0])
+        x = API_module.Symbol(inp[0])
         print(x)
-        y = sympify(str(inptmes))
+        y = API_module.sympify(str(inptmes))
         yprime = y.diff(x)
         output = str(yprime).replace('**','^')
         boto.send_message(message.chat.id, output, parse_mode='html')
@@ -29,9 +28,9 @@ class SympyCalculator(Calculator):
     def integrate(self, boto, message, inptmes, dx):
         
         inp = self.__pr.preprocess_text(dx)
-        x = Symbol(inp[0])
+        x = API_module.sympySymbol(inp[0])
         print(x)
-        y = sympify(str(inptmes))
+        y = API_module.sympify(str(inptmes))
         yprime = y.integrate(x)
         output = str(yprime).replace('**','^')
         boto.send_message(message.chat.id, output, parse_mode='html')

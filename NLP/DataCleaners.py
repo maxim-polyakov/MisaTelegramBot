@@ -22,7 +22,6 @@ class CommonCleaner(Cleaner):
     
     def clean(self, filename, string):
         
-        
         if(self.type_doc == "csv"):
             train = NLP.pd.read_csv(filename, encoding="utf-8")
         else:
@@ -33,7 +32,7 @@ class CommonCleaner(Cleaner):
         df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df[string].isna()]
         train[string] = train[string].astype(int)
-        train.to_excel(filename, index=False)
+        train.to_csv(filename, index=False)
 
 class QuestionCleaner(Cleaner):
     

@@ -38,4 +38,4 @@ def webhook():
         boto.process_new_updates([update])
         return ''
     else:
-        bot.flask.abort(403)
+        boto.flask.abort(403)

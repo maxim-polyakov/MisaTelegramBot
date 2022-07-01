@@ -1,4 +1,4 @@
-import wikipedia as w
+import API_module
 
 class Finder:
     
@@ -14,14 +14,14 @@ class WikiFinder(Finder):
         pass
     
     def find(self, boto, message, inptmes):
-        w.set_lang("ru")
+        API_module.w.set_lang("ru")
         
-        boto.send_message(message.chat.id, w.summary(inptmes),
+        boto.send_message(message.chat.id, API_module.w.summary(inptmes),
                            parse_mode='html')
         
         for i in range(0,6):
             try:
-                boto.send_photo(message.chat.id, w.page(inptmes).images[i],
+                boto.send_photo(message.chat.id, API_module.w.page(inptmes).images[i],
                                 parse_mode='html')
             except:
                 pass
