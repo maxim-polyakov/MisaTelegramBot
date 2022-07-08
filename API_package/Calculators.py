@@ -1,4 +1,4 @@
-import API_module
+import API_package
 
 class Calculator:
     
@@ -11,7 +11,7 @@ class Calculator:
     
 class SympyCalculator(Calculator):
     
-    __pr = API_module.tp.QuestionPreprocessing()
+    __pr = API_package.tp.QuestionPreprocessing()
     def __init__(self):
         pass
     

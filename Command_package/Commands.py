@@ -1,8 +1,8 @@
 import NLP
 from NLP import TextPreprocessers
 #import pyTelegramBotAPI
-from API_module import Finders as APIFind
-from API_module import Calculators
+from API_package import Finders as APIFind
+from API_package import Calculators
 import psycopg2
 
 def commandsdesition(boto, message, tstr):
