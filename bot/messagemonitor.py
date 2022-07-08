@@ -1,6 +1,6 @@
 import bot
 
-from Bot_module import Monitors
+from Bot_package import Monitors
 
 
 @bot.boto.message_handler(commands=['testmonitor'])

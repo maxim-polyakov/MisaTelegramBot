@@ -7,7 +7,7 @@ from NLP import mapa
 #import subfunctions
 from telebot import types
 import config
-from Command_module import Commands
+from Command_package import Commands
 import os
 import sys
 from requests.exceptions import ConnectionError, ReadTimeout

@@ -3,7 +3,7 @@ from bot import subfunctions
 from bot import bototrain
 import psycopg2
 from sqlalchemy import create_engine
-import Bot_module
+import Bot_package
 
 
 class Monitor:
