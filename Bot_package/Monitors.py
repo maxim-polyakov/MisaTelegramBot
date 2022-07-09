@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from Bot_package import Subfunctions
 from Bot_package import Bototrainers
 from Bot_package import Botoevaluaters
-
+from Command_package import Commands
 class Monitor:
 
     def __init__(self):
@@ -12,7 +12,6 @@ class Monitor:
 
     def monitor(self):
         pass
-
 
 class MessageMonitor(Monitor):
 
@@ -36,6 +35,12 @@ class MessageMonitor(Monitor):
                     'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
     _conn = psycopg2.connect(
         "dbname=postgres user=postgres password=postgres")
+
+    __ad = Subfunctions.Adder()
+    __bt = Bototrainers.Train()
+    __mt = Bototrainers.Multytrain()
+    __be = Botoevaluaters.Binaryevaluate()
+    __me = Botoevaluaters.Multyevaluate()
 
     def __init__(self, message):
         self.__message = message
@@ -88,6 +93,7 @@ class MessageMonitor(Monitor):
                     self.__message.chat.id, "Вопрос без классификации",
                     parse_mode='html')
 
+                command = Commands.Command(bot.boto, )
                 bot.commands.commandsdesition(
                     bot.boto, text, tstr)
                 self.__set_null()
@@ -166,11 +172,7 @@ class MessageMonitor(Monitor):
     def monitor(self):
 
         inpt = self.__message.text.split(' ')
-        ad = Subfunctions.Adder()
-        bt = Bototrainers.Train()
-        mt = Bototrainers.Multytrain()
-        be = Botoevaluaters.Binaryevaluate()
-        me = Botoevaluaters.Multyevaluate()
+
         text = []
 
         if(self.__message.text.lower().count('миса') > 0 or self.__message.text.lower().count('misa') > 0):
@@ -188,46 +190,46 @@ class MessageMonitor(Monitor):
                 #print(df)
                 df.to_sql('validset', con= self._engine, schema='public',
                           index=False, if_exists='append')
-            
-            try:
                 self.__neurodesc(text, ststr)
-            except:
-                bot.boto.send_message(
-                    self.__message.chat.id, 'А?', parse_mode='html')
+         #   try:
+
+       #     except:
+        #        bot.boto.send_message(
+        #            self.__message.chat.id, 'А?', parse_mode='html')
         elif(self.__message.text == "👍" and self.__hi_flag == 1):
-            ad.add(self.__mtext, 'recognized_hi',
+            self.__ad.add(self.__mtext, 'recognized_hi',
                              "Приветствие", 'agenda', 'hi', 1)
-            be.hievaluate()
+            self.__be.hievaluate()
             self.__set_null()
         elif(self.__message.text == "👎" and self.__hi_flag == 1):
-            ad.add(self.__mtext, 'recognized_hi',
+            self.ad.add(self.__mtext, 'recognized_hi',
                              "Не приветствие", 'agenda', 'hi', 0)
-            be.hievaluate()
+            self.__be.hievaluate()
             self.__set_null()
         elif(self.__message.text == "Вопрос без класса" and self.__qu_flag == 1):
 
-            ad.add(self.__mtext, 'recognized_multyclass',
+            self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Нет классификации", 'agenda', 'questionclass', 0)
-            ad.quadd(self.__mtext, 'recognized_qu',
+            self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
 
-            me.multyclassevaluate()
+            self.__me.multyclassevaluate()
             self.__set_null()
         elif(self.__message.text == "Не вопрос" and self.__qu_flag == 1):
-            ad.add(self.__mtext, 'recognized_multyclass',
+            self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Нет классификации", 'agenda', 'questionclass', 0)
-            ad.quadd(self.__mtext, 'recognized_qu',
+            self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Не вопрос", 0)
-            bt.quevaluate()
+            self.__bt.quevaluate()
 
             bot.boto.send_message(
                 self.__message.chat.id, "Запомнила", parse_mode='html')
 
             self.__set_null()
         elif(self.__message.text == "Погода" and self.__qu_flag == 1):
-            ad.add(self.__mtext, 'recognized_multyclass',
+            self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Погода", 'agenda', 'questionclass', 1)
-            ad.quadd(self.__mtext, 'recognized_qu',
+            self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
 
             trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5',
@@ -237,9 +239,9 @@ class MessageMonitor(Monitor):
             trainer.train('questionclass', 3, 'evaluate')
             self.__set_null()
         elif(self.__message.text == "Дело" and self.__qu_flag == 1):
-            ad.add(self.__mtext, 'recognized_multyclass',
+            self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Дело", 'agenda', 'questionclass', 1)
-            ad.quadd(self.__mtext, 'recognized_qu',
+            self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
 
             trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5',
@@ -248,31 +250,31 @@ class MessageMonitor(Monitor):
                                     'SELECT * FROM recognized_multyclass')
             trainer.train('questionclass', 3, 'evaluate')
 
-            bt.quevaluate()
+            self.__bt.quevaluate()
             self.__set_null()
         elif(self.__message.text == "👍" and self.__command_flag == 1):
-            ad.commandadd(self.__mtext,
+            self.__ad.commandadd(self.__mtext,
                                     'recognized_command',
                                     "Команда", 1)
-            bt.commandevaluate()
+            self.__bt.commandevaluate()
             self.__set_null()
         elif(self.__message.text == "👎" and self.__command_flag == 1):
-            ad.commandadd(self.__mtext, 'recognized_command',
+            self.__ad.commandadd(self.__mtext, 'recognized_command',
                                     "Не команда", 0)
-            bt.commandevaluate()
+            self.__bt.commandevaluate()
             self.__set_null()
         elif(self.__message.text == "👍" and self.__th_flag == 1):
-            ad.add(
+            self.__ad.add(
                 self.__mtext, 'recognized_th',
                 "Благодарность", 'agenda', 'thanks', 1)
             self.__set_null()
         elif(self.__message.text == "👎" and self.__th_flag == 1):
-            ad.add(self.__mtext, 'recognized_th',
+            self.__ad.add(self.__mtext, 'recognized_th',
                              "Не благодарность", 'agenda', 'thanks', 0)
-            bt.thevaluate()
+            self.__bt.thevaluate()
             self.__set_null()
         elif(self.__message.text == "👍" and self.__non_flag == 1):
-            ad.add(
+            self.__ad.add(
                 self.__mtext, 'non_recognized',
                 "Нет классификации", 'agenda', 'nonclass', 1)
             self.__set_null()

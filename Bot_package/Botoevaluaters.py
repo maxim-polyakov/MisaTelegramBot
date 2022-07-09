@@ -11,6 +11,10 @@ class Evaluate:
         pass
     def commandevaluate(self):
         pass
+    def hi_th_commandevaluate(self):
+        pass
+    def multyclassevaluate(self):
+        pass
 
 class Binaryevaluate(Evaluate):
     def __init__(self):

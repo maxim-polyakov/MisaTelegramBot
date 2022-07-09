@@ -26,7 +26,7 @@ class Predictor:
             #    print(self.inp)
         return self.inp
     
-    def predict():
+    def predict(self):
         pass
     
 class Binary(Predictor):
