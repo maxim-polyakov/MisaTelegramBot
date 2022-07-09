@@ -1,161 +1,84 @@
 import bot
+from Bot_package import Bototrain
+from Bot_package import Botoevaluate
 #import messagemonitor
 
 # ______________________________________________________________________________
 
-
-def hitrain():
-    filemodel = './models/binary/himodel.h5'
-    filetokenizer = './tokenizers/binary/hitokenizer.pickle'
-    datasetfile = 'SELECT * FROM hiset'
-    recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('hi', 'train')
-
-
-def hievaluate():
-    filemodel = './models/binary/himodel.h5'
-    filetokenizer = './tokenizers/binary/hitokenizer.pickle'
-    datasetfile = 'SELECT * FROM hiset'
-    recognizeddata = 'SELECT * FROM recognized_hi'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('hi', 'evaluate')
-
-
-def qutrain():
-    filemodel = './models/binary/qumodel.h5'
-    filetokenizer = './tokenizers/binary/qutokenizer.pickle'
-    datasetfile = 'SELECT * FROM questionset'
-    recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('question', 'train')
-
-
-def quevaluate():
-    filemodel = './models/binary/qumodel.h5'
-    filetokenizer = './tokenizers/binary/qutokenizer.pickle'
-    datasetfile = 'SELECT * FROM questionset'
-    recognizeddata = 'SELECT * FROM recognized_qu'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('question', 'evaluate')
-
-
-def thtrain():
-    filemodel = './models/binary/thmodel.h5'
-    filetokenizer = './tokenizers/binary/thtokenizer.pickle'
-    datasetfile = 'SELECT * FROM thanksset'
-    recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('thanks', 'train')
-
-
-def thevaluate():
-    filemodel = './models/binary/qumodel.h5'
-    filetokenizer = './tokenizers/binary/thtokenizer.pickle'
-    datasetfile = 'SELECT * FROM thanksset'
-    recognizeddata = 'SELECT * FROM recognized_th'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('thanks', 'evaluate')
-
-
-def commandtrain():
-    filemodel = './models/binary/commandmodel.h5'
-    filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
-    datasetfile = 'SELECT * FROM commandset'
-    recognizeddata = 'SELECT * FROM recognized_command'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('command', 'train')
-
-
-def commandevaluate():
-    filemodel = './models/binary/commandmodel.h5'
-    filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
-    datasetfile = 'SELECT * FROM commandset'
-    recognizeddata = 'SELECT * FROM recognized_command'
-    trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
-    trainer.train('command', 'evaluate')
-# ______________________________________________________________________________
-
-
 @bot.boto.message_handler(commands=['hitrain'])
 def get_user_text(message):
-
-    hitrain()
+    bt = Bototrain.Binarytrain()
+    bt.hitrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['qutrain'])
 def get_user_text(message):
-
-    qutrain()
+    bt = Bototrain.Binarytrain()
+    bt.qutrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['thtrain'])
 def get_user_text(message):
 
-    thtrain()
+    bt = Bototrain.Binarytrain()
+    bt.thtrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['commandtrain'])
 def get_user_text(message):
+    bt = Bototrain.Binarytrain()
 
-    commandtrain()
+    bt.commandtrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 # ______________________________________________________________________________
 
 
 @bot.boto.message_handler(commands=['hievaluate'])
 def get_user_text(message):
+    bt = Botoevaluate.Binaryevaluate()
 
-    hievaluate()
+    bt.hievaluate()
 
 
 @bot.boto.message_handler(commands=['quevaluate'])
 def get_user_text(message):
+    bt = Bototrain.Binarytrain()
 
-    quevaluate()
+    bt.quevaluate()
 
 
 @bot.boto.message_handler(commands=['thevaluate'])
 def get_user_text(message):
+    bt = Botoevaluate.Binaryevaluate()
 
-    thevaluate()
+    bt.thevaluate()
 
 
 @bot.boto.message_handler(commands=['commandevaluate'])
 def get_user_text(message):
+    bt = Botoevaluate.Binaryevaluate()
 
-    commandevaluate()
+    bt.commandevaluate()
 
 
 @bot.boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
-    trainer = bot.Models.Multy('./models/multy/multyclassmodel.h5', 
-                               './tokenizers/multy/multyclasstokenizer.pickle',
-                               'SELECT * FROM multyclasesset', 
-                               'SELECT * FROM recognized_multyclass')
+    mt = Bototrain.Multytrain()
 
-    trainer.train('questionclass', 3,'train')
+    mt.multyclasstrain()
+
+
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 @bot.boto.message_handler(commands=['hi_th_commandtrain'])
 def get_user_text(message):
 
-    trainer = bot.Models.Multy('./models/multy/hi_th_commandmodel.h5', 
-                               './tokenizers/multy/hi_th_commandtokenizer.pickle',
-                               'SELECT * FROM hi_th_command', 
-                               'SELECT * FROM recognized_hi_th_command')
+    mt = Bototrain.Multytrain()
 
-    trainer.train('hi_th_command', 4,'train')
+    mt.hi_th_commandtrain()
+
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
