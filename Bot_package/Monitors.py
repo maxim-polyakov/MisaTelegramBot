@@ -42,6 +42,7 @@ class MessageMonitor(Monitor):
     __be = Botoevaluaters.Binaryevaluate()
     __me = Botoevaluaters.Multyevaluate()
     __mapa = bot.Mapas.Mapa()
+
     def __init__(self, message):
         self.__message = message
 
@@ -94,9 +95,7 @@ class MessageMonitor(Monitor):
                     self.__message.chat.id, "Вопрос без классификации",
                     parse_mode='html')
 
-                command = Commands.Command(bot.boto, text )
 
-                command.commandsdesition(tstr)
 
                 self.__set_null()
                 self.__q__non_flag = 1
@@ -111,8 +110,9 @@ class MessageMonitor(Monitor):
                 self.__set_null()
                 self.__command_flag = 1
                 #print(self.__command_flag)
-                bot.commands.commandsdesition(
-                    bot.boto, self.__message, tstr)
+                command = Commands.Command(bot.boto, self.__message )
+
+                command.commandsdesition(tstr)
             else:
                 bot.boto.send_message(
                     self.__message.chat.id, "Похоже на команду но я не уверена.",

@@ -26,15 +26,13 @@ class Command:
 
     def __insidefunction(self,inpt):
         c = Calculators.SympyCalculator()
-        if self.preprocess_text(inpt[2]) == 'производная':
+        if self.__pr.preprocess_text(inpt[2]) == 'производная':
             print(inpt[3])
             c.deravative(self.boto, self.message, inpt[3], inpt[4])
         elif self.preprocess_text(inpt[2]) == 'интеграл':
             c.integrate(self.boto, self.message, inpt[3], inpt[4])
 
     def commandsdesition(self, tstr):
-
-        global command_flag
 
         preinpt = self.message.text.split('->')
 
@@ -48,12 +46,12 @@ class Command:
             self.command_flag = 1
 
         elif ((self.__pr.preprocess_text(inpt[1]) == 'поссчитать')):
-            self.__insidefunction(self.__pr,self.boto,self.message,inpt)
+            self.__insidefunction(inpt)
 
         elif self.__pr.preprocess_text(inpt[1]) == 'находить':
             if self.__pr.preprocess_text(inpt[2]) == 'производная' or pr.preprocess_text(inpt[2]) == 'интеграл':
 
-                self.__insidefunction(self.__pr,self.boto,self.message,inpt)
+                self.__insidefunction(inpt)
             else:
 
                 tmp = self.__pr.preprocess_text(preinpt[1])
