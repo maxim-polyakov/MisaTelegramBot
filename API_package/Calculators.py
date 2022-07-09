@@ -18,9 +18,9 @@ class SympyCalculator(Calculator):
     def deravative(self, boto, message, inptmes, dx):
         
         inp = self.__pr.preprocess_text(dx)
-        x = API_module.Symbol(inp[0])
+        x = API_package.Symbol(inp[0])
         print(x)
-        y = API_module.sympify(str(inptmes))
+        y = API_package.sympify(str(inptmes))
         yprime = y.diff(x)
         output = str(yprime).replace('**','^')
         boto.send_message(message.chat.id, output, parse_mode='html')
@@ -28,9 +28,9 @@ class SympyCalculator(Calculator):
     def integrate(self, boto, message, inptmes, dx):
         
         inp = self.__pr.preprocess_text(dx)
-        x = API_module.sympySymbol(inp[0])
+        x = API_package.sympySymbol(inp[0])
         print(x)
-        y = API_module.sympify(str(inptmes))
+        y = API_package.sympify(str(inptmes))
         yprime = y.integrate(x)
         output = str(yprime).replace('**','^')
         boto.send_message(message.chat.id, output, parse_mode='html')
