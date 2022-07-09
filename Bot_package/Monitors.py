@@ -41,7 +41,7 @@ class MessageMonitor(Monitor):
     __mt = Bototrainers.Multytrain()
     __be = Botoevaluaters.Binaryevaluate()
     __me = Botoevaluaters.Multyevaluate()
-
+    __mapa = bot.Mapas.Mapa()
     def __init__(self, message):
         self.__message = message
 
@@ -64,9 +64,10 @@ class MessageMonitor(Monitor):
         ststr = self.__qpr.reversepreprocess_text(tstr)
         a = self.__cpr.preprocess_text(text[0])
         splta = a.split()
+
         print("splta = ", splta[0])
         if (len(ststr) > 0 and tstr.count('?') > 0):
-            if(self.__mpred.predict(text, bot.mapa.multymapa,
+            if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 bot.boto.send_message(
@@ -77,7 +78,7 @@ class MessageMonitor(Monitor):
                 self.__qu_flag = 1
                 self.__mtext = tstr
 
-            elif(self.__mpred.predict(text, bot.mapa.multymapa,
+            elif(self.__mpred.predict(text, self.__mapa.multymapa,
                                       './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 bot.boto.send_message(
@@ -93,16 +94,17 @@ class MessageMonitor(Monitor):
                     self.__message.chat.id, "Вопрос без классификации",
                     parse_mode='html')
 
-                command = Commands.Command(bot.boto, )
-                bot.commands.commandsdesition(
-                    bot.boto, text, tstr)
+                command = Commands.Command(bot.boto, text )
+
+                command.commandsdesition(tstr)
+
                 self.__set_null()
                 self.__q__non_flag = 1
                 self.__qu_flag = 1
                 self.__mtext = tstr
         elif(splta[0] in Cdict.values()):
 
-            if(self.__bpred.predict(text, bot.mapa.commandmapa,
+            if(self.__bpred.predict(text, self.__mapa.commandmapa,
                                     './models/binary/commandmodel.h5',
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
@@ -117,7 +119,7 @@ class MessageMonitor(Monitor):
                     parse_mode='html')
 
             self.__mtext = tstr
-        elif(self.__bpred.predict(text, bot.mapa.himapa,
+        elif(self.__bpred.predict(text, self.__mapa.himapa,
                                   './models/binary/himodel.h5',
                                   './tokenizers/binary/hitokenizer.pickle',
                                   '') == "Приветствие"):
@@ -130,7 +132,7 @@ class MessageMonitor(Monitor):
             self.__hi_flag = 1
             self.__mtext = tstr
 
-        elif(self.__bpred.predict(text, bot.mapa.thmapa,
+        elif(self.__bpred.predict(text, self.__mapa.thmapa,
                                   './models/binary/thmodel.h5',
                                   './tokenizers/binary/thtokenizer.pickle',
                                   '') == "Благодарность"):
@@ -143,7 +145,7 @@ class MessageMonitor(Monitor):
             self.__mtext = tstr
         else:
 
-            if(self.__mpred.predict(text, bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
+            if(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 bot.boto.send_message(
                     self.__message.chat.id, "Утверждение про дела", parse_mode='html')
@@ -152,7 +154,7 @@ class MessageMonitor(Monitor):
                 self.__b_flag = 1
                 self.__mtext = tstr
 
-            elif(self.__mpred.predict(text, bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
+            elif(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 bot.boto.send_message(
                     self.__message.chat.id, "Утверждение про погоду", parse_mode='html')

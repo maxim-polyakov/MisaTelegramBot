@@ -3,7 +3,7 @@ import pandas as pd
 from NLP_package import Models
 from NLP_package import Predictors
 from NLP_package import Answers
-from NLP_package import mapa
+from NLP_package import Mapas
 #import subfunctions
 from telebot import types
 import config

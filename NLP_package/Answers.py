@@ -1,7 +1,7 @@
 import pandas as pd
 import random
 import NLP_package
-from NLP_package import mapa
+from NLP_package import Mapas
 from sqlalchemy import create_engine
 
 class Answer:
