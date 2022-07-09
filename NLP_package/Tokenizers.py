@@ -1,4 +1,4 @@
-import NLP
+import NLP_package
 
 
 
@@ -9,7 +9,7 @@ class CustomTokenizer:
     
     def __init__(self, train_texts):
         self.train_texts = train_texts
-        self.tokenizer = NLP.Tokenizer(num_words=self.TOP_K)
+        self.tokenizer = NLP_package.Tokenizer(num_words=self.TOP_K)
 
     def train_tokenize(self):
         # Get max sequence length.
@@ -26,6 +26,6 @@ class CustomTokenizer:
         # Fix sequence length to max value. Sequences shorter than the length are
         # padded in the beginning and sequences longer are truncated
         # at the beginning.
-        tweets = NLP.pad_sequences(
+        tweets = NLP_package.pad_sequences(
             tweets, maxlen=self.max_length, truncating='post', padding='post')
         return tweets

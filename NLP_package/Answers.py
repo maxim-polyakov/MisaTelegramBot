@@ -1,7 +1,7 @@
 import pandas as pd
 import random
-import NLP
-from NLP import mapa
+import NLP_package
+from NLP_package import mapa
 from sqlalchemy import create_engine
 
 class Answer:
@@ -15,11 +15,11 @@ class Answer:
 
 class RandomAnswer(Answer):
     
-    conn = NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
+    conn = NLP_package.psycopg2.connect("dbname=postgres user=postgres password=postgres")
 
     inpt = pd.read_sql('SELECT * FROM hiset', conn)
 
-    data = NLP.pd.concat([inpt])
+    data = NLP_package.pd.concat([inpt])
     df = []
 
 

@@ -1,6 +1,6 @@
 import pandas as pd
-from NLP import TextPreprocessers
-import NLP
+from NLP_package import TextPreprocessers
+import NLP_package
 from sqlalchemy import create_engine
 
 
@@ -14,7 +14,7 @@ class Adder:
 
     def add(text, tablename, string, agenda, classification, classtype):
         pr = TextPreprocessers.CommonPreprocessing()
-        conn = NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        conn = NLP_package.psycopg2.connect("dbname=postgres user=postgres password=postgres")
         engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
         data = {'text': pr.preprocess_text(
             text), agenda: string, classification: classtype}
@@ -25,7 +25,7 @@ class Adder:
 
     def quadd(text, tablename, string, isqu):
         pr = TextPreprocessers.QuestionPreprocessing()
-        conn = NLP.psycopg2.connect("dbname=postgres user=postgres password=postgres")
+        conn = NLP_package.psycopg2.connect("dbname=postgres user=postgres password=postgres")
         engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
         data = {'text': pr.preprocess_text(
             text), 'agenda': string, 'question': isqu}
@@ -35,7 +35,7 @@ class Adder:
         df.to_sql(tablename, con=engine, schema='public', index=False, if_exists='append')
 
     def commandadd(text, tablename, string, isqu):
-        pr = NLP.CommandPreprocessing()
+        pr = NLP_package.CommandPreprocessing()
         conn = TextPreprocessers.psycopg2.connect("dbname=postgres user=postgres password=postgres")
         engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
         data = {'text': pr.preprocess_text(

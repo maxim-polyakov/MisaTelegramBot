@@ -1,3 +1,3 @@
 from sympy import *
-from NLP import TextPreprocessers as tp
+from NLP_package import TextPreprocessers as tp
 import wikipedia as w

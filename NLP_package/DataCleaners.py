@@ -1,5 +1,5 @@
-import NLP
-from NLP import TextPreprocessers
+import NLP_package
+from NLP_package import TextPreprocessers
 
 
 class Cleaner:
@@ -23,12 +23,12 @@ class CommonCleaner(Cleaner):
     def clean(self, filename, string):
         
         if(self.type_doc == "csv"):
-            train = NLP.pd.read_csv(filename, encoding="utf-8")
+            train = NLP_package.pd.read_csv(filename, encoding="utf-8")
         else:
-            train = NLP.pd.read_excel(filename)
+            train = NLP_package.pd.read_excel(filename)
         
         train.text = train.text.astype(str)
-        df = NLP.pd.concat([train])
+        df = NLP_package.pd.concat([train])
         df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df[string].isna()]
         train[string] = train[string].astype(int)
@@ -48,12 +48,12 @@ class QuestionCleaner(Cleaner):
         
         if(self.type_doc == "csv"):
             
-            train = NLP.pd.read_csv(filename, encoding="utf-8")
+            train = NLP_package.pd.read_csv(filename, encoding="utf-8")
         else:
-            train = NLP.pd.read_excel(filename)
+            train = NLP_package.pd.read_excel(filename)
         
         train.text = train.text.astype(str)
-        df = NLP.pd.concat([train])
+        df = NLP_package.pd.concat([train])
         df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df['question'].isna()]
         train['question'] = train['question'].astype(int)
@@ -73,12 +73,12 @@ class CommandCleaner(Cleaner):
         
         if(self.type_doc == "csv"):
             
-            train = NLP.pd.read_csv(filename, encoding="utf-8")
+            train = NLP_package.pd.read_csv(filename, encoding="utf-8")
         else:
-            train = NLP.pd.read_excel(filename)
+            train = NLP_package.pd.read_excel(filename)
             
         train.text = train.text.astype(str)
-        df = NLP.pd.concat([train])
+        df = NLP_package.pd.concat([train])
         df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df['command'].isna()]
         train['command'] = train['command'].astype(int)

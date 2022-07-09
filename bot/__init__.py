@@ -1,9 +1,9 @@
 import telebot
 import pandas as pd
-from NLP import Models
-from NLP import Predictors
-from NLP import Answers
-from NLP import mapa
+from NLP_package import Models
+from NLP_package import Predictors
+from NLP_package import Answers
+from NLP_package import mapa
 #import subfunctions
 from telebot import types
 import config

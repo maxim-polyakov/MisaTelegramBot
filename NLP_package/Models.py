@@ -1,7 +1,7 @@
-import NLP
-from NLP import Tokenizers
-from NLP import DataShowers
-from NLP import TextPreprocessers
+import NLP_package
+from NLP_package import Tokenizers
+from NLP_package import DataShowers
+from NLP_package import TextPreprocessers
 
 
 
@@ -24,7 +24,7 @@ class Binary(Model):
 
     def __init__(self, filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
-        self.conn = NLP.psycopg2.connect(
+        self.conn = NLP_package.psycopg2.connect(
             "dbname=postgres user=postgres password=postgres")
         self.filemodelname = filemodelname
         self.tokenizerfilename = tokenizerfilename
@@ -32,19 +32,19 @@ class Binary(Model):
         self.recognizeddataselect = recognizeddataselect
 
     def createmodel(self, tokenizer):
-        optimzer = NLP.Adam(clipvalue=0.5)
-        model = NLP.Sequential()
-        model.add(NLP.Embedding(len(tokenizer.tokenizer.word_index)+1,
-                                self.EMBEDDING_VECTOR_LENGTH,
-                  input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
-                  trainable=True, mask_zero=True))
-        model.add(NLP.Dropout(0.1))
-        model.add(NLP.LSTM(64))
-        model.add(NLP.Dense(64, activation="sigmoid"))
-        model.add(NLP.Dropout(0.1))
-        model.add(NLP.Dense(32, activation="sigmoid"))
-        model.add(NLP.Dense(16, activation="sigmoid"))
-        model.add(NLP.Dense(1, activation='sigmoid'))
+        optimzer = NLP_package.Adam(clipvalue=0.5)
+        model = NLP_package.Sequential()
+        model.add(NLP_package.Embedding(len(tokenizer.tokenizer.word_index) + 1,
+                                        self.EMBEDDING_VECTOR_LENGTH,
+                                        input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
+                                        trainable=True, mask_zero=True))
+        model.add(NLP_package.Dropout(0.1))
+        model.add(NLP_package.LSTM(64))
+        model.add(NLP_package.Dense(64, activation="sigmoid"))
+        model.add(NLP_package.Dropout(0.1))
+        model.add(NLP_package.Dense(32, activation="sigmoid"))
+        model.add(NLP_package.Dense(16, activation="sigmoid"))
+        model.add(NLP_package.Dense(1, activation='sigmoid'))
         # compile the model
         model.compile(optimizer=optimzer, loss='binary_crossentropy',
                       metrics=['binary_accuracy'])
@@ -53,13 +53,13 @@ class Binary(Model):
 
     def train(self, target, mode):
 
-        recognizedtrain = NLP.pd.read_sql(self.recognizeddataselect, self.conn)
+        recognizedtrain = NLP_package.pd.read_sql(self.recognizeddataselect, self.conn)
         recognizedtrain.text = recognizedtrain.text.astype(str)
 
-        train = NLP.pd.read_sql(self.dataselect, self.conn)
+        train = NLP_package.pd.read_sql(self.dataselect, self.conn)
         train.text = train.text.astype(str)
 
-        df = NLP.pd.concat([train, recognizedtrain])
+        df = NLP_package.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
         train = train.drop_duplicates()
@@ -67,12 +67,12 @@ class Binary(Model):
         ds.showdata(train, target)
 
         print(train)
-        X_train, X_val, y_train, y_val = NLP.train_test_split(
+        X_train, X_val, y_train, y_val = NLP_package.train_test_split(
             train, train[target], test_size=0.3, random_state=32)
 
         if(mode == 'evaluate'):
             with open(self.tokenizerfilename, 'rb') as handle:
-                tokenizer = NLP.p.load(handle)
+                tokenizer = NLP_package.p.load(handle)
         else:
             tokenizer = Tokenizers.CustomTokenizer(train_texts=X_train['text'])
             # fit o the train
@@ -81,10 +81,10 @@ class Binary(Model):
         tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
 
         if(mode == 'evaluate'):
-            model = NLP.load_model(self.filemodelname)
+            model = NLP_package.load_model(self.filemodelname)
             
-            es = NLP.EarlyStopping(patience=10, monitor='binary_accuracy',
-                                   restore_best_weights=True)
+            es = NLP_package.EarlyStopping(patience=10, monitor='binary_accuracy',
+                                           restore_best_weights=True)
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
@@ -106,15 +106,15 @@ class Binary(Model):
         model.save(self.filemodelname)
 
         with open(self.tokenizerfilename, 'wb') as handle:
-            NLP.p.dump(tokenizer, handle,
-                       protocol=NLP.p.HIGHEST_PROTOCOL)
+            NLP_package.p.dump(tokenizer, handle,
+                               protocol=NLP_package.p.HIGHEST_PROTOCOL)
 
 
 class Multy(Model):
 
     def __init__(self, filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
-        self.conn = NLP.psycopg2.connect(
+        self.conn = NLP_package.psycopg2.connect(
             "dbname=postgres user=postgres password=postgres")
         self.filemodelname = filemodelname
         self.tokenizerfilename = tokenizerfilename
@@ -122,19 +122,19 @@ class Multy(Model):
         self.recognizeddataselect = recognizeddataselect
 
     def createmodel(self, tokenizer, n_clases):
-        model = NLP.Sequential()
-        optimzer = NLP.Adam(clipvalue=0.5)
-        model.add(NLP.Embedding(len(tokenizer.tokenizer.word_index)+1,
-                                self.EMBEDDING_VECTOR_LENGTH,
-                                input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
-                                trainable=True))
-        model.add(NLP.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
-        model.add(NLP.Dense(128, activation="sigmoid"))
-        model.add(NLP.Dense(64, activation="sigmoid"))
-        model.add(NLP.Dense(32, activation="sigmoid"))
-        model.add(NLP.Dense(16, activation="sigmoid"))
-        model.add(NLP.Dense(8, activation="sigmoid"))
-        model.add(NLP.Dense(n_clases, activation='softmax'))
+        model = NLP_package.Sequential()
+        optimzer = NLP_package.Adam(clipvalue=0.5)
+        model.add(NLP_package.Embedding(len(tokenizer.tokenizer.word_index) + 1,
+                                        self.EMBEDDING_VECTOR_LENGTH,
+                                        input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
+                                        trainable=True))
+        model.add(NLP_package.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
+        model.add(NLP_package.Dense(128, activation="sigmoid"))
+        model.add(NLP_package.Dense(64, activation="sigmoid"))
+        model.add(NLP_package.Dense(32, activation="sigmoid"))
+        model.add(NLP_package.Dense(16, activation="sigmoid"))
+        model.add(NLP_package.Dense(8, activation="sigmoid"))
+        model.add(NLP_package.Dense(n_clases, activation='softmax'))
         # compile the model
         model.compile(optimizer=optimzer, loss='categorical_crossentropy', metrics=[
             'categorical_accuracy'])
@@ -142,19 +142,19 @@ class Multy(Model):
 
     def train(self, target, n_clases, mode):
 
-        train = NLP.pd.read_sql(self.dataselect, self.conn)
+        train = NLP_package.pd.read_sql(self.dataselect, self.conn)
         train.text = train.text.astype(str)
-        recognizedtrain = NLP.pd.read_sql(
+        recognizedtrain = NLP_package.pd.read_sql(
             self.recognizeddataselect, self.conn)
         recognizedtrain.text = recognizedtrain.text.astype(str)
-        df = NLP.pd.concat([train, recognizedtrain])
+        df = NLP_package.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
       #  train = train.drop_duplicates()
       
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
-        X_train, X_val, y_train, y_val = NLP.train_test_split(
+        X_train, X_val, y_train, y_val = NLP_package.train_test_split(
             train, train[target], test_size=0.2, random_state=64)
         print('Shape of train', X_train.shape)
         print("Shape of Validation ", X_val.shape)
@@ -162,7 +162,7 @@ class Multy(Model):
         if(mode == 'evaluate'):
             with open(self.tokenizerfilename,
                       'rb') as handle:
-                tokenizer = NLP.p.load(handle)
+                tokenizer = NLP_package.p.load(handle)
         else:
             tokenizer = Tokenizers.CustomTokenizer(train_texts=X_train['text'])
             # fit o the train
@@ -171,16 +171,16 @@ class Multy(Model):
         tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
 
 
-        y_trainmatrix = NLP.tensorflow.keras.utils.to_categorical(
+        y_trainmatrix = NLP_package.tensorflow.keras.utils.to_categorical(
             y_train, n_clases)
-        y_valmatrix = NLP.tensorflow.keras.utils.to_categorical(
+        y_valmatrix = NLP_package.tensorflow.keras.utils.to_categorical(
             y_val, n_clases)
         if(mode == 'evaluate'):
             
-            es = NLP.EarlyStopping(patience=10, monitor='val_accuracy',
-                                   restore_best_weights=True)
+            es = NLP_package.EarlyStopping(patience=10, monitor='val_accuracy',
+                                           restore_best_weights=True)
             
-            model = NLP.load_model(self.filemodelname)
+            model = NLP_package.load_model(self.filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
                                 batch_size=512, epochs=2000,
@@ -202,5 +202,5 @@ class Multy(Model):
         model.save(self.filemodelname)
 
         with open(self.tokenizerfilename, 'wb') as handle:
-            NLP.p.dump(tokenizer, handle,
-                       protocol=NLP.p.HIGHEST_PROTOCOL)
+            NLP_package.p.dump(tokenizer, handle,
+                               protocol=NLP_package.p.HIGHEST_PROTOCOL)

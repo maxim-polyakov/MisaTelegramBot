@@ -50,3 +50,14 @@ class Binaryevaluate(Evaluate):
         trainer = bot.Models.Binary(filemodel, filetokenizer,
                                 datasetfile, recognizeddata)
         trainer.train('command', 'evaluate')
+
+class Multyevaluate(Evaluate):
+    def __init__(self):
+        pass
+    def hi_th_commandevaluate(self):
+        pass
+    def multyclassevaluate(self):
+
+      trainer = bot.Models.Multy()
+
+      trainer.multyclasstrain('evaluate')

@@ -1,13 +1,13 @@
-import NLP
+import NLP_package
 import spacy
 
 
 class Preprocessing:
 
-    mystem = NLP.Mystem()
+    mystem = NLP_package.Mystem()
 
-    russian_stopwords = NLP.stopwords.words("russian")
-    english_stopwords = NLP.stopwords.words("english")
+    russian_stopwords = NLP_package.stopwords.words("russian")
+    english_stopwords = NLP_package.stopwords.words("english")
 
     nlp = spacy.load('ru_core_news_md')
     def __init__(self):
@@ -15,7 +15,7 @@ class Preprocessing:
 
     def remove_punctuation(self, text):
 
-        translator = str.maketrans('', '', NLP.string.punctuation)
+        translator = str.maketrans('', '', NLP_package.string.punctuation)
         return text.translate(translator)
 
     def preprocess_text(self, text):
@@ -46,17 +46,17 @@ class CommonPreprocessing(Preprocessing):
             tokens = self.mystem.lemmatize(text.lower())
             tokens = [token for token in tokens if token not in self.russian_stopwords
                       and token != " "
-                      and token.strip() not in NLP.punctuation]
+                      and token.strip() not in NLP_package.punctuation]
             tokens = [
                 token for token in tokens if token not in self.english_stopwords]
 
             text = " ".join(tokens).rstrip('\n')
             pattern3 = r"[\d]"
             pattern2 = "[.]"
-            text = NLP.re.sub(pattern3, "", text)
-            text = NLP.re.sub(pattern2, "", text)
+            text = NLP_package.re.sub(pattern3, "", text)
+            text = NLP_package.re.sub(pattern2, "", text)
             text = self.remove_punctuation(text)
-            text = NLP.re.sub('  ', ' ', text)
+            text = NLP_package.re.sub('  ', ' ', text)
             return text
         except:
             return "except"
@@ -77,8 +77,8 @@ class QuestionPreprocessing(Preprocessing):
         
        # text = self.remove_punctuation(text)
             text = " ".join(tokens).rstrip('\n')
-            text = NLP.re.sub('[!@#$-><%^&*()_=+/\|:;~,.]', '', text)
-            text = NLP.re.sub('  ', ' ', text)
+            text = NLP_package.re.sub('[!@#$-><%^&*()_=+/\|:;~,.]', '', text)
+            text = NLP_package.re.sub('  ', ' ', text)
             text = text.replace(' ? ', '?')
 
             return text
@@ -91,7 +91,7 @@ class QuestionPreprocessing(Preprocessing):
                       and (token != " " or token == "?")]
         text = " ".join(tokens).rstrip('\n')
         #text = remove_punctuation(text)
-        text = NLP.re.sub('  ', ' ', text)
+        text = NLP_package.re.sub('  ', ' ', text)
         return text        
 
 
@@ -106,8 +106,8 @@ class CommandPreprocessing(Preprocessing):
             tokens = str(text)
             tokens = text.lower().split(' ')
             tokens = [token for token in tokens if token not in self.russian_stopwords
-                     and token != " "
-                     and token.strip() not in NLP.punctuation]
+                      and token != " "
+                      and token.strip() not in NLP_package.punctuation]
         
        # text = self.remove_punctuation(text)
             text = " ".join(tokens).rstrip('\n')
