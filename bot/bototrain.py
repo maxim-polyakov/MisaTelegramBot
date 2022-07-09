@@ -1,20 +1,20 @@
 import bot
-from Bot_package import Bototrain
-from Bot_package import Botoevaluate
+from Bot_package import Bototrainers
+from Bot_package import Botoevaluaters
 #import messagemonitor
 
 # ______________________________________________________________________________
 
 @bot.boto.message_handler(commands=['hitrain'])
 def get_user_text(message):
-    bt = Bototrain.Binarytrain()
+    bt = Bototrainers.Binarytrain()
     bt.hitrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['qutrain'])
 def get_user_text(message):
-    bt = Bototrain.Binarytrain()
+    bt = Bototrainers.Binarytrain()
     bt.qutrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
@@ -22,14 +22,14 @@ def get_user_text(message):
 @bot.boto.message_handler(commands=['thtrain'])
 def get_user_text(message):
 
-    bt = Bototrain.Binarytrain()
+    bt = Bototrainers.Binarytrain()
     bt.thtrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
 @bot.boto.message_handler(commands=['commandtrain'])
 def get_user_text(message):
-    bt = Bototrain.Binarytrain()
+    bt = Bototrainers.Binarytrain()
 
     bt.commandtrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
@@ -38,28 +38,28 @@ def get_user_text(message):
 
 @bot.boto.message_handler(commands=['hievaluate'])
 def get_user_text(message):
-    bt = Botoevaluate.Binaryevaluate()
+    bt = Botoevaluaters.Binaryevaluate()
 
     bt.hievaluate()
 
 
 @bot.boto.message_handler(commands=['quevaluate'])
 def get_user_text(message):
-    bt = Bototrain.Binarytrain()
+    bt = Bototrainers.Binarytrain()
 
     bt.quevaluate()
 
 
 @bot.boto.message_handler(commands=['thevaluate'])
 def get_user_text(message):
-    bt = Botoevaluate.Binaryevaluate()
+    bt = Botoevaluaters.Binaryevaluate()
 
     bt.thevaluate()
 
 
 @bot.boto.message_handler(commands=['commandevaluate'])
 def get_user_text(message):
-    bt = Botoevaluate.Binaryevaluate()
+    bt = Botoevaluaters.Binaryevaluate()
 
     bt.commandevaluate()
 
@@ -67,7 +67,7 @@ def get_user_text(message):
 @bot.boto.message_handler(commands=['multyclasstrain'])
 def get_user_text(message):
 
-    mt = Bototrain.Multytrain()
+    mt = Bototrainers.Multytrain()
 
     mt.multyclasstrain()
 
@@ -77,7 +77,7 @@ def get_user_text(message):
 @bot.boto.message_handler(commands=['hi_th_commandtrain'])
 def get_user_text(message):
 
-    mt = Bototrain.Multytrain()
+    mt = Bototrainers.Multytrain()
 
     mt.hi_th_commandtrain()
 

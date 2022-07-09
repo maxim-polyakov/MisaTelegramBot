@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/MisaTelegramBot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MisaTelegramBot.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/bototrain.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/bototrain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bot_package/Monitors.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Monitors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/messagemonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/messagemonitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/subfunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/subfunctions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +40,11 @@
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/Documents/GitHub/MisaTelegramBot&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\maxim\Documents\GitHub\MisaTelegramBot\Bot_package" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.bototrain">
     <configuration name="Monitors" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="MisaTelegramBot" />
@@ -100,5 +105,16 @@
       <updated>1656652981418</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
