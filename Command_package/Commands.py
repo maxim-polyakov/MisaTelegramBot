@@ -49,7 +49,7 @@ class Command:
             self.__insidefunction(inpt)
 
         elif self.__pr.preprocess_text(inpt[1]) == 'находить':
-            if self.__pr.preprocess_text(inpt[2]) == 'производная' or pr.preprocess_text(inpt[2]) == 'интеграл':
+            if self.__pr.preprocess_text(inpt[2]) == 'производная' or self.__pr.preprocess_text(inpt[2]) == 'интеграл':
 
                 self.__insidefunction(inpt)
             else:
@@ -57,7 +57,7 @@ class Command:
                 tmp = self.__pr.preprocess_text(preinpt[1])
                 apif = APIFind.WikiFinder()
                 apif.find(self.boto, self.message, tmp)
-                command_flag = 1
+                self.command_flag = 1
 
         else:
             self.send_message(self.message.chat.id, "Команда",

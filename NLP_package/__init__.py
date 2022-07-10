@@ -35,4 +35,5 @@ import seaborn as sns
 from sklearn.feature_extraction.text import CountVectorizer
 from collections import defaultdict
 from collections import Counter
+from sklearn.naive_bayes import MultinomialNB
 plt.style.use('ggplot')

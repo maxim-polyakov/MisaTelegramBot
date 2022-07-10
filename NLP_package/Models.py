@@ -88,7 +88,7 @@ class Binary(Model):
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
-                                batch_size=512,
+                                batch_size=51,
                                 epochs=200,
                                 verbose=2,
                                 callbacks=[es]
@@ -99,7 +99,7 @@ class Binary(Model):
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
                                 batch_size=512,
-                                epochs=200,
+                                epochs=2000,
                                 verbose=2,
                                 )
 
@@ -203,4 +203,49 @@ class Multy(Model):
 
         with open(self.tokenizerfilename, 'wb') as handle:
             NLP_package.p.dump(tokenizer, handle,
+                               protocol=NLP_package.p.HIGHEST_PROTOCOL)
+
+
+class NonNeuro(Model):
+    def __init__(self,filemodelname, tokenizerfilename, dataselect,
+                 recognizeddataselect):
+        self.conn = NLP_package.psycopg2.connect(
+            "dbname=postgres user=postgres password=postgres")
+        self.filemodelname = filemodelname
+        self.tokenizerfilename = tokenizerfilename
+        self.dataselect = dataselect
+        self.recognizeddataselect = recognizeddataselect
+
+
+    def createmodel(self):
+        nb_model = NLP_package.MultinomialNB()
+        return nb_model
+
+    def train(self, target, mode):
+        train = NLP_package.pd.read_sql(self.dataselect, self.conn)
+        recognizedtrain = NLP_package.pd.read_sql(self.recognizeddataselect, self.conn)
+        df = NLP_package.pd.concat([train, recognizedtrain])
+
+        train = df[~df[target].isna()]
+        train[target] = train[target].astype(int)
+        train = train.drop_duplicates()
+        ds = DataShowers.DataShower()
+        ds.showdata(train, target)
+
+        nb_x, nb_x_test, nb_y, nb_y_test = NLP_package.train_test_split(train['text'], train[target], test_size=0.3,
+                                                            random_state=32)
+        vec = NLP_package.CountVectorizer()
+        nb_x = vec.fit_transform(nb_x).toarray()
+        nb_x_test = vec.transform(nb_x_test).toarray()
+
+        nb_model = self.createmodel()
+
+        nb_model.fit(nb_x, nb_y)
+
+        with open(self.tokenizerfilename, 'wb') as handle:
+            NLP_package.p.dump(vec, handle,
+                               protocol=NLP_package.p.HIGHEST_PROTOCOL)
+
+        with open(self.filemodelname, 'wb') as handle:
+            NLP_package.p.dump(nb_model, handle,
                                protocol=NLP_package.p.HIGHEST_PROTOCOL)

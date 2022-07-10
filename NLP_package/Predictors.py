@@ -35,7 +35,6 @@ class Binary(Predictor):
         pass
     
     def predict(self, inpt, tmap, model, tokenizer, prep):
-        tmap = tmap
         model = load_model(model)
         inn = []
         inn.append(self.preprocessing(inpt, prep).pop())
@@ -58,7 +57,6 @@ class Multy(Predictor):
         pass
 
     def predict(self, inpt, tmap, model, tokenizer):
-        tmap = tmap
         model = load_model(model)
         self.inp = []
         pr = NLP_package.TextPreprocessers.CommonPreprocessing()
@@ -75,3 +73,24 @@ class Multy(Predictor):
       #  print(outpt)
         self.inp = []
         return outpt
+
+class NonNeuro(Predictor):
+    def __init__(self):
+        pass
+    def predict(self, inpt, tmap, model, tokenizer, prep):
+        with open(model, 'rb') as handle:
+            model = NLP_package.p.load(handle)
+
+        inn = []
+        inn.append(self.preprocessing(inpt, prep).pop())
+
+        pr = NLP_package.TextPreprocessers.CommonPreprocessing()
+
+        with open(tokenizer, 'rb') as handle:
+            tokenizer = NLP_package.p.load(handle)
+            tokenized_inpt = tokenizer.transform(inn).toarray()
+            nb_x_test = tokenizer.transform(inn).toarray()
+
+        score = model.predict_proba(tokenized_inpt)
+
+        return(tmap[score.argmax(axis=-1)[0]])

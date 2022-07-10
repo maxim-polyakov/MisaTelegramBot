@@ -5,6 +5,7 @@ from Bot_package import Subfunctions
 from Bot_package import Bototrainers
 from Bot_package import Botoevaluaters
 from Command_package import Commands
+
 class Monitor:
 
     def __init__(self):
@@ -26,6 +27,7 @@ class MessageMonitor(Monitor):
     __mtext = ""
 
     __bpred = bot.Predictors.Binary()
+    __nnpred = bot.Predictors.NonNeuro()
     __mpred = bot.Predictors.Multy()
     __qpr = bot.Models.TextPreprocessers.QuestionPreprocessing()
     __cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
@@ -46,7 +48,7 @@ class MessageMonitor(Monitor):
     def __init__(self, message):
         self.__message = message
 
-    def __set_null(self, ):
+    def __set_null(self):
         self.__hi_flag = 0
         self.__qu_flag = 0
         self.__command_flag = 0
@@ -67,6 +69,10 @@ class MessageMonitor(Monitor):
         splta = a.split()
 
         print("splta = ", splta[0])
+       # print(self.__nnpred.predict(text, self.__mapa.himapa,
+        #                            './models/binary/himodel.pickle',
+       #                            './tokenizers/binary/vec.pickle',
+       #                             ''))
         if (len(ststr) > 0 and tstr.count('?') > 0):
             if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
@@ -176,9 +182,10 @@ class MessageMonitor(Monitor):
         inpt = self.__message.text.split(' ')
 
         text = []
-
-        if(self.__message.text.lower().count('миса') > 0 or self.__message.text.lower().count('misa') > 0):
-            tstr = self.__message.text.replace("миса", '')
+        lowertext = self.__message.text.lower()
+        print(lowertext)
+        if(lowertext.count('миса') > 0 or lowertext.lower().count('misa') > 0):
+            tstr = lowertext.replace("миса", '')
             ststr = tstr.replace("misa", '')
             text.append(ststr)
 
@@ -192,12 +199,12 @@ class MessageMonitor(Monitor):
                 #print(df)
                 df.to_sql('validset', con= self._engine, schema='public',
                           index=False, if_exists='append')
-                self.__neurodesc(text, ststr)
-         #   try:
 
-       #     except:
-        #        bot.boto.send_message(
-        #            self.__message.chat.id, 'А?', parse_mode='html')
+            try:
+                self.__neurodesc(text, ststr)
+            except:
+                bot.boto.send_message(
+                    self.__message.chat.id, 'А?', parse_mode='html')
         elif(self.__message.text == "👍" and self.__hi_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_hi',
                              "Приветствие", 'agenda', 'hi', 1)

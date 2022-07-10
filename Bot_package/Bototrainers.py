@@ -73,3 +73,12 @@ class Multytrain(Train):
                                    'SELECT * FROM multyclasesset',
                                    'SELECT * FROM recognized_multyclass')
         trainer.train('questionclass', 3, 'train')
+
+class NonNeuroTrain(Train):
+    def hitrain(self):
+        filemodel = './models/binary/himodel.pickle'
+        filetokenizer = './tokenizers/binary/vec.pickle'
+        datasetfile = 'SELECT * FROM hiset'
+        recognizeddata = 'SELECT * FROM recognized_hi'
+        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+        trainer.train('hi', 'train')

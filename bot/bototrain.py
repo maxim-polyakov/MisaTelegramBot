@@ -82,3 +82,14 @@ def get_user_text(message):
     mt.hi_th_commandtrain()
 
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
+
+@bot.boto.message_handler(commands=['NonNeurotrain'])
+def get_user_text(message):
+
+    mt = Bototrainers.NonNeuroTrain()
+
+    mt.hitrain()
+
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
+
+
