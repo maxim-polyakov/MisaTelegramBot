@@ -98,7 +98,7 @@ class Binary(Model):
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
-                                batch_size=512,
+                                batch_size=51,
                                 epochs=2000,
                                 verbose=2,
                                 )
