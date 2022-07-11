@@ -32,7 +32,7 @@ class Command:
         elif self.preprocess_text(inpt[2]) == 'интеграл':
             c.integrate(self.boto, self.message, inpt[3], inpt[4])
 
-    def commandsdesition(self, tstr):
+    def commandanalyse(self, tstr):
 
         preinpt = self.message.text.split('->')
 

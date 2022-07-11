@@ -118,7 +118,7 @@ class MessageMonitor(Monitor):
                 #print(self.__command_flag)
                 command = Commands.Command(bot.boto, self.__message )
 
-                command.commandsdesition(tstr)
+                command.commandanalyse(tstr)
             else:
                 bot.boto.send_message(
                     self.__message.chat.id, "Похоже на команду но я не уверена.",
