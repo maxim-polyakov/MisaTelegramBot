@@ -89,7 +89,7 @@ def get_user_text(message):
     mt = Bototrainers.NonNeuroTrain()
 
     mt.hitrain()
-
+    mt.thtrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 

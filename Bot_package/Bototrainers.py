@@ -77,8 +77,18 @@ class Multytrain(Train):
 class NonNeuroTrain(Train):
     def hitrain(self):
         filemodel = './models/binary/himodel.pickle'
-        filetokenizer = './tokenizers/binary/vec.pickle'
+        filetokenizer = './tokenizers/binary/hivec.pickle'
         datasetfile = 'SELECT * FROM hiset'
         recognizeddata = 'SELECT * FROM recognized_hi'
         trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
         trainer.train('hi', 'train')
+
+    def thtrain(self):
+        filemodel = './models/binary/thmodel.pickle'
+        filetokenizer = './tokenizers/binary/thvec.pickle'
+        datasetfile = 'SELECT * FROM thanksset'
+        recognizeddata = 'SELECT * FROM recognized_th'
+
+        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+
+        trainer.train('thanks', 'train')

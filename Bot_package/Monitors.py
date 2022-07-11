@@ -69,10 +69,10 @@ class MessageMonitor(Monitor):
         splta = a.split()
 
         print("splta = ", splta[0])
-       # print(self.__nnpred.predict(text, self.__mapa.himapa,
-        #                            './models/binary/himodel.pickle',
-       #                            './tokenizers/binary/vec.pickle',
-       #                             ''))
+        print(self.__nnpred.predict(text, self.__mapa.thmapa,
+                                    './models/binary/thmodel.pickle',
+                                   './tokenizers/binary/thvec.pickle',
+                                    ''))
         if (len(ststr) > 0 and tstr.count('?') > 0):
             if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
@@ -199,12 +199,12 @@ class MessageMonitor(Monitor):
                 #print(df)
                 df.to_sql('validset', con= self._engine, schema='public',
                           index=False, if_exists='append')
+            self.__neurodesc(text, ststr)
+           # try:
 
-            try:
-                self.__neurodesc(text, ststr)
-            except:
-                bot.boto.send_message(
-                    self.__message.chat.id, 'А?', parse_mode='html')
+           # except:
+          #      bot.boto.send_message(
+          #          self.__message.chat.id, 'А?', parse_mode='html')
         elif(self.__message.text == "👍" and self.__hi_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_hi',
                              "Приветствие", 'agenda', 'hi', 1)
