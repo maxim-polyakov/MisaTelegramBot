@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/emotionstrain.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/emotionstrain.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

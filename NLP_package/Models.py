@@ -183,7 +183,7 @@ class Multy(Model):
             model = NLP_package.load_model(self.filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=512, epochs=2000,
+                                batch_size=51, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 callbacks=[es],
                                 verbose=2)
@@ -191,7 +191,7 @@ class Multy(Model):
             model = self.createmodel(tokenizer, n_clases)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=512, epochs=2000,
+                                batch_size=51, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2)
 
