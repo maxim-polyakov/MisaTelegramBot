@@ -8,7 +8,7 @@ class Subfuncion:
     def __init__(self):
         pass
 
-class Adder:
+class Adder(Subfuncion):
     def __init__(self):
         pass
 

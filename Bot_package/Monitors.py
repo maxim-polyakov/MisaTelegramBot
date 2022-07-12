@@ -114,11 +114,12 @@ class MessageMonitor(Monitor):
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
                 self.__set_null()
-                self.__command_flag = 1
-                #print(self.__command_flag)
+
                 command = Commands.Command(bot.boto, self.__message )
 
                 command.commandanalyse(tstr)
+
+                self.__command_flag = command.command_flag
             else:
                 bot.boto.send_message(
                     self.__message.chat.id, "Похоже на команду но я не уверена.",
@@ -190,8 +191,6 @@ class MessageMonitor(Monitor):
             text.append(ststr)
 
             for txt in text:
-
-
                 data = {'text': txt, 'agenda': ''}
                 df = bot.pd.DataFrame()
                 new_row = bot.pd.Series(data)
@@ -199,12 +198,12 @@ class MessageMonitor(Monitor):
                 #print(df)
                 df.to_sql('validset', con= self._engine, schema='public',
                           index=False, if_exists='append')
-            self.__neurodesc(text, ststr)
-           # try:
 
-           # except:
-          #      bot.boto.send_message(
-          #          self.__message.chat.id, 'А?', parse_mode='html')
+            try:
+                self.__neurodesc(text, ststr)
+            except:
+                bot.boto.send_message(
+                    self.__message.chat.id, 'А?', parse_mode='html')
         elif(self.__message.text == "👍" and self.__hi_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_hi',
                              "Приветствие", 'agenda', 'hi', 1)
@@ -241,11 +240,8 @@ class MessageMonitor(Monitor):
             self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
 
-            trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5',
-                                    './tokenizers/multy/multyclasstokenizer.pickle',
-                                    'SELECT * FROM multyclasesset',
-                                    'SELECT * FROM recognized_multyclass')
-            trainer.train('questionclass', 3, 'evaluate')
+            self.__me.multyclassevaluate()
+
             self.__set_null()
         elif(self.__message.text == "Дело" and self.__qu_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_multyclass',
@@ -253,11 +249,7 @@ class MessageMonitor(Monitor):
             self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
 
-            trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5',
-                                    './tokenizers/multy/multyclasstokenizer.pickle',
-                                    'SELECT * FROM multyclasesset',
-                                    'SELECT * FROM recognized_multyclass')
-            trainer.train('questionclass', 3, 'evaluate')
+            self.__me.multyclassevaluate()
 
             self.__bt.quevaluate()
             self.__set_null()

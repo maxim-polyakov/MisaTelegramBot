@@ -62,6 +62,8 @@ class Multyevaluate(Evaluate):
         pass
     def multyclassevaluate(self):
 
-      trainer = bot.Models.Multy()
-
-      trainer.multyclasstrain('evaluate')
+        trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5',
+                                './tokenizers/multy/multyclasstokenizer.pickle',
+                                'SELECT * FROM multyclasesset',
+                                'SELECT * FROM recognized_multyclass')
+        trainer.train('questionclass', 3, 'evaluate')

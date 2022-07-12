@@ -92,3 +92,6 @@ class NonNeuroTrain(Train):
         trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
 
         trainer.train('thanks', 'train')
+
+    def multyclasstrain(self):
+        pass
