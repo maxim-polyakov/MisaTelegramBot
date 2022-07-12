@@ -94,4 +94,12 @@ class NonNeuroTrain(Train):
         trainer.train('thanks', 'train')
 
     def multyclasstrain(self):
-        pass
+
+        filemodel = './models/binary/multyclassmodel.pickle'
+        filetokenizer = './tokenizers/binary/multvec.pickle'
+        datasetfile = 'SELECT * FROM multyclasesset'
+        recognizeddata = 'SELECT * FROM recognized_multyclass'
+
+        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+
+        trainer.train('questionclass', 'train')

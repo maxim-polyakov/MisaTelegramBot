@@ -69,10 +69,7 @@ class MessageMonitor(Monitor):
         splta = a.split()
 
         print("splta = ", splta[0])
-        print(self.__nnpred.predict(text, self.__mapa.thmapa,
-                                    './models/binary/thmodel.pickle',
-                                   './tokenizers/binary/thvec.pickle',
-                                    ''))
+        print()
         if (len(ststr) > 0 and tstr.count('?') > 0):
             if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',

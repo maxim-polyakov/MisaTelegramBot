@@ -90,6 +90,7 @@ def get_user_text(message):
 
     mt.hitrain()
     mt.thtrain()
+    mt.multyclasstrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
 
