@@ -50,7 +50,7 @@ class Command:
             else:
 
                 tmp = self.__pr.preprocess_text(preinpt[1])
-                apif = Command_package.APIFind.WikiFinder()
+                apif = Command_package.Finders.WikiFinder()
                 apif.find(self.boto, self.message, tmp)
                 self.command_flag = 1
         elif self.__pr.preprocess_text(inpt[1]) == 'перевести':
