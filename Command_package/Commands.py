@@ -1,17 +1,12 @@
-import NLP_package
-from NLP_package import TextPreprocessers
-#import pyTelegramBotAPI
-from API_package import Finders as APIFind
-from API_package import Calculators
-import psycopg2
+import Command_package
 
 class Command:
 
     command_flag = 0
 
-    __pred = TextPreprocessers.Preprocessing()
-    __pr = TextPreprocessers.CommonPreprocessing()
-    __cpr = TextPreprocessers.CommandPreprocessing()
+    __pred = Command_package.TextPreprocessers.Preprocessing()
+    __pr = Command_package.TextPreprocessers.CommonPreprocessing()
+    __cpr = Command_package.TextPreprocessers.CommandPreprocessing()
 
 
     def __init__(self, boto, message):
@@ -25,7 +20,7 @@ class Command:
         self.boto.send_message(self.message.chat.id, inpt[2] + " - пидор.", parse_mode='html')
 
     def __insidefunction(self,inpt):
-        c = Calculators.SympyCalculator()
+        c = Command_package.Calculators.SympyCalculator()
         if self.__pr.preprocess_text(inpt[2]) == 'производная':
             print(inpt[3])
             c.deravative(self.boto, self.message, inpt[3], inpt[4])
@@ -38,7 +33,7 @@ class Command:
 
         strr = self.__pred.preprocess_text(preinpt[0])
         inpt = strr.split(' ')
-        print(inpt)
+        print(self.__pr.preprocess_text(inpt[1]))
         if (self.__pr.preprocess_text(inpt[1]) == 'атаковать' or
                 self.__pr.preprocess_text(inpt[1]) == 'фас' or
                 self.__pr.preprocess_text(inpt[1]) == 'пиздануть'):
@@ -55,12 +50,15 @@ class Command:
             else:
 
                 tmp = self.__pr.preprocess_text(preinpt[1])
-                apif = APIFind.WikiFinder()
+                apif = Command_package.APIFind.WikiFinder()
                 apif.find(self.boto, self.message, tmp)
                 self.command_flag = 1
+        elif self.__pr.preprocess_text(inpt[1]) == 'перевести':
+            tr = Command_package.Translators.GoogleTranslator("es")
+            tr.translate(self.boto, self.message, preinpt[1])
 
         else:
-            self.send_message(self.message.chat.id, "Команда",
+            self.boto.send_message(self.message.chat.id, "Команда",
                               parse_mode='html')
             self.command_flag = 1
 

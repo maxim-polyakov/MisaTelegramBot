@@ -17,3 +17,5 @@ class DataShower:
         green = '#52BE80'
         red = '#EC7063'
         NLP_package.sns.countplot(train[target], palette=[green, red])
+
+

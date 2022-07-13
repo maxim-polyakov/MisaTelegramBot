@@ -27,9 +27,7 @@ class RandomAnswer(Answer):
         pass
 
     def answer(self):
-        
-        
-        
+
         outmapa = []
         for i in range(0, len(self.data['text'])-1):
             if(self.data['hi'][i] == 1):

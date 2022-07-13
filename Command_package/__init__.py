@@ -1,7 +1,13 @@
 import NLP_package
 from NLP_package import TextPreprocessers
-#import pyTelegramBotAPI
-from API_package import Finders as APIFind
-from API_package import Calculators
+
 import psycopg2
+import pandas as pd
+import seaborn as sns
+import numpy as np
+from API_package import *
+from API_package import Translators
+import psycopg2
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
