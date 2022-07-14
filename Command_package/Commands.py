@@ -54,8 +54,14 @@ class Command:
                 apif.find(self.boto, self.message, tmp)
                 self.command_flag = 1
         elif self.__pr.preprocess_text(inpt[1]) == 'перевести':
-            tr = Command_package.Translators.GoogleTranslator("es")
-            tr.translate(self.boto, self.message, preinpt[1])
+            tr = Command_package.Translators.GoogleTranslator("ru")
+            if(self.__pr.preprocess_text(inpt[2]) =='данные'):
+                dataselect = 'SELECT * FROM ' + self.__pr.preprocess_text(inpt[3])
+                insertdtname = 'translated'
+                tr.translatedt(dataselect, insertdtname)
+            else:
+
+                tr.translate(self.boto, self.message, preinpt[1])
 
         else:
             self.boto.send_message(self.message.chat.id, "Команда",

@@ -87,10 +87,19 @@ def get_user_text(message):
 def get_user_text(message):
 
     mt = Bototrainers.NonNeuroTrain()
-
     mt.hitrain()
     mt.thtrain()
     mt.multyclasstrain()
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
+
+@bot.boto.message_handler(commands=['emotionstrain'])
+def get_user_text(message):
+
+    mt = Bototrainers.NonNeuroTrain()
+    mb = Bototrainers.Multytrain()
+    mb.emotionstrain()
+
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
+
 
 

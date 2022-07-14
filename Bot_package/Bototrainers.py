@@ -15,6 +15,8 @@ class Train:
         pass
     def multyclasstrain(self):
         pass
+    def emotionstrain(self):
+        pass
 
 class Binarytrain(Train):
     def __init__(self):
@@ -73,6 +75,13 @@ class Multytrain(Train):
                                    'SELECT * FROM multyclasesset',
                                    'SELECT * FROM recognized_multyclass')
         trainer.train('questionclass', 3, 'train')
+
+    def emotionstrain(self):
+        trainer = bot.Models.Multy('./models/multy/emotionsmodel.h5',
+                                   './tokenizers/multy/emotionstokenizer.pickle',
+                                   'SELECT * FROM emotionstrain',
+                                   'SELECT * FROM recognized_emotion')
+        trainer.train('emotion_id', 6, 'train')
 
 class NonNeuroTrain(Train):
     def hitrain(self):

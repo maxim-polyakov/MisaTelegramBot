@@ -30,7 +30,7 @@ class GoogleTranslator(Translator):
 
 
 
-    def translatedb(self, dataselect, insertdtname):
+    def translatedt(self, dataselect, insertdtname):
 
         train = API_package.pd.read_sql(dataselect, self.__conn)
         train.text = train.text.astype(str)
