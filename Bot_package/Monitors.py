@@ -69,7 +69,7 @@ class MessageMonitor(Monitor):
         splta = a.split()
 
         print("splta = ", splta[0])
-        print()
+        print(self.__pr.preprocess_text(splta[0]))
         if (len(ststr) > 0 and tstr.count('?') > 0):
             if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
@@ -98,8 +98,6 @@ class MessageMonitor(Monitor):
                     self.__message.chat.id, "Вопрос без классификации",
                     parse_mode='html')
 
-
-
                 self.__set_null()
                 self.__q__non_flag = 1
                 self.__qu_flag = 1
@@ -111,7 +109,7 @@ class MessageMonitor(Monitor):
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
                 self.__set_null()
-
+                print("command")
                 command = Commands.Command(bot.boto, self.__message )
 
                 command.commandanalyse(tstr)

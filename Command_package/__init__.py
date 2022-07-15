@@ -8,6 +8,7 @@ import numpy as np
 from API_package import Calculators
 from API_package import Finders
 from API_package import Translators
+from API_package import DataShowers
 import psycopg2
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')

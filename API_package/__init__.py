@@ -6,5 +6,6 @@ import psycopg2
 import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine
-
+import matplotlib.pyplot as plt
 from API_package import *
+import seaborn as sns

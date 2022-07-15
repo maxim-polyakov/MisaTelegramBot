@@ -62,6 +62,14 @@ class Command:
             else:
 
                 tr.translate(self.boto, self.message, preinpt[1])
+        elif self.__pr.preprocess_text(inpt[1]) == 'показывать':
+
+            if(self.__pr.preprocess_text(inpt[2]) =='данные'):
+                dataselect = 'SELECT * FROM ' + self.__pr.preprocess_text(inpt[3])
+                recognizeddataselect = 'SELECT * FROM ' + "recognized_" + self.__pr.preprocess_text(inpt[3])
+                target = inpt[4]
+                ds = Command_package.DataShowers.DataShower(self.boto,self.message,dataselect,recognizeddataselect)
+                ds.showdata(target)
 
         else:
             self.boto.send_message(self.message.chat.id, "Команда",

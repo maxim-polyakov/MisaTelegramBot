@@ -88,7 +88,7 @@ class Binary(Model):
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
-                                batch_size=51,
+                                batch_size=512,
                                 epochs=200,
                                 verbose=2,
                                 callbacks=[es]
@@ -98,7 +98,7 @@ class Binary(Model):
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
-                                batch_size=51,
+                                batch_size=512,
                                 epochs=2000,
                                 verbose=2,
                                 )
@@ -150,7 +150,7 @@ class Multy(Model):
         df = NLP_package.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
-      #  train = train.drop_duplicates()
+        train = train.drop_duplicates()
       
         ds = DataShowers.DataShower()
         ds.showdata(train, target)
@@ -177,22 +177,26 @@ class Multy(Model):
             y_val, n_clases)
         if(mode == 'evaluate'):
             
-            es = NLP_package.EarlyStopping(patience=10, monitor='val_accuracy',
+            es = NLP_package.EarlyStopping(patience=10, monitor='categorical_accuracy',
                                            restore_best_weights=True)
             
             model = NLP_package.load_model(self.filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=51, epochs=2000,
+                                batch_size=512, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 callbacks=[es],
                                 verbose=2)
         else:
             model = self.createmodel(tokenizer, n_clases)
-            
+
+            es = NLP_package.EarlyStopping(patience=10, monitor='categorical_accuracy',
+                                           restore_best_weights=True)
+
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=51, epochs=2000,
+                                batch_size=51, epochs=1000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
+                                callbacks=[es],
                                 verbose=2)
 
 

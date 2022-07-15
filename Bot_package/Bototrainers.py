@@ -112,3 +112,14 @@ class NonNeuroTrain(Train):
         trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
 
         trainer.train('questionclass', 'train')
+
+    def emotionstrain(self):
+        filemodel = './models/binary/emotionsmodel.pickle'
+        filetokenizer = './tokenizers/binary/emotionsvec.pickle'
+        datasetfile = 'SELECT * FROM emotionstrain'
+        recognizeddata = 'SELECT * FROM recognized_emotionstrain'
+
+
+        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+
+        trainer.train('questionclass', 'train')
