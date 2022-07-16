@@ -41,15 +41,7 @@ class DataShower:
         fig = outt.get_figure()
         fig.savefig('./API_package/outputs/outcountplot.png')
 
-        API_package.plt.figure(figsize=(16, 7))
-        API_package.plt.hist(sample, bins=30, density=True,
-                 alpha=0.6, label='Гистограмма выборки')
-        API_package.plt.plot(grid, sps.norm.pdf(grid), color='red',
-                 lw=5, label='Плотность случайной величины')
-        API_package.plt.title(r'Случайная величина $\xi \sim \mathcal{N}$(0, 1)', fontsize=20)
-        API_package.plt.legend(fontsize=14, loc=1)
-        API_package.plt.grid(ls=':')
-        API_package.plt.show()
+
 
 
         self.bot.send_photo(self.message.chat.id, photo=open('./API_package/outputs/output.png', 'rb'),
