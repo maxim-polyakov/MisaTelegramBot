@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/API_package/DataShowers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API_package/DataShowers.py" beforeDir="false" afterPath="$PROJECT_DIR$/API_package/DataShowers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/API_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/API_package/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/Bototrainers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Bototrainers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/Monitors.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Monitors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Command_package/Commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/Command_package/Commands.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Command_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Command_package/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/multy/multyclassmodel.h5" beforeDir="false" afterPath="$PROJECT_DIR$/models/multy/multyclassmodel.h5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tokenizers/multy/multyclasstokenizer.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/tokenizers/multy/multyclasstokenizer.pickle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
