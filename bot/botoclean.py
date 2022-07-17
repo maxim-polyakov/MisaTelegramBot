@@ -1,6 +1,7 @@
 import bot
 #import pyTelegramBotAPI
-from NLP_package import DataCleaners
+from Bot_package import DataCleaners
+
 
 @bot.boto.message_handler(commands=['multyclean'])
 def get_user_text(message):

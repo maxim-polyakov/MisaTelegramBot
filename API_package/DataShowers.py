@@ -22,7 +22,7 @@ class DataShower:
         train = API_package.pd.read_sql(self.dataselect, self.conn)
         train.text = train.text.astype(str)
 
-        df = API_package.pd.concat([train])
+        df = API_package.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
         train = train.drop_duplicates()
@@ -44,19 +44,12 @@ class DataShower:
 
 
 
-        self.bot.send_photo(self.message.chat.id, photo=open('./API_package/outputs/output.png', 'rb'),
+        self.bot.send_photo(self.message.chat.id, photo=open('./API_package/outputs/outcountplot.png', 'rb'),
                         parse_mode='html')
 
-        self.bot.send_message(self.message.chat.id, "Дисперсия " +str(API_package.np.var(train[target])),
-                          parse_mode='html')
-
-        self.bot.send_message(self.message.chat.id, "Медиана  " +str(API_package.np.median(train[target])),
-                          parse_mode='html')
-
-        self.bot.send_message(self.message.chat.id, "Мат ожидание  " +str(API_package.np.mean(train[target])),
-                          parse_mode='html')
-
-        self.bot.send_message(self.message.chat.id, "Стандартное отклонение  " +str(API_package.np.std(train[target])),
-                          parse_mode='html')
+        self.bot.send_message(self.message.chat.id, "Дисперсия " +str(API_package.np.var(train[target])) +
+                              " Медиана " +str(API_package.np.median(train[target])) +
+                              " Мат ожидание " +str(API_package.np.mean(train[target])) +
+                              " Стандартное отклонение " +str(API_package.np.std(train[target])), parse_mode='html')
 
 

@@ -20,7 +20,7 @@ class Model:
         pass
     
 
-class Binary(Model):
+class BinaryLSTM(Model):
 
     def __init__(self, filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
@@ -110,7 +110,7 @@ class Binary(Model):
                                protocol=NLP_package.p.HIGHEST_PROTOCOL)
 
 
-class Multy(Model):
+class MultyLSTM(Model):
 
     def __init__(self, filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
@@ -185,18 +185,14 @@ class Multy(Model):
             history = model.fit(tokenized_X_train, y_trainmatrix,
                                 batch_size=512, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
-                                callbacks=[es],
-                                verbose=2)
+                                verbose=2,
+                                callbacks=[es])
         else:
             model = self.createmodel(tokenizer, n_clases)
 
-            es = NLP_package.EarlyStopping(patience=10, monitor='categorical_accuracy',
-                                           restore_best_weights=True)
-
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=51, epochs=1000,
+                                batch_size=51, epochs=2000,
                                 validation_data=(tokenized_X_val, y_valmatrix),
-                                callbacks=[es],
                                 verbose=2)
 
 

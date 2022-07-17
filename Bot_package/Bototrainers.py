@@ -1,4 +1,5 @@
-import bot
+#import bot
+import Bot_package
 
 class Train:
     def __init__(self):
@@ -26,36 +27,36 @@ class Binarytrain(Train):
         filemodel = './models/binary/himodel.h5'
         filetokenizer = './tokenizers/binary/hitokenizer.pickle'
         datasetfile = 'SELECT * FROM hiset'
-        recognizeddata = 'SELECT * FROM recognized_hi'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        recognizeddata = 'SELECT * FROM recognized_hiset'
+        trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('hi', 'train')
 
     def qutrain(self):
         filemodel = './models/binary/qumodel.h5'
         filetokenizer = './tokenizers/binary/qutokenizer.pickle'
         datasetfile = 'SELECT * FROM questionset'
-        recognizeddata = 'SELECT * FROM recognized_qu'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        recognizeddata = 'SELECT * FROM recognized_questionset'
+        trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('question', 'train')
 
     def thtrain(self):
         filemodel = './models/binary/thmodel.h5'
         filetokenizer = './tokenizers/binary/thtokenizer.pickle'
         datasetfile = 'SELECT * FROM thanksset'
-        recognizeddata = 'SELECT * FROM recognized_th'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        recognizeddata = 'SELECT * FROM recognized_thanksset'
+        trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('thanks', 'train')
 
     def commandtrain(self):
         filemodel = './models/binary/commandmodel.h5'
         filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
         datasetfile = 'SELECT * FROM commandset'
-        recognizeddata = 'SELECT * FROM recognized_command'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        recognizeddata = 'SELECT * FROM recognized_commandset'
+        trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('command', 'train')
 
 class Multytrain(Train):
@@ -63,25 +64,25 @@ class Multytrain(Train):
         pass
 
     def hi_th_commandtrain(self):
-        trainer = bot.Models.Multy('./models/multy/hi_th_commandmodel.h5',
+        trainer = Bot_package.Models.Multy('./models/multy/hi_th_commandmodel.h5',
                                    './tokenizers/multy/hi_th_commandtokenizer.pickle',
                                    'SELECT * FROM hi_th_command',
                                    'SELECT * FROM recognized_hi_th_command')
 
         trainer.train('hi_th_command', 4, 'train')
     def multyclasstrain(self):
-        trainer = bot.Models.Multy('./models/multy/multyclassmodel.h5',
+        trainer = Bot_package.Models.Multy('./models/multy/multyclassmodel.h5',
                                    './tokenizers/multy/multyclasstokenizer.pickle',
                                    'SELECT * FROM multyclasesset',
-                                   'SELECT * FROM recognized_multyclass')
+                                   'SELECT * FROM recognized_multyclasesset')
         trainer.train('questionclass', 3, 'train')
 
     def emotionstrain(self):
-        trainer = bot.Models.Multy('./models/multy/emotionsmodel.h5',
+        trainer = Bot_package.Models.MultyLSTM('./models/multy/emotionsmodel.h5',
                                    './tokenizers/multy/emotionstokenizer.pickle',
                                    'SELECT * FROM emotionstrain',
-                                   'SELECT * FROM recognized_emotion')
-        trainer.train('emotion_id', 6, 'train')
+                                   'SELECT * FROM recognized_emotionstrain')
+        trainer.train('emotionid', 6, 'train')
 
 class NonNeuroTrain(Train):
     def hitrain(self):
@@ -89,7 +90,7 @@ class NonNeuroTrain(Train):
         filetokenizer = './tokenizers/binary/hivec.pickle'
         datasetfile = 'SELECT * FROM hiset'
         recognizeddata = 'SELECT * FROM recognized_hi'
-        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+        trainer = Bot_package.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
         trainer.train('hi', 'train')
 
     def thtrain(self):
@@ -98,7 +99,7 @@ class NonNeuroTrain(Train):
         datasetfile = 'SELECT * FROM thanksset'
         recognizeddata = 'SELECT * FROM recognized_th'
 
-        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+        trainer = Bot_package.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
 
         trainer.train('thanks', 'train')
 
@@ -109,7 +110,7 @@ class NonNeuroTrain(Train):
         datasetfile = 'SELECT * FROM multyclasesset'
         recognizeddata = 'SELECT * FROM recognized_multyclass'
 
-        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+        trainer = Bot_package.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
 
         trainer.train('questionclass', 'train')
 
@@ -120,6 +121,6 @@ class NonNeuroTrain(Train):
         recognizeddata = 'SELECT * FROM recognized_emotionstrain'
 
 
-        trainer = bot.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
+        trainer = Bot_package.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
 
         trainer.train('questionclass', 'train')

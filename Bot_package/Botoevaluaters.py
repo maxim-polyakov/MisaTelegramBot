@@ -1,4 +1,6 @@
-import bot
+#import bot
+import Bot_package
+
 
 class Evaluate:
     def __init__(self):
@@ -15,6 +17,8 @@ class Evaluate:
         pass
     def multyclassevaluate(self):
         pass
+    def emotionsevaluate(self):
+        pass
 
 class Binaryevaluate(Evaluate):
     def __init__(self):
@@ -24,8 +28,8 @@ class Binaryevaluate(Evaluate):
         filetokenizer = './tokenizers/binary/hitokenizer.pickle'
         datasetfile = 'SELECT * FROM hiset'
         recognizeddata = 'SELECT * FROM recognized_hi'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        trainer =Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('hi', 'evaluate')
 
     def quevaluate(self):
@@ -33,8 +37,8 @@ class Binaryevaluate(Evaluate):
         filetokenizer = './tokenizers/binary/qutokenizer.pickle'
         datasetfile = 'SELECT * FROM questionset'
         recognizeddata = 'SELECT * FROM recognized_qu'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('question', 'evaluate')
 
     def thevaluate(self):
@@ -42,8 +46,8 @@ class Binaryevaluate(Evaluate):
         filetokenizer = './tokenizers/binary/thtokenizer.pickle'
         datasetfile = 'SELECT * FROM thanksset'
         recognizeddata = 'SELECT * FROM recognized_th'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('thanks', 'evaluate')
 
     def commandevaluate(self):
@@ -51,8 +55,8 @@ class Binaryevaluate(Evaluate):
         filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
         datasetfile = 'SELECT * FROM commandset'
         recognizeddata = 'SELECT * FROM recognized_command'
-        trainer = bot.Models.Binary(filemodel, filetokenizer,
-                                datasetfile, recognizeddata)
+        trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
+                                        datasetfile, recognizeddata)
         trainer.train('command', 'evaluate')
 
 class Multyevaluate(Evaluate):
@@ -62,8 +66,15 @@ class Multyevaluate(Evaluate):
         pass
     def multyclassevaluate(self):
 
-        trainer = bot.NLP.Multy('./models/multy/multyclassmodel.h5',
+        trainer = Bot_package.Models.Multy('./models/multy/multyclassmodel.h5',
                                 './tokenizers/multy/multyclasstokenizer.pickle',
                                 'SELECT * FROM multyclasesset',
                                 'SELECT * FROM recognized_multyclass')
         trainer.train('questionclass', 3, 'evaluate')
+
+    def emotionsevaluate(self):
+        trainer = Bot_package.Models.MultyLSTM('./models/multy/emotionsmodel.h5',
+                                   './tokenizers/multy/emotionstokenizer.pickle',
+                                   'SELECT * FROM emotionstrain',
+                                   'SELECT * FROM recognized_emotionstrain')
+        trainer.train('emotionid', 6, 'evaluate')

@@ -4,6 +4,7 @@ from NLP_package import Models
 from NLP_package import Predictors
 from NLP_package import Answers
 from NLP_package import Mapas
+from NLP_package import TextPreprocessers
 #import subfunctions
 from telebot import types
 import config
@@ -16,3 +17,5 @@ import flask
 #import requests
 import logging
 from bot import *
+import pandas as pd
+import psycopg2

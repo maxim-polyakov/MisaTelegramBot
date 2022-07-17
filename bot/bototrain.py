@@ -101,5 +101,15 @@ def get_user_text(message):
 
     bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
 
+@bot.boto.message_handler(commands=['emotionsevaluate'])
+def get_user_text(message):
+
+   # mt = Bototrainers.NonNeuroT()
+    mb = Botoevaluaters.Multyevaluate()
+    mb.emotionsevaluate()
+
+    bot.boto.send_message(message.chat.id, "trained", parse_mode='html')
+
+
 
 

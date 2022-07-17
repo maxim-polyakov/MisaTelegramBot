@@ -1,5 +1,5 @@
-import NLP_package
-from NLP_package import TextPreprocessers
+import Bot_package
+
 
 
 class Cleaner:
@@ -12,7 +12,7 @@ class Cleaner:
     
 class CommonCleaner(Cleaner):
     
-    __pr = TextPreprocessers.CommonPreprocessing()
+    __pr = Bot_package.TextPreprocessers.CommonPreprocessing()
     
     def __init__(self):
         pass
@@ -23,12 +23,12 @@ class CommonCleaner(Cleaner):
     def clean(self, filename, string):
         
         if(self.type_doc == "csv"):
-            train = NLP_package.pd.read_csv(filename, encoding="utf-8")
+            train = Bot_package.pd.read_csv(filename, encoding="utf-8")
         else:
-            train = NLP_package.pd.read_excel(filename)
+            train = Bot_package.pd.read_excel(filename)
         
         train.text = train.text.astype(str)
-        df = NLP_package.pd.concat([train])
+        df = Bot_package.pd.concat([train])
         df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df[string].isna()]
         train[string] = train[string].astype(int)
@@ -36,7 +36,7 @@ class CommonCleaner(Cleaner):
 
 class QuestionCleaner(Cleaner):
     
-    __pr = TextPreprocessers.QuestionPreprocessing()
+    __pr = Bot_package.TextPreprocessers.QuestionPreprocessing()
     
     def __init__(self):
         pass  
@@ -48,12 +48,12 @@ class QuestionCleaner(Cleaner):
         
         if(self.type_doc == "csv"):
             
-            train = NLP_package.pd.read_csv(filename, encoding="utf-8")
+            train = Bot_package.pd.read_csv(filename, encoding="utf-8")
         else:
-            train = NLP_package.pd.read_excel(filename)
+            train = Bot_package.pd.read_excel(filename)
         
         train.text = train.text.astype(str)
-        df = NLP_package.pd.concat([train])
+        df = Bot_package.pd.concat([train])
         df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df['question'].isna()]
         train['question'] = train['question'].astype(int)
@@ -61,7 +61,7 @@ class QuestionCleaner(Cleaner):
         
 class CommandCleaner(Cleaner):
     
-    __pr = TextPreprocessers.CommandPreprocessing()
+    __pr = Bot_package.TextPreprocessers.CommandPreprocessing()
     
     def __init__(self):
         pass
@@ -73,12 +73,12 @@ class CommandCleaner(Cleaner):
         
         if(self.type_doc == "csv"):
             
-            train = NLP_package.pd.read_csv(filename, encoding="utf-8")
+            train = Bot_package.pd.read_csv(filename, encoding="utf-8")
         else:
-            train = NLP_package.pd.read_excel(filename)
+            train = Bot_package.pd.read_excel(filename)
             
         train.text = train.text.astype(str)
-        df = NLP_package.pd.concat([train])
+        df = Bot_package.pd.concat([train])
         df['text'] = df['text'].apply(self.__pr.preprocess_text)
         train = df[~df['command'].isna()]
         train['command'] = train['command'].astype(int)

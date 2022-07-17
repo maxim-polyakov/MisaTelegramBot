@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="" />
+    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API_package/DataShowers.py" beforeDir="false" afterPath="$PROJECT_DIR$/API_package/DataShowers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API_package/outputs/outcountplot.png" beforeDir="false" afterPath="$PROJECT_DIR$/API_package/outputs/outcountplot.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bot_package/Botoevaluaters.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Botoevaluaters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bot_package/Bototrainers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Bototrainers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bot_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Command_package/Commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/Command_package/Commands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NLP_package/DataCleaners.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/DataCleaners.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NLP_package/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/botoclean.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/botoclean.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/bototrain.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/bototrain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/emotionstrain.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/emotionstrain.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/multy/emotionsmodel.h5" beforeDir="false" afterPath="$PROJECT_DIR$/models/multy/emotionsmodel.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/multy/multyclassmodel.h5" beforeDir="false" afterPath="$PROJECT_DIR$/models/multy/multyclassmodel.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tokenizers/multy/emotionstokenizer.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/tokenizers/multy/emotionstokenizer.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tokenizers/multy/multyclasstokenizer.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/tokenizers/multy/multyclasstokenizer.pickle" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,8 +54,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\maxim\Documents\GitHub\MisaTelegramBot\Command_package" />
       <recent name="C:\Users\maxim\Documents\GitHub\MisaTelegramBot\Bot_package" />
+      <recent name="C:\Users\maxim\Documents\GitHub\MisaTelegramBot\Command_package" />
     </key>
   </component>
   <component name="RunManager" selected="Python.bototrain">
