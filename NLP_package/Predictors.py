@@ -1,6 +1,6 @@
 import NLP_package
 
-from tensorflow.keras.models import load_model
+
 
 class Predictor:
     inp = []
@@ -35,7 +35,7 @@ class Binary(Predictor):
         pass
     
     def predict(self, inpt, tmap, model, tokenizer, prep):
-        model = load_model(model)
+        model = NLP_package.load_model(model)
         inn = []
         inn.append(self.preprocessing(inpt, prep).pop())
         #print(inn)
@@ -57,7 +57,7 @@ class Multy(Predictor):
         pass
 
     def predict(self, inpt, tmap, model, tokenizer):
-        model = load_model(model)
+        model = NLP_package.load_model(model)
         self.inp = []
         pr = NLP_package.TextPreprocessers.CommonPreprocessing()
         for i in inpt:

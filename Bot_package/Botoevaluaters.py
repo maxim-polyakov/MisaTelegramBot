@@ -1,6 +1,4 @@
-#import bot
 import Bot_package
-
 
 class Evaluate:
     def __init__(self):

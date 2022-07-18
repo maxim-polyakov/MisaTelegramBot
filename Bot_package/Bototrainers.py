@@ -1,4 +1,3 @@
-#import bot
 import Bot_package
 
 class Train:
@@ -64,14 +63,14 @@ class Multytrain(Train):
         pass
 
     def hi_th_commandtrain(self):
-        trainer = Bot_package.Models.Multy('./models/multy/hi_th_commandmodel.h5',
+        trainer = Bot_package.Models.MultyLSTM('./models/multy/hi_th_commandmodel.h5',
                                    './tokenizers/multy/hi_th_commandtokenizer.pickle',
                                    'SELECT * FROM hi_th_command',
                                    'SELECT * FROM recognized_hi_th_command')
 
         trainer.train('hi_th_command', 4, 'train')
     def multyclasstrain(self):
-        trainer = Bot_package.Models.Multy('./models/multy/multyclassmodel.h5',
+        trainer = Bot_package.Models.MultyLSTM('./models/multy/multyclassmodel.h5',
                                    './tokenizers/multy/multyclasstokenizer.pickle',
                                    'SELECT * FROM multyclasesset',
                                    'SELECT * FROM recognized_multyclasesset')

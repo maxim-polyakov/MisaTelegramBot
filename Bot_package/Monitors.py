@@ -1,10 +1,4 @@
-import bot
-import psycopg2
-from sqlalchemy import create_engine
-from Bot_package import Subfunctions
-from Bot_package import Bototrainers
-from Bot_package import Botoevaluaters
-from Command_package import Commands
+import Bot_package
 
 class Monitor:
 
@@ -26,24 +20,24 @@ class MessageMonitor(Monitor):
     __q__non_flag = 0
     __mtext = ""
 
-    __bpred = bot.Predictors.Binary()
-    __nnpred = bot.Predictors.NonNeuro()
-    __mpred = bot.Predictors.Multy()
-    __qpr = bot.Models.TextPreprocessers.QuestionPreprocessing()
-    __cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
-    __pr = bot.Models.TextPreprocessers.CommonPreprocessing()
+    __bpred = Bot_package.bot.Predictors.Binary()
+    __nnpred = Bot_package.bot.Predictors.NonNeuro()
+    __mpred = Bot_package.bot.Predictors.Multy()
+    __qpr = Bot_package.TextPreprocessers.QuestionPreprocessing()
+    __cpr = Bot_package.TextPreprocessers.CommandPreprocessing()
+    __pr = Bot_package.TextPreprocessers.CommonPreprocessing()
     
-    _engine = create_engine(
+    _engine = Bot_package.create_engine(
                     'postgresql+psycopg2://postgres:postgres@localhost:5432/postgres')
-    _conn = psycopg2.connect(
+    _conn = Bot_package.psycopg2.connect(
         "dbname=postgres user=postgres password=postgres")
 
-    __ad = Subfunctions.Adder()
-    __bt = Bototrainers.Train()
-    __mt = Bototrainers.Multytrain()
-    __be = Botoevaluaters.Binaryevaluate()
-    __me = Botoevaluaters.Multyevaluate()
-    __mapa = bot.Mapas.Mapa()
+    __ad = Bot_package.Subfunctions.Adder()
+    __bt = Bot_package.Bototrainers.Train()
+    __mt = Bot_package.Bototrainers.Multytrain()
+    __be = Bot_package.Botoevaluaters.Binaryevaluate()
+    __me = Bot_package.Botoevaluaters.Multyevaluate()
+    __mapa = Bot_package.bot.Mapas.Mapa()
 
     def __init__(self, message):
         self.__message = message
@@ -61,7 +55,7 @@ class MessageMonitor(Monitor):
 
     def __neurodesc(self, text, tstr):
 
-        df = bot.pd.read_sql('SELECT text FROM commands', self._conn)
+        df = Bot_package.bot.pd.read_sql('SELECT text FROM commands', self._conn)
         Cdict = df['text'].to_dict()
 
         ststr = self.__qpr.reversepreprocess_text(tstr)
@@ -70,11 +64,14 @@ class MessageMonitor(Monitor):
 
         print("splta = ", splta[0])
         print(self.__pr.preprocess_text(splta[0]))
+        print(self.__mpred.predict(text, self.__mapa.emotionsmapa,
+                                    './models/multy/emotionsmodel.h5',
+                                    './tokenizers/multy/emotionstokenizer.pickle'))
         if (len(ststr) > 0 and tstr.count('?') > 0):
             if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
-                bot.boto.send_message(
+                Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Я в порядке", parse_mode='html')
 
                 self.__set_null()
@@ -85,7 +82,7 @@ class MessageMonitor(Monitor):
             elif(self.__mpred.predict(text, self.__mapa.multymapa,
                                       './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
-                bot.boto.send_message(
+                Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Погода норм", parse_mode='html')
 
                 self.__set_null()
@@ -94,7 +91,7 @@ class MessageMonitor(Monitor):
                 self.__mtext = tstr
 
             else:
-                bot.boto.send_message(
+                Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Вопрос без классификации",
                     parse_mode='html')
 
@@ -110,13 +107,13 @@ class MessageMonitor(Monitor):
                                     'command') == "Команда"):
                 self.__set_null()
                 print("command")
-                command = Commands.Command(bot.boto, self.__message )
+                command = Bot_package.Commands.Command(Bot_package.bot.boto, self.__message )
 
                 command.commandanalyse(tstr)
 
                 self.__command_flag = command.command_flag
             else:
-                bot.boto.send_message(
+                Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Похоже на команду но я не уверена.",
                     parse_mode='html')
 
@@ -126,8 +123,8 @@ class MessageMonitor(Monitor):
                                   './tokenizers/binary/hitokenizer.pickle',
                                   '') == "Приветствие"):
 
-            ra = bot.Answers.RandomAnswer()
-            bot.boto.send_message(
+            ra = Bot_package.bot.Answers.RandomAnswer()
+            Bot_package.bot.boto.send_message(
                 self.__message.chat.id, ra.answer(), parse_mode='html')
 
             self.__set_null()
@@ -139,7 +136,7 @@ class MessageMonitor(Monitor):
                                   './tokenizers/binary/thtokenizer.pickle',
                                   '') == "Благодарность"):
 
-            bot.boto.send_message(self.__message.chat.id, "Не за что",
+            Bot_package.bot.boto.send_message(self.__message.chat.id, "Не за что",
                                   parse_mode='html')
 
             self.__set_null()
@@ -149,7 +146,7 @@ class MessageMonitor(Monitor):
 
             if(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
-                bot.boto.send_message(
+                Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Утверждение про дела", parse_mode='html')
                 
                 self.__set_null()
@@ -158,14 +155,14 @@ class MessageMonitor(Monitor):
 
             elif(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
-                bot.boto.send_message(
+                Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Утверждение про погоду", parse_mode='html')
                 
                 self.__set_null()
                 self.__weater_flag = 1
                 self.__mtext = tstr
             else:
-                bot.boto.send_message(
+                Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Нет классификации",
                     parse_mode='html')
 
@@ -187,8 +184,8 @@ class MessageMonitor(Monitor):
 
             for txt in text:
                 data = {'text': txt, 'agenda': ''}
-                df = bot.pd.DataFrame()
-                new_row = bot.pd.Series(data)
+                df = Bot_package.bot.pd.DataFrame()
+                new_row = Bot_package.bot.pd.Series(data)
                 df = df.append(new_row, ignore_index=True)
                 #print(df)
                 df.to_sql('validset', con= self._engine, schema='public',
@@ -225,7 +222,7 @@ class MessageMonitor(Monitor):
                                "Не вопрос", 0)
             self.__bt.quevaluate()
 
-            bot.boto.send_message(
+            Bot_package.bot.boto.send_message(
                 self.__message.chat.id, "Запомнила", parse_mode='html')
 
             self.__set_null()
@@ -277,10 +274,10 @@ class MessageMonitor(Monitor):
         elif(self.__message.text == "👎" and self.__non_flag == 1):
             self.__set_null()
         elif(self.__message.text == "👎"):
-            bot.boto.send_message(self.__message.chat.id,
+            Bot_package.bot.boto.send_message(self.__message.chat.id,
                                   "😒", parse_mode='html')
         elif(self.__message.text == "👍"):
-            bot.boto.send_message(self.__message.chat.id,
+            Bot_package.bot.boto.send_message(self.__message.chat.id,
                                   "😊", parse_mode='html')
         text = []
 
@@ -288,11 +285,11 @@ class TestMonitor(MessageMonitor):
 
     inputtext = ""
     
-    __bpred = bot.Predictors.Binary()
-    __mpred = bot.Predictors.Multy()
-    __qpr = bot.Models.TextPreprocessers.QuestionPreprocessing()
-    __cpr = bot.Models.TextPreprocessers.CommandPreprocessing()
-    __pr = bot.Models.TextPreprocessers.CommonPreprocessing()
+    __bpred = Bot_package.Predictors.Binary()
+    __mpred = Bot_package.Predictors.Multy()
+    __qpr = Bot_package.TextPreprocessers.QuestionPreprocessing()
+    __cpr = Bot_package.TextPreprocessers.CommandPreprocessing()
+    __pr = Bot_package.TextPreprocessers.CommonPreprocessing()
     
     def __init__(self):
         self.__engine = super()._engine
@@ -302,15 +299,15 @@ class TestMonitor(MessageMonitor):
     def __insert_to_validset_lablel(self, txt, insert):
         
         data = {'text': txt,'agenda': insert}
-        df = bot.pd.DataFrame()
-        new_row = bot.pd.Series(data)
+        df = Bot_package.bot.pd.DataFrame()
+        new_row = Bot_package.bot.pd.Series(data)
         df = df.append(new_row, ignore_index=True)
         df.to_sql('markedvalidset', con=self.__engine, schema='public',
                           index=False, if_exists='append')
     
     def __neurodesc(self, text, tstr):
 
-        df = bot.pd.read_sql('SELECT text FROM commands', self.__engine)
+        df = Bot_package.bot.pd.read_sql('SELECT text FROM commands', self.__engine)
         Cdict = df['text'].to_dict()
 
         ststr = self.__qpr.reversepreprocess_text(tstr)
@@ -318,14 +315,14 @@ class TestMonitor(MessageMonitor):
         splta = a.split()
      #   print("splta = ", splta[0])
         if (len(ststr) > 0 and tstr.count('?') > 0):
-            if(self.__mpred.predict(text, bot.mapa.multymapa,
+            if(self.__mpred.predict(text, Bot_package.bot.mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 insert = "Вопрос про дело"
                 self.__insert_to_validset_lablel(tstr,insert)
 
 
-            elif(self.__mpred.predict(text, bot.mapa.multymapa,
+            elif(self.__mpred.predict(text, Bot_package.bot.mapa.multymapa,
                                       './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 
@@ -339,7 +336,7 @@ class TestMonitor(MessageMonitor):
 
         elif(splta[0] in Cdict.values()):
 
-            if(self.__bpred.predict(text, bot.mapa.commandmapa,
+            if(self.__bpred.predict(text, Bot_package.bot.mapa.commandmapa,
                                     './models/binary/commandmodel.h5',
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
@@ -354,17 +351,17 @@ class TestMonitor(MessageMonitor):
                 self.__mtext = tstr
 
 
-        elif(self.__bpred.predict(text, bot.mapa.himapa,
+        elif(self.__bpred.predict(text, Bot_package.bot.mapa.himapa,
                                   './models/binary/himodel.h5',
                                   './tokenizers/binary/hitokenizer.pickle',
                                   '') == "Приветствие"):
 
-            ra = bot.Answers.RandomAnswer()
+            ra = Bot_package.bot.Answers.RandomAnswer()
             insert = "Приветствие"
             self.__insert_to_validset_lablel(tstr,insert)
             self.__mtext = tstr
 
-        elif(self.__bpred.predict(text, bot.mapa.thmapa,
+        elif(self.__bpred.predict(text, Bot_package.bot.mapa.thmapa,
                                   './models/binary/thmodel.h5',
                                   './tokenizers/binary/thtokenizer.pickle',
                                   '') == "Благодарность"):
@@ -374,14 +371,14 @@ class TestMonitor(MessageMonitor):
             self.__mtext = tstr
         else:
 
-            if(self.__mpred.predict(text, bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
+            if(self.__mpred.predict(text, Bot_package.bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
 
                 insert = "Дело"
                 self.__insert_to_validset_lablel(tstr,insert)
                 self.__mtext = tstr
                 
-            elif(self.__mpred.predict(text, bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
+            elif(self.__mpred.predict(text, Bot_package.bot.mapa.multymapa, './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 insert = "Погода"
                 self.__insert_to_validset_lablel(tstr,insert)
@@ -393,7 +390,7 @@ class TestMonitor(MessageMonitor):
 
     def monitor(self):
         
-        df = bot.pd.read_sql('SELECT * FROM validset', self.__conn)
+        df = Bot_package.bot.pd.read_sql('SELECT * FROM validset', self.__conn)
 
 
         inptext = df['text']

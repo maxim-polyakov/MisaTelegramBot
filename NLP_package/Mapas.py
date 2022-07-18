@@ -1,5 +1,4 @@
-import pandas as pd
-import random
+import NLP_package
 
 class Mapa:
 
@@ -9,6 +8,7 @@ class Mapa:
     commandmapa = {0: "Не команда", 1: "Команда"}
 
     multymapa = {0: "Нет темы", 1: "Погода", 2: "Дело"}
+    emotionsmapa = {0: "Грусть", 1:"Злость", 2:"Страх", 3:"Радость", 4:"Любовь", 5:"Удивление"}
 
     hi_th_commandmapa = {0: "Утверждение", 1: "Команда", 2: "Приветствие", 3: "Благодарность"}
 

@@ -1,8 +1,4 @@
-import pandas as pd
-import random
 import NLP_package
-from NLP_package import Mapas
-from sqlalchemy import create_engine
 
 class Answer:
 
@@ -12,12 +8,11 @@ class Answer:
     def answer(self):
         pass
 
-
 class RandomAnswer(Answer):
     
     conn = NLP_package.psycopg2.connect("dbname=postgres user=postgres password=postgres")
 
-    inpt = pd.read_sql('SELECT * FROM hiset', conn)
+    inpt = NLP_package.pd.read_sql('SELECT * FROM hiset', conn)
 
     data = NLP_package.pd.concat([inpt])
     df = []
@@ -33,6 +28,6 @@ class RandomAnswer(Answer):
             if(self.data['hi'][i] == 1):
                 self.df.append(self.data['text'][i])
         print(self.df)
-        outmapa = {0: [self.df[random.randint(0, len(self.df))]]}
+        outmapa = {0: [self.df[NLP_package.random.randint(0, len(self.df))]]}
                 
         return (outmapa[0])

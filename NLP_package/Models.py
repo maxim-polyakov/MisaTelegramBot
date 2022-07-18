@@ -1,7 +1,5 @@
 import NLP_package
-from NLP_package import Tokenizers
-from NLP_package import DataShowers
-from NLP_package import TextPreprocessers
+
 
 
 
@@ -36,7 +34,7 @@ class BinaryLSTM(Model):
         model = NLP_package.Sequential()
         model.add(NLP_package.Embedding(len(tokenizer.tokenizer.word_index) + 1,
                                         self.EMBEDDING_VECTOR_LENGTH,
-                                        input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
+                                        input_length=NLP_package.Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
                                         trainable=True, mask_zero=True))
         model.add(NLP_package.Dropout(0.1))
         model.add(NLP_package.LSTM(64))
@@ -63,8 +61,6 @@ class BinaryLSTM(Model):
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
         train = train.drop_duplicates()
-        ds = DataShowers.DataShower()
-        ds.showdata(train, target)
 
         print(train)
         X_train, X_val, y_train, y_val = NLP_package.train_test_split(
@@ -74,7 +70,7 @@ class BinaryLSTM(Model):
             with open(self.tokenizerfilename, 'rb') as handle:
                 tokenizer = NLP_package.p.load(handle)
         else:
-            tokenizer = Tokenizers.CustomTokenizer(train_texts=X_train['text'])
+            tokenizer = NLP_package.Tokenizers.CustomTokenizer(train_texts=X_train['text'])
             # fit o the train
         tokenizer.train_tokenize()
         tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
@@ -126,7 +122,7 @@ class MultyLSTM(Model):
         optimzer = NLP_package.Adam(clipvalue=0.5)
         model.add(NLP_package.Embedding(len(tokenizer.tokenizer.word_index) + 1,
                                         self.EMBEDDING_VECTOR_LENGTH,
-                                        input_length=Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
+                                        input_length=NLP_package.Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
                                         trainable=True))
         model.add(NLP_package.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
         model.add(NLP_package.Dense(128, activation="sigmoid"))
@@ -151,9 +147,7 @@ class MultyLSTM(Model):
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
         train = train.drop_duplicates()
-      
-        ds = DataShowers.DataShower()
-        ds.showdata(train, target)
+
         X_train, X_val, y_train, y_val = NLP_package.train_test_split(
             train, train[target], test_size=0.2, random_state=64)
         print('Shape of train', X_train.shape)
@@ -164,7 +158,7 @@ class MultyLSTM(Model):
                       'rb') as handle:
                 tokenizer = NLP_package.p.load(handle)
         else:
-            tokenizer = Tokenizers.CustomTokenizer(train_texts=X_train['text'])
+            tokenizer = NLP_package.Tokenizers.CustomTokenizer(train_texts=X_train['text'])
             # fit o the train
         tokenizer.train_tokenize()
         tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
@@ -229,7 +223,7 @@ class NonNeuro(Model):
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
         train = train.drop_duplicates()
-        ds = DataShowers.DataShower()
+        ds = NLP_package.DataShowers.DataShower()
         ds.showdata(train, target)
 
         nb_x, nb_x_test, nb_y, nb_y_test = NLP_package.train_test_split(train['text'], train[target], test_size=0.3,

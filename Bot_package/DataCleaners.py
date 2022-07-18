@@ -1,14 +1,11 @@
 import Bot_package
 
-
-
 class Cleaner:
     def __init__(self):
         pass
     
     def clean(self):
         pass
-    
     
 class CommonCleaner(Cleaner):
     

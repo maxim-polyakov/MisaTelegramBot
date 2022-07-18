@@ -1,5 +1,5 @@
 import NLP_package
-import spacy
+
 
 
 class Preprocessing:
@@ -9,7 +9,7 @@ class Preprocessing:
     russian_stopwords = NLP_package.stopwords.words("russian")
     english_stopwords = NLP_package.stopwords.words("english")
 
-    nlp = spacy.load('ru_core_news_md')
+    nlp = NLP_package.spacy.load('ru_core_news_md')
     def __init__(self):
         pass
 
@@ -108,8 +108,6 @@ class CommandPreprocessing(Preprocessing):
             tokens = [token for token in tokens if token not in self.russian_stopwords
                       and token != " "
                       and token.strip() not in NLP_package.punctuation]
-        
-       # text = self.remove_punctuation(text)
             text = " ".join(tokens).rstrip('\n')
             return text
         except:
