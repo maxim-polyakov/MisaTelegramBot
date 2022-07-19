@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/Botoevaluaters.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Botoevaluaters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/Bototrainers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Bototrainers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/DataCleaners.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/DataCleaners.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/Monitors.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Monitors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Answers.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Answers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Mapas.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Mapas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Predictors.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Predictors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/TextPreprocessers.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/TextPreprocessers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Tokenizers.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Tokenizers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/__init__.py" afterDir="false" />
-    </list>
+    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

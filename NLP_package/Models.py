@@ -125,11 +125,6 @@ class MultyLSTM(Model):
                                         input_length=NLP_package.Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
                                         trainable=True))
         model.add(NLP_package.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
-        model.add(NLP_package.Dense(128, activation="sigmoid"))
-        model.add(NLP_package.Dense(64, activation="sigmoid"))
-        model.add(NLP_package.Dense(32, activation="sigmoid"))
-        model.add(NLP_package.Dense(16, activation="sigmoid"))
-        model.add(NLP_package.Dense(8, activation="sigmoid"))
         model.add(NLP_package.Dense(n_clases, activation='softmax'))
         # compile the model
         model.compile(optimizer=optimzer, loss='categorical_crossentropy', metrics=[
