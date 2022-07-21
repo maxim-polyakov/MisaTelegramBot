@@ -48,7 +48,7 @@ class Command:
         else:
             tr.translate(self.boto, self.message, preinpt[1])
         self.command_flag = 1
-    def __show(self,inpt):
+    def __show(self,preinpt, inpt):
         if (self.__pr.preprocess_text(inpt[2]) == 'данные'):
             dataselect = 'SELECT * FROM ' + inpt[3]
             recognizeddataselect = 'SELECT * FROM ' + "recognized_" + inpt[3]
