@@ -19,28 +19,30 @@ class Command:
         self.command_flag = 1
     def __insidefunction(self, inpt):
         c = Command_package.Calculators.SympyCalculator()
-        if self.__pr.preprocess_text(inpt[2]) == 'производная':
+        if self.__pr.preprocess_text(inpt[0]) == 'производная':
             print(inpt[3])
-            c.deravative(self.boto, self.message, inpt[3], inpt[4])
-        elif self.preprocess_text(inpt[2]) == 'интеграл':
-            c.integrate(self.boto, self.message, inpt[3], inpt[4])
+            c.deravative(self.boto, self.message, inpt[1], inpt[2])
+        elif self.__pr.preprocess_text(inpt[0]) == 'интеграл':
+            c.integrate(self.boto, self.message, inpt[1], inpt[2])
         self.command_flag = 1
-    def __find(self,preinpt, inpt):
-        if self.__pr.preprocess_text(inpt[2]) == 'производная' or self.__pr.preprocess_text(inpt[2]) == 'интеграл':
+    def __find(self,inpt):
 
-            self.__insidefunction(inpt)
+        if (inpt.count('производная') > 0) or (inpt.count('интеграл') > 0):
+            inptt = inpt.split(' ')
+            print(inptt)
+            self.__insidefunction(inptt)
         else:
 
-            tmp = self.__pr.preprocess_text(preinpt[1])
+
             apif = Command_package.Finders.WikiFinder()
-            apif.find(self.boto, self.message, tmp)
+            apif.find(self.boto, self.message, inpt)
 
         self.command_flag = 1
     def __translate(self,preinpt,inpt):
 
         tr = Command_package.Translators.GoogleTranslator("ru")
-        if (self.__pr.preprocess_text(inpt[2]) == 'данные'):
-            dataselect = 'SELECT * FROM ' + inpt[3]
+        if (self.__pr.preprocess_text(inpt[1]) == 'данные'):
+            dataselect = 'SELECT * FROM ' + inpt[2]
             insertdtname = 'translated'
             tr.translatedt(dataselect, insertdtname)
         else:
@@ -55,23 +57,33 @@ class Command:
             ds.showdata(target)
         self.command_flag = 1
     def commandanalyse(self, tstr):
+      #  print(tstr)
+        preinpt = tstr.split('->')
 
-        preinpt = self.message.text.split('->')
-
-        strr = self.__pred.preprocess_text(preinpt[0])
+        strr = self.__pr.preprocess_text(tstr)
+        print("strr = ",strr)
         inpt = strr.split(' ')
-        print(self.__pr.preprocess_text(inpt[1]))
-        if (self.__pr.preprocess_text(inpt[1]) == 'атаковать' or
-                self.__pr.preprocess_text(inpt[1]) == 'фас' or
-                self.__pr.preprocess_text(inpt[1]) == 'пиздануть'):
+       # print(inpt)
+       # print(self.__pr.preprocess_text(inpt[0]))
+        if (strr.count('атаковать')>0 or
+                strr.count('фас') > 0 or
+                strr.count('пиздануть') > 0):
+            tstr = strr.replace("атаковать ", '')
+            fstr = tstr.replace("фас ")
+            sstr = fstr.replace("пиздануть ")
+
+
             self.__fas()
-        elif ((self.__pr.preprocess_text(inpt[1]) == 'поссчитать')):
+        elif (strr.count('поссчитать') > 0):
             self.__insidefunction(inpt)
-        elif self.__pr.preprocess_text(inpt[1]) == 'находить':
-            self.__find(preinpt, inpt)
-        elif self.__pr.preprocess_text(inpt[1]) == 'перевести':
+        elif (strr.count('находить') > 0):
+
+            strr = tstr.replace("найди ", '')
+            fstr = strr.strip(' ')
+            self.__find(fstr)
+        elif (strr.count('перевести') > 0):
             self.__translate(preinpt,inpt)
-        elif self.__pr.preprocess_text(inpt[1]) == 'показывать':
+        elif (strr.count('показывать') > 0):
             self.__show(preinpt,inpt)
         else:
             self.boto.send_message(self.message.chat.id, "Команда",

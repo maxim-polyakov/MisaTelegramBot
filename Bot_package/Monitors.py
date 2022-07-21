@@ -178,8 +178,8 @@ class MessageMonitor(Monitor):
         lowertext = self.__message.text.lower()
         print(lowertext)
         if(lowertext.count('миса') > 0 or lowertext.lower().count('misa') > 0):
-            tstr = lowertext.replace("миса", '')
-            ststr = tstr.replace("misa", '')
+            tstr = lowertext.replace("миса ", '')
+            ststr = tstr.replace("misa ", '')
             text.append(ststr)
 
             for txt in text:
