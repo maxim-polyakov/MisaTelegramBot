@@ -184,10 +184,6 @@ class MultyLSTM(Model):
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2)
 
-
-
-        #loss, acc = model.evaluate(tokenized_X_val, y_valmatrix, verbose=2)
-
         model.save(self.filemodelname)
 
         with open(self.tokenizerfilename, 'wb') as handle:

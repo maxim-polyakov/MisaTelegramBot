@@ -67,7 +67,7 @@ class MessageMonitor(Monitor):
         print(self.__mpred.predict(text, self.__mapa.emotionsmapa,
                                     './models/multy/emotionsmodel.h5',
                                     './tokenizers/multy/emotionstokenizer.pickle'))
-        if (len(ststr) > 0 and tstr.count('?') > 0):
+        if (tstr.count('?')):
             if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
@@ -177,19 +177,24 @@ class MessageMonitor(Monitor):
         text = []
         lowertext = self.__message.text.lower()
         print(lowertext)
+        text.append(lowertext)
+        for txt in text:
+            data = {'text': txt, 'agenda': ''}
+            df = Bot_package.bot.pd.DataFrame()
+            new_row = Bot_package.bot.pd.Series(data)
+            df = df.append(new_row, ignore_index=True)
+            # print(df)
+            df.to_sql('validset', con=self._engine, schema='public',
+                      index=False, if_exists='append')
+
+
         if(lowertext.count('миса') > 0 or lowertext.lower().count('misa') > 0):
+            text = []
             tstr = lowertext.replace("миса", '')
             ststr = tstr.replace("misa", '')
             text.append(ststr)
 
-            for txt in text:
-                data = {'text': txt, 'agenda': ''}
-                df = Bot_package.bot.pd.DataFrame()
-                new_row = Bot_package.bot.pd.Series(data)
-                df = df.append(new_row, ignore_index=True)
-                #print(df)
-                df.to_sql('validset', con= self._engine, schema='public',
-                          index=False, if_exists='append')
+
             self.__neurodesc(text, ststr)
           #  try:
 
