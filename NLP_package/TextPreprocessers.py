@@ -21,12 +21,12 @@ class Preprocessing:
     def preprocess_text(self, text):
         try:
             tokens = str(text)
-            tokens = text.lower().split(' ')
-            tokens = [token for token in tokens if token not in self.russian_stopwords
-                     and token != " "]
+            tokens = self.mystem.lemmatize(text.lower())
+            tokens = [token for token in tokens if token not in self.russian_stopwords]
         
        # text = self.remove_punctuation(text)
-            text = " ".join(tokens).rstrip('\n')
+            text = "".join(tokens).rstrip('\n')
+            text = text.replace('  ', ' ')
             return text
         except:
             return "except"

@@ -28,7 +28,7 @@ class SympyCalculator(Calculator):
     def integrate(self, boto, message, inptmes, dx):
         
         inp = self.__pr.preprocess_text(dx)
-        x = API_package.sympySymbol(inp[0])
+        x = API_package.Symbol(inp[0])
         print(x)
         y = API_package.sympify(str(inptmes))
         yprime = y.integrate(x)
