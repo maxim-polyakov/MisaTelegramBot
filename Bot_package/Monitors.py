@@ -61,9 +61,6 @@ class MessageMonitor(Monitor):
         ststr = self.__qpr.reversepreprocess_text(tstr)
         a = self.__cpr.preprocess_text(text[0])
         splta = a.split()
-
-        print("splta = ", splta[0])
-        print(self.__pr.preprocess_text(splta[0]))
         print(self.__mpred.predict(text, self.__mapa.emotionsmapa,
                                     './models/multy/emotionsmodel.h5',
                                     './tokenizers/multy/emotionstokenizer.pickle'))
@@ -106,7 +103,6 @@ class MessageMonitor(Monitor):
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
                 self.__set_null()
-                print("command")
                 command = Bot_package.Commands.Command(Bot_package.bot.boto, self.__message )
 
                 command.commandanalyse(tstr)

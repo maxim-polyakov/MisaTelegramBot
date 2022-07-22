@@ -10,82 +10,70 @@ class Command:
     def __init__(self, boto, message):
         self.boto= boto
         self.message = message
-    def __fas(self):
-
-        inpt = self.message.text.split(' ')
-
-        self.boto.send_message(self.message.chat.id, inpt[2] + " - пидор.", parse_mode='html')
-
+    def __fas(self,Inputstr):
+        Inputstr = Inputstr.replace("атакуй ", '').replace("пиздани ", '').replace("фас ", '')
+     #   Inputstr = Inputstr.replace("фас ", '')
+     #   Inputstr = Inputstr.replace("пиздани ", '')
+        Inputstr = Inputstr.split(' ')
+        self.boto.send_message(self.message.chat.id, Inputstr[0] + " - пидор.", parse_mode='html')
         self.command_flag = 1
-    def __insidefunction(self, inpt):
+
+    def __calculate(self, Inputstr):
         c = Command_package.Calculators.SympyCalculator()
-        if inpt[0] == 'производная':
-            c.deravative(self.boto, self.message, inpt[1], inpt[2])
-        elif inpt[0] == 'интеграл':
-            c.integrate(self.boto, self.message, inpt[1], inpt[2])
+        if Inputstr[0] == 'производная':
+            c.deravative(self.boto, self.message, Inputstr[1], Inputstr[2])
+        elif Inputstr[0] == 'интеграл':
+            c.integrate(self.boto, self.message, Inputstr[1], Inputstr[2])
         self.command_flag = 1
-    def __find(self,inpt):
-        print(inpt)
-        tmp = self.__pred.preprocess_text(inpt)
-        print(tmp.count('производная'))
+
+    def __find(self,Inputstr):
+        Inputstr = Inputstr.strip(' ').replace("найди ", '').replace("поссчитай ", '')
+        tmp = self.__pred.preprocess_text(Inputstr)
         if (tmp.count('производная') > 0) or (tmp.count('интеграл') > 0):
             inptt = tmp.split(' ')
-            self.__insidefunction(inptt)
+            self.__calculate(inptt)
         else:
             apif = Command_package.Finders.WikiFinder()
-            apif.find(self.boto, self.message, inpt)
+            apif.find(self.boto, self.message, Inputstr)
         self.command_flag = 1
-    def __translate(self,strr):
+
+    def __translate(self, Inputstr):
+        Inputstr = Inputstr.strip(' ').replace("переведи ", '')
         tr = Command_package.Translators.GoogleTranslator("ru")
-        print(strr)
-        if (strr.count('данные') > 0):
-            dataselect = 'SELECT * FROM ' + inpt[2]
+        if (Inputstr.count('данные') > 0):
+            dataselect = 'SELECT * FROM ' + Inputstr[2]
             insertdtname = 'translated'
             tr.translatedt(dataselect, insertdtname)
         else:
-            tr.translate(self.boto, self.message, strr)
+            tr.translate(self.boto, self.message, Inputstr)
         self.command_flag = 1
-    def __show(self, inpt):
-        print(inpt)
-        inpt = inpt.split(' ')
-        if (self.__pr.preprocess_text(inpt[0]) == 'данные'):
-            dataselect = 'SELECT * FROM ' + inpt[1]
-            recognizeddataselect = 'SELECT * FROM ' + "recognized_" + inpt[1]
-            target = inpt[2]
+
+    def __show(self, Inputstr):
+        Inputstr = self.__pred.preprocess_text(Inputstr)
+        Inputstr = Inputstr.replace("показывать ", '')
+        Inputstr = Inputstr.strip(' ')
+        Inputstr = Inputstr.split(' ')
+        if (self.__pr.preprocess_text(Inputstr[0]) == 'данные'):
+            dataselect = 'SELECT * FROM ' + Inputstr[1]
+            recognizeddataselect = 'SELECT * FROM ' + "recognized_" + Inputstr[1]
+            target = Inputstr[2]
             ds = Command_package.DataShowers.DataShower(self.boto, self.message, dataselect, recognizeddataselect)
             ds.showdata(target)
         self.command_flag = 1
-    def commandanalyse(self, tstr):
-        preinpt = tstr.split('->')
 
-        strr = self.__pred.preprocess_text(tstr)
-        print("strr = ",strr)
-        inpt = strr.split(' ')
-        if (strr.count('атаковать')>0 or
-                strr.count('фас') > 0 or
-                strr.count('пиздануть') > 0):
-            strr = strr.replace("атаковать ", '')
-            strr = tstr.replace("фас ")
-            strr = fstr.replace("пиздануть ")
-            self.__fas()
-        elif (strr.count('поссчитать') > 0):
-            strr = strr.replace("поссчитать ", '')
-            strr = strr.strip(' ')
-            self.__find(strr)
-        elif (strr.count('находить') > 0):
+    def commandanalyse(self, Inputstr):
 
-            strr = strr.replace("находить ", '')
-            strr = strr.strip(' ')
-            self.__find(strr)
-        elif (strr.count('перевести') > 0):
-            strr = strr.replace("перевести ", '')
-            strr = strr.strip(' ')
-            self.__translate(strr)
-        elif (strr.count('показывать') > 0):
-            strr = strr.replace("показывать ", '')
-            strr = strr.strip(' ')
-            print(strr)
-            self.__show(strr)
+        PreprocessedInputstr = self.__pred.preprocess_text(Inputstr)
+        if (PreprocessedInputstr.count('атаковать')>0 or
+                PreprocessedInputstr.count('фас') > 0 or
+                PreprocessedInputstr.count('пиздануть') > 0):
+            self.__fas(Inputstr)
+        elif (PreprocessedInputstr.count('находить') > 0) or (PreprocessedInputstr.count('поссчитать') > 0):
+            self.__find(Inputstr)
+        elif (PreprocessedInputstr.count('перевести') > 0):
+            self.__translate(Inputstr)
+        elif (PreprocessedInputstr.count('показывать') > 0):
+            self.__show(Inputstr)
         else:
             self.boto.send_message(self.message.chat.id, "Команда",
                               parse_mode='html')
