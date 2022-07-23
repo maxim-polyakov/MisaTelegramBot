@@ -166,32 +166,33 @@ class MessageMonitor(Monitor):
                 self.__non_flag = 1
                 self.__mtext = tstr
 
-    def monitor(self):
+    def __todb(self,lowertext):
+        lowertext = lowertext.replace("миса ", '').replace("misa ", '')
+        text = []
+        text.append(lowertext)
+        for txt in text:
+            data = {'text': txt, 'agenda': ''}
+            df = Bot_package.bot.pd.DataFrame()
+            new_row = Bot_package.bot.pd.Series(data)
+            df = df.append(new_row, ignore_index=True)
+            df.to_sql('validset', con=self._engine, schema='public',
+                      index=False, if_exists='append')
 
-        inpt = self.__message.text.split(' ')
+    def monitor(self):
 
         text = []
         lowertext = self.__message.text.lower()
-        print(lowertext)
-        if(lowertext.count('миса') > 0 or lowertext.lower().count('misa') > 0):
-            tstr = lowertext.replace("миса ", '')
-            ststr = tstr.replace("misa ", '')
-            text.append(ststr)
+        self.__todb(lowertext)
 
-            for txt in text:
-                data = {'text': txt, 'agenda': ''}
-                df = Bot_package.bot.pd.DataFrame()
-                new_row = Bot_package.bot.pd.Series(data)
-                df = df.append(new_row, ignore_index=True)
-                #print(df)
-                df.to_sql('validset', con= self._engine, schema='public',
-                          index=False, if_exists='append')
-            self.__neurodesc(text, ststr)
+        if(lowertext.count('миса') > 0 or lowertext.lower().count('misa') > 0):
+
+            lowertext = lowertext.replace("миса ", '').replace("misa ", '')
+            text.append(lowertext)
+            self.__neurodesc(text, lowertext)
           #  try:
 
-         #  except:
-         #       bot.boto.send_message(
-          #          self.__message.chat.id, 'А?', parse_mode='html')
+          #  except:
+          #      Bot_package.bot.boto.send_message(self.__message.chat.id, 'А?', parse_mode='html')
         elif(self.__message.text == "👍" and self.__hi_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_hi',
                              "Приветствие", 'agenda', 'hi', 1)

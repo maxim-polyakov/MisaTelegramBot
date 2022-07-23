@@ -21,11 +21,13 @@ class Preprocessing:
     def preprocess_text(self, text):
         try:
             tokens = str(text)
-            tokens = self.mystem.lemmatize(text.lower())
-            tokens = [token for token in tokens if token not in self.russian_stopwords]
+            tokens = text.lower().split(' ')
+            tokens = [token for token in tokens if token not in self.russian_stopwords
+                      and token != " "
+                      and token.strip() not in NLP_package.punctuation]
         
        # text = self.remove_punctuation(text)
-            text = "".join(tokens).rstrip('\n')
+            text = " ".join(tokens).rstrip('\n')
             text = text.replace('  ', ' ')
             return text
         except:
