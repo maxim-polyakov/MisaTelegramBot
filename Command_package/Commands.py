@@ -6,10 +6,17 @@ class Command:
     __pred = Command_package.TextPreprocessers.Preprocessing()
     __pr = Command_package.TextPreprocessers.CommonPreprocessing()
     __cpr = Command_package.TextPreprocessers.CommandPreprocessing()
+    __nothingflg = 0
+    __cash = ''
+    __conn = Command_package.psycopg2.connect(
+        "dbname=postgres user=postgres password=postgres")
 
+    __df = Command_package.pd.read_sql('SELECT text FROM commands', self.__conn)
+    __Cdict = __df['text'].to_dict()
     def __init__(self, boto, message):
         self.boto= boto
         self.message = message
+
     def __fas(self,Inputstr):
         Inputstr = self.__pred.preprocess_text(Inputstr)
         Inputstr = Inputstr.replace("атакуй ", '').replace("пиздани ", '').replace("фас ", '')
@@ -18,6 +25,7 @@ class Command:
         self.command_flag = 1
         Inputstr = Inputstr.replace(Inputarr[0] + ' ', '')
         return Inputstr
+
     def __calculate(self, Inputstr):
         Inputarr = Inputstr.split(' ')
         c = Command_package.Calculators.SympyCalculator()
@@ -39,9 +47,10 @@ class Command:
             Inputstr = self.__calculate(Inputstr)
         else:
             apif = Command_package.Finders.WikiFinder()
-            apif.find(self.boto, self.message, Inputstr)
+            apif.find(self.boto, self.message, tmp)
         self.command_flag = 1
         return Inputstr
+
     def __translate(self, Inputstr):
         tmp = Inputstr.count('переведи данные')
         Inputstr = Inputstr.strip(' ').replace("переведи ", '')
@@ -69,6 +78,9 @@ class Command:
 
     def commandanalyse(self, Inputstr):
 
+        if(Inputstr.count('.')>0):
+            Insidestringarr = Inputstr.split('. ')
+
         Insidestringarr = Inputstr.split(', ')
         for idx in range(0,len(Insidestringarr)):
             PreprocessedInputstr = self.__pr.preprocess_text(Insidestringarr[idx])
@@ -77,13 +89,32 @@ class Command:
                     PreprocessedInputstr.count('фас') > 0 or
                     PreprocessedInputstr.count('пиздануть') > 0):
                 self.__fas(PreprocessedInsidestringarr)
-
+                self.__cash = 'атаковать'
+                self.__nothingflg = 1
             if (PreprocessedInputstr.count('находить') > 0) or (PreprocessedInputstr.count('поссчитать') > 0):
-                self.__find(PreprocessedInsidestringarr)
+                    self.__find(PreprocessedInsidestringarr)
+                    self.__cash = 'находить'
+                    self.__nothingflg = 2
             if (PreprocessedInputstr.count('перевести') > 0):
                 self.__translate(PreprocessedInsidestringarr)
+                self.__cash = 'перевести'
+                self.__nothingflg = 3
             if (PreprocessedInputstr.count('показывать') > 0):
                 self.__show(PreprocessedInsidestringarr)
+                self.__nothingflg = 4
+
+            if(self.__nothingflg == 0):
+                if(Insidestringarr[idx] in self.Cdict.values()):
+                    self.boto.send_message(self.message.chat.id, "Команда", parse_mode='html')
+                else:
+                    self.boto.send_message(self.message.chat.id, "Не команда", parse_mode='html')
+                    if(self.__cash == 'находить'):
+                        self.__find(PreprocessedInsidestringarr)
+                    elif(self.__cash == 'атаковать'):
+                        self.__fas(PreprocessedInsidestringarr)
+                    elif(self.__cash == 'перевести'):
+                        self.__translate(PreprocessedInsidestringarr)
+            self.__nothingflg = 0
 
         self.command_flag = 1
 
