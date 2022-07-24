@@ -119,16 +119,18 @@ class MultyLSTM(Model):
 
     def createmodel(self, tokenizer, n_clases):
         model = NLP_package.Sequential()
-        optimzer = NLP_package.Adam(clipvalue=0.5)
+
+        optimzer = NLP_package.Adam(learning_rate=0.005)
         model.add(NLP_package.Embedding(len(tokenizer.tokenizer.word_index) + 1,
                                         self.EMBEDDING_VECTOR_LENGTH,
                                         input_length=NLP_package.Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
                                         trainable=True))
-        model.add(NLP_package.LSTM(100, dropout=0.2, recurrent_dropout=0.5))
+        model.add(NLP_package.Bidirectional(NLP_package.LSTM(256, dropout=0.2,recurrent_dropout=0.2, return_sequences=True)))
+        model.add(NLP_package.Bidirectional(NLP_package.LSTM(128, dropout=0.2, recurrent_dropout=0.2, return_sequences=True)))
+        model.add(NLP_package.Bidirectional(NLP_package.LSTM(128, dropout=0.2, recurrent_dropout=0.2)))
         model.add(NLP_package.Dense(n_clases, activation='softmax'))
         # compile the model
-        model.compile(optimizer=optimzer, loss='categorical_crossentropy', metrics=[
-            'categorical_accuracy'])
+        model.compile(optimizer=optimzer, loss='categorical_crossentropy', metrics=['accuracy'])
         return model
 
     def train(self, target, n_clases, mode):
@@ -180,7 +182,7 @@ class MultyLSTM(Model):
             model = self.createmodel(tokenizer, n_clases)
 
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=51, epochs=2000,
+                                batch_size=512, epochs=100,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2)
 
