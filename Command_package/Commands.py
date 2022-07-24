@@ -11,7 +11,7 @@ class Command:
     __conn = Command_package.psycopg2.connect(
         "dbname=postgres user=postgres password=postgres")
 
-    __df = Command_package.pd.read_sql('SELECT text FROM commands', self.__conn)
+    __df = Command_package.pd.read_sql('SELECT text FROM commands', __conn)
     __Cdict = __df['text'].to_dict()
     def __init__(self, boto, message):
         self.boto= boto
@@ -104,10 +104,9 @@ class Command:
                 self.__nothingflg = 4
 
             if(self.__nothingflg == 0):
-                if(Insidestringarr[idx] in self.Cdict.values()):
+                if(Insidestringarr[idx] in self.__Cdict.values()):
                     self.boto.send_message(self.message.chat.id, "Команда", parse_mode='html')
                 else:
-                    self.boto.send_message(self.message.chat.id, "Не команда", parse_mode='html')
                     if(self.__cash == 'находить'):
                         self.__find(PreprocessedInsidestringarr)
                     elif(self.__cash == 'атаковать'):
