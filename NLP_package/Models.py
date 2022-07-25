@@ -174,7 +174,7 @@ class MultyLSTM(Model):
             model = NLP_package.load_model(self.filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=512, epochs=100,
+                                batch_size=51, epochs=50,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2,
                                 callbacks=[es])
@@ -182,7 +182,7 @@ class MultyLSTM(Model):
             model = self.createmodel(tokenizer, n_clases)
 
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=512, epochs=100,
+                                batch_size=51, epochs=13,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2)
 

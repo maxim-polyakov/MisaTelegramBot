@@ -75,4 +75,4 @@ class Multyevaluate(Evaluate):
                                    './tokenizers/multy/emotionstokenizer.pickle',
                                    'SELECT * FROM emotionstrain',
                                    'SELECT * FROM recognized_emotionstrain')
-        trainer.train('emotionid', 6, 'evaluate')
+        trainer.train('emotionid', 7, 'evaluate')

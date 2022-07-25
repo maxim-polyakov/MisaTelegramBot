@@ -81,7 +81,7 @@ class Multytrain(Train):
                                    './tokenizers/multy/emotionstokenizer.pickle',
                                    'SELECT * FROM emotionstrain',
                                    'SELECT * FROM recognized_emotionstrain')
-        trainer.train('emotionid', 6, 'train')
+        trainer.train('emotionid', 7, 'train')
 
 class NonNeuroTrain(Train):
     def hitrain(self):
