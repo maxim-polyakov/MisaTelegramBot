@@ -168,13 +168,13 @@ class MultyLSTM(Model):
             y_val, n_clases)
         if(mode == 'evaluate'):
             
-            es = NLP_package.EarlyStopping(patience=10, monitor='categorical_accuracy',
+            es = NLP_package.EarlyStopping(patience=2, monitor='val_loss',
                                            restore_best_weights=True)
-            
+
             model = NLP_package.load_model(self.filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
-                                batch_size=512, epochs=2000,
+                                batch_size=512, epochs=100,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2,
                                 callbacks=[es])
