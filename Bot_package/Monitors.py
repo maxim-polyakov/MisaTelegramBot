@@ -39,6 +39,8 @@ class MessageMonitor(Monitor):
     __me = Bot_package.Botoevaluaters.Multyevaluate()
     __mapa = Bot_package.bot.Mapas.Mapa()
 
+    __emotion = ""
+
     def __init__(self, message):
         self.__message = message
 
@@ -53,6 +55,12 @@ class MessageMonitor(Monitor):
         self.__q__non_flag = 0
         self.__mtext = ""
 
+    def __emotionsrecognition(self,text):
+
+            self.__emotion = self.__mpred.predict(text, self.__mapa.emotionsmapa,
+                                   './models/multy/emotionsmodel.h5',
+                                   './tokenizers/multy/emotionstokenizer.pickle')
+
     def __neurodesc(self, text, tstr):
 
         df = Bot_package.bot.pd.read_sql('SELECT text FROM commands', self._conn)
@@ -64,12 +72,15 @@ class MessageMonitor(Monitor):
         print(self.__mpred.predict(text, self.__mapa.emotionsmapa,
                                     './models/multy/emotionsmodel.h5',
                                     './tokenizers/multy/emotionstokenizer.pickle'))
+
+        self.__emotionsrecognition(text)
+
         if (len(ststr) > 0 and tstr.count('?') > 0):
             if(self.__mpred.predict(text, self.__mapa.multymapa,
                                     './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 Bot_package.bot.boto.send_message(
-                    self.__message.chat.id, "Я в порядке", parse_mode='html')
+                    self.__message.chat.id, "Я в порядке " + + self.__emotion, parse_mode='html')
 
                 self.__set_null()
                 self.__b_flag = 1
@@ -80,7 +91,7 @@ class MessageMonitor(Monitor):
                                       './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 Bot_package.bot.boto.send_message(
-                    self.__message.chat.id, "Погода норм", parse_mode='html')
+                    self.__message.chat.id, "Погода норм " + self.__emotion, parse_mode='html')
 
                 self.__set_null()
                 self.__weater_flag = 1
@@ -89,7 +100,7 @@ class MessageMonitor(Monitor):
 
             else:
                 Bot_package.bot.boto.send_message(
-                    self.__message.chat.id, "Вопрос без классификации",
+                    self.__message.chat.id, "Вопрос без классификации " + self.__emotion,
                     parse_mode='html')
 
                 self.__set_null()
@@ -103,14 +114,14 @@ class MessageMonitor(Monitor):
                                     './tokenizers/binary/thtokenizer.pickle',
                                     'command') == "Команда"):
                 self.__set_null()
-                command = Bot_package.Commands.Command(Bot_package.bot.boto, self.__message )
+                command = Bot_package.Commands.Command(Bot_package.bot.boto, self.__message)
 
                 command.commandanalyse(tstr)
 
                 self.__command_flag = command.command_flag
             else:
                 Bot_package.bot.boto.send_message(
-                    self.__message.chat.id, "Похоже на команду но я не уверена.",
+                    self.__message.chat.id, "Похоже на команду но я не уверена. " + self.__emotion,
                     parse_mode='html')
 
             self.__mtext = tstr
@@ -121,7 +132,7 @@ class MessageMonitor(Monitor):
 
             ra = Bot_package.bot.Answers.RandomAnswer()
             Bot_package.bot.boto.send_message(
-                self.__message.chat.id, ra.answer(), parse_mode='html')
+                self.__message.chat.id, ra.answer()[0] + self.__emotion, parse_mode='html')
 
             self.__set_null()
             self.__hi_flag = 1
@@ -132,7 +143,7 @@ class MessageMonitor(Monitor):
                                   './tokenizers/binary/thtokenizer.pickle',
                                   '') == "Благодарность"):
 
-            Bot_package.bot.boto.send_message(self.__message.chat.id, "Не за что",
+            Bot_package.bot.boto.send_message(self.__message.chat.id, "Не за что " + self.__emotion,
                                   parse_mode='html')
 
             self.__set_null()
@@ -143,7 +154,7 @@ class MessageMonitor(Monitor):
             if(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 Bot_package.bot.boto.send_message(
-                    self.__message.chat.id, "Утверждение про дела", parse_mode='html')
+                    self.__message.chat.id, "Утверждение про дела " + self.__emotion, parse_mode='html')
                 
                 self.__set_null()
                 self.__b_flag = 1
@@ -152,14 +163,14 @@ class MessageMonitor(Monitor):
             elif(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 Bot_package.bot.boto.send_message(
-                    self.__message.chat.id, "Утверждение про погоду", parse_mode='html')
+                    self.__message.chat.id, "Утверждение про погоду " + self.__emotion, parse_mode='html')
                 
                 self.__set_null()
                 self.__weater_flag = 1
                 self.__mtext = tstr
             else:
                 Bot_package.bot.boto.send_message(
-                    self.__message.chat.id, "Нет классификации",
+                    self.__message.chat.id, "Нет классификации " + self.__emotion,
                     parse_mode='html')
 
                 self.__set_null()
