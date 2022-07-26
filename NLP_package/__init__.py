@@ -58,3 +58,4 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, LSTM, Embedding, Bidirectional
+from abc import ABC, abstractmethod, abstractclassmethod

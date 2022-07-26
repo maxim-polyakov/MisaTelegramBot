@@ -1,28 +1,34 @@
 import NLP_package
 
+class IPreprocessing(NLP_package.ABC):
 
-
-class Preprocessing:
-
-    mystem = NLP_package.Mystem()
-
-    russian_stopwords = NLP_package.stopwords.words("russian")
-    english_stopwords = NLP_package.stopwords.words("english")
-
-    nlp = NLP_package.spacy.load('ru_core_news_md')
-    def __init__(self):
+    @NLP_package.abstractmethod
+    def preprocess_text(self, text):
         pass
 
-    def remove_punctuation(self, text):
+    @NLP_package.abstractmethod
+    def reversepreprocess_text(self, text):
+        pass
 
+class Preprocessing(IPreprocessing):
+
+    __mystem = NLP_package.Mystem()
+
+    __russian_stopwords = NLP_package.stopwords.words("russian")
+    __english_stopwords = NLP_package.stopwords.words("english")
+
+    __nlp = NLP_package.spacy.load('ru_core_news_md')
+
+    @classmethod
+    def __remove_punctuation(self, text):
         translator = str.maketrans('', '', NLP_package.string.punctuation)
         return text.translate(translator)
 
+    @classmethod
     def preprocess_text(self, text):
         try:
-            tokens = str(text)
             tokens = text.lower().split(' ')
-            tokens = [token for token in tokens if token not in self.russian_stopwords
+            tokens = [token for token in tokens if token not in self.__russian_stopwords
                       and token != " "
                       and token.strip() not in NLP_package.punctuation]
         
@@ -33,24 +39,27 @@ class Preprocessing:
         except:
             return "except"
 
+    @classmethod
     def reversepreprocess_text(self,text):
-        pass
+        super().reversepreprocess_text()
 
 
 class CommonPreprocessing(Preprocessing):
 
-    def __init__(self):
-        pass
+    @classmethod
+    def __remove_punctuation(self, text):
+        super().__remove_punctuation()
 
+    @classmethod
     def preprocess_text(self, text):
         try:
             tokens = str(text)
-            tokens = self.mystem.lemmatize(text.lower())
-            tokens = [token for token in tokens if token not in self.russian_stopwords
+            tokens = super().__mystem.lemmatize(text.lower())
+            tokens = [token for token in tokens if token not in super().__russian_stopwords
                       and token != " "
                       and token.strip() not in NLP_package.punctuation]
             tokens = [
-                token for token in tokens if token not in self.english_stopwords]
+                token for token in tokens if token not in super().__english_stopwords]
 
             text = " ".join(tokens).rstrip('\n')
             pattern3 = r"[\d]"
@@ -62,19 +71,23 @@ class CommonPreprocessing(Preprocessing):
             return text
         except:
             return "except"
+
+    @classmethod
     def reversepreprocess_text(self, text):
-        pass
+        super().reversepreprocess_text()
 
 
 class QuestionPreprocessing(Preprocessing):
 
-    def __init__(self):
-        pass
+    @classmethod
+    def __remove_punctuation(self, text):
+        super().reversepreprocess_text()
 
+    @classmethod
     def preprocess_text(self, text):
         try:
             tokens = str(text).split(' ')
-            tokens = self.mystem.lemmatize(text.lower())
+            tokens = super().__mystem.lemmatize(text.lower())
             tokens = [token for token in tokens if token != " "]
         
        # text = self.remove_punctuation(text)
@@ -86,34 +99,40 @@ class QuestionPreprocessing(Preprocessing):
             return text
         except:
             return "except"
+
+    @classmethod
     def reversepreprocess_text(self, text):
         tokens = str(text)
-        tokens = self.mystem.lemmatize(text.lower())
-        tokens = [token for token in tokens if token in self.russian_stopwords
+        tokens = super().__mystem.lemmatize(text.lower())
+        tokens = [token for token in tokens if token in super().__russian_stopwords
                       and (token != " " or token == "?")]
         text = " ".join(tokens).rstrip('\n')
         #text = remove_punctuation(text)
         text = NLP_package.re.sub('  ', ' ', text)
-        return text        
+        return text
 
 
 class CommandPreprocessing(Preprocessing):
 
-    def __init__(self):
-        pass
+    @classmethod
+    def __remove_punctuation(self, text):
+        super().__remove_punctuation()
 
+    @classmethod
     def preprocess_text(self, text):
         try:
-            text = self.remove_punctuation(text)
+            text = super().__remove_punctuation(text)
             tokens = str(text)
             tokens = text.lower().split(' ')
-            tokens = [token for token in tokens if token not in self.russian_stopwords
+            tokens = [token for token in tokens if token not in super().__russian_stopwords
                       and token != " "
                       and token.strip() not in NLP_package.punctuation]
             text = " ".join(tokens).rstrip('\n')
             return text
         except:
             return "except"
+
+    @classmethod
     def reversepreprocess_text(self, text):
         document = self.nlp(text)
         tokens = [token.lemma_ for token in document if token.pos_ == 'VERB']
