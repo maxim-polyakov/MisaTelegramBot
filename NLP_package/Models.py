@@ -38,10 +38,6 @@ class BinaryLSTM(Model):
                                         trainable=True, mask_zero=True))
         model.add(NLP_package.Dropout(0.1))
         model.add(NLP_package.LSTM(64))
-        model.add(NLP_package.Dense(64, activation="sigmoid"))
-        model.add(NLP_package.Dropout(0.1))
-        model.add(NLP_package.Dense(32, activation="sigmoid"))
-        model.add(NLP_package.Dense(16, activation="sigmoid"))
         model.add(NLP_package.Dense(1, activation='sigmoid'))
         # compile the model
         model.compile(optimizer=optimzer, loss='binary_crossentropy',
@@ -95,7 +91,7 @@ class BinaryLSTM(Model):
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
                                 batch_size=512,
-                                epochs=2000,
+                                epochs=500,
                                 verbose=2,
                                 )
 

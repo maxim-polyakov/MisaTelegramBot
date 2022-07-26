@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot_package/Monitors.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot_package/Monitors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/Mapas.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/Mapas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/multy/emotionsmodel.h5" beforeDir="false" afterPath="$PROJECT_DIR$/models/multy/emotionsmodel.h5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tokenizers/multy/emotionstokenizer.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/tokenizers/multy/emotionstokenizer.pickle" afterDir="false" />
-    </list>
+    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +56,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="https://791f-95-37-219-206.eu.ngrok.io" />
+      <option name="PARAMETERS" value="https://faa7-89-22-235-98.eu.ngrok.io" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
