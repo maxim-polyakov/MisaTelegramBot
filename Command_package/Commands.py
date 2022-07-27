@@ -80,8 +80,9 @@ class Command:
 
         if(Inputstr.count('.')>0):
             Insidestringarr = Inputstr.split('. ')
+        else:
+            Insidestringarr = Inputstr.split(', ')
 
-        Insidestringarr = Inputstr.split(', ')
         for idx in range(0,len(Insidestringarr)):
             PreprocessedInputstr = self.__pr.preprocess_text(Insidestringarr[idx])
             PreprocessedInsidestringarr = self.__pred.preprocess_text(Insidestringarr[idx])

@@ -39,7 +39,6 @@ from sklearn.naive_bayes import MultinomialNB
 from tensorflow.keras.models import load_model
 import spacy
 import random
-from NLP_package import Tokenizers
 plt.style.use('ggplot')
 import re
 import string
@@ -58,3 +57,4 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, LSTM, Embedding, Bidirectional
+from abc import ABC, abstractmethod
