@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API_package/Calculators.py" beforeDir="false" afterPath="$PROJECT_DIR$/API_package/Calculators.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/API_package/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/TextPreprocessers.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/TextPreprocessers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NLP_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/NLP_package/__init__.py" afterDir="false" />
-    </list>
+    <list default="true" id="ad4234aa-dd1f-49db-8b1c-d6565ebf9afa" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +56,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="https://683c-95-37-219-206.eu.ngrok.io" />
+      <option name="PARAMETERS" value="https://6570-89-22-235-98.eu.ngrok.io" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -125,6 +119,41 @@
           <url>file://$PROJECT_DIR$/Command_package/DataShowers.py</url>
           <line>49</line>
           <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Command_package/Commands.py</url>
+          <line>85</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Command_package/Commands.py</url>
+          <line>80</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Command_package/Commands.py</url>
+          <line>88</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/NLP_package/TextPreprocessers.py</url>
+          <line>76</line>
+          <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/NLP_package/TextPreprocessers.py</url>
+          <line>78</line>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/NLP_package/TextPreprocessers.py</url>
+          <line>86</line>
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/NLP_package/TextPreprocessers.py</url>
+          <line>79</line>
+          <option name="timeStamp" value="79" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
