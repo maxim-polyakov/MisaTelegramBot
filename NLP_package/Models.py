@@ -6,7 +6,7 @@ from NLP_package import Tokenizers
 
 class Model:
     
-    EMBEDDING_VECTOR_LENGTH = 33
+    EMBEDDING_VECTOR_LENGTH = 13
     
     def __init__(self):
         pass
@@ -37,7 +37,7 @@ class BinaryLSTM(Model):
                                         input_length=NLP_package.Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
                                         trainable=True, mask_zero=True))
         model.add(NLP_package.Dropout(0.1))
-        model.add(NLP_package.LSTM(64))
+        model.add(NLP_package.Bidirectional(NLP_package.LSTM(128)))
         model.add(NLP_package.Dense(64, activation="sigmoid"))
         model.add(NLP_package.Dropout(0.1))
         model.add(NLP_package.Dense(32, activation="sigmoid"))
@@ -84,7 +84,7 @@ class BinaryLSTM(Model):
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
-                                batch_size=512,
+                                batch_size=51,
                                 epochs=200,
                                 verbose=2,
                                 callbacks=[es]
@@ -94,7 +94,7 @@ class BinaryLSTM(Model):
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
-                                batch_size=512,
+                                batch_size=51,
                                 epochs=2000,
                                 verbose=2,
                                 )
