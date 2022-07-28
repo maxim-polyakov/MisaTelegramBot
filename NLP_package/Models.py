@@ -6,7 +6,7 @@ from NLP_package import Tokenizers
 
 class Model:
     
-    EMBEDDING_VECTOR_LENGTH = 13
+    EMBEDDING_VECTOR_LENGTH = 33
     
     def __init__(self):
         pass
@@ -36,12 +36,11 @@ class BinaryLSTM(Model):
                                         self.EMBEDDING_VECTOR_LENGTH,
                                         input_length=NLP_package.Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
                                         trainable=True, mask_zero=True))
-        model.add(NLP_package.Dropout(0.1))
-        model.add(NLP_package.Bidirectional(NLP_package.LSTM(128)))
-        model.add(NLP_package.Dense(64, activation="sigmoid"))
-        model.add(NLP_package.Dropout(0.1))
-        model.add(NLP_package.Dense(32, activation="sigmoid"))
-        model.add(NLP_package.Dense(16, activation="sigmoid"))
+        model.add(NLP_package.Dropout(0.5))
+        model.add(NLP_package.LSTM(64, dropout=0.2, recurrent_dropout=0.2))
+        model.add(NLP_package.Dense(512, activation="sigmoid"))
+        model.add(NLP_package.Dropout(0.5))
+        model.add(NLP_package.Dense(512, activation="sigmoid"))
         model.add(NLP_package.Dense(1, activation='sigmoid'))
         # compile the model
         model.compile(optimizer=optimzer, loss='binary_crossentropy',
@@ -60,7 +59,7 @@ class BinaryLSTM(Model):
         df = NLP_package.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
         train[target] = train[target].astype(int)
-        train = train.drop_duplicates()
+        #train = train.drop_duplicates()
 
         print(train)
         X_train, X_val, y_train, y_val = NLP_package.train_test_split(
@@ -95,7 +94,7 @@ class BinaryLSTM(Model):
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
                                 batch_size=51,
-                                epochs=2000,
+                                epochs=250,
                                 verbose=2,
                                 )
 
@@ -104,6 +103,26 @@ class BinaryLSTM(Model):
         with open(self.tokenizerfilename, 'wb') as handle:
             NLP_package.p.dump(tokenizer, handle,
                                protocol=NLP_package.p.HIGHEST_PROTOCOL)
+
+
+
+        s, (at, al) = NLP_package.plt.subplots(2, 1)
+        at.plot(history.history['binary_accuracy'], c='b')
+        at.plot(history.history['val_binary_accuracy'], c='r')
+        at.set_title('model accuracy')
+        at.set_ylabel('accuracy')
+        at.set_xlabel('epoch')
+        at.legend(['LSTM_train', 'LSTM_val'], loc='upper left')
+
+        al.plot(history.history['loss'], c='m')
+        al.plot(history.history['val_loss'], c='c')
+        al.set_title('model loss')
+        al.set_ylabel('loss')
+        al.set_xlabel('epoch')
+        al.legend(['train', 'val'], loc='upper left')
+
+        fig = al.get_figure()
+        fig.savefig('./models/binary/results_training/' + 'resultstraining_binary.png')
 
 
 class MultyLSTM(Model):
