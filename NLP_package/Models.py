@@ -32,7 +32,8 @@ class BinaryLSTM(Model):
     def createmodel(self, tokenizer):
         optimzer = NLP_package.Adam(clipvalue=0.5)
         model = NLP_package.Sequential()
-        model.add(NLP_package.Embedding(len(tokenizer.tokenizer.word_index) + 1,
+        a = len(tokenizer.tokenizer.word_index)
+        model.add(NLP_package.Embedding(a + 1,
                                         self.EMBEDDING_VECTOR_LENGTH,
                                         input_length=NLP_package.Tokenizers.CustomTokenizer.MAX_SEQUENCE_LENGTH,
                                         trainable=True, mask_zero=True))

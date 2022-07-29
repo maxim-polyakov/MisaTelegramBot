@@ -25,7 +25,6 @@ class Preprocessing(IPreprocessing):
             return text
         except:
             return "except"
-
     @classmethod
     def reversepreprocess_text(self,text):
         pass
