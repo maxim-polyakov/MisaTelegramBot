@@ -6,3 +6,4 @@ Channels/
 /NLP_pachage/__pychache__/
 /API_pachage/__pychache__/
 /Command_pachage/__pychache__/
+*.pyc
