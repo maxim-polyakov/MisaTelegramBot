@@ -1,43 +1,39 @@
 import NLP_package
 
+class IPredictor(NLP_package.ABC):
 
-
-class Predictor:
-    inp = []
-    def __init__(self):
+    @NLP_package.abstractmethod
+    def predict(self):
         pass
 
-    def preprocessing(self, inpt, prep):
-        
+class Binary(IPredictor):
+
+    @classmethod
+    def __preprocessing(self, inpt, prep):
+
+        inp = []
         if(prep == 'qu'):
             for i in inpt:
                 pr = NLP_package.TextPreprocessers.QuestionPreprocessing()
-                self.inp.append(pr.preprocess_text(i))
+                inp.append(pr.preprocess_text(i))
                # print(self.inp)
         elif(prep == 'command'):
             for i in inpt:
                 pr = NLP_package.TextPreprocessers.CommandPreprocessing()
-                self.inp.append(pr.preprocess_text(i))
+                inp.append(pr.preprocess_text(i))
              #   print(self.inp)
         else:
             for i in inpt:
                 pr = NLP_package.TextPreprocessers.CommonPreprocessing()
-                self.inp.append(pr.preprocess_text(i))
+                inp.append(pr.preprocess_text(i))
             #    print(self.inp)
-        return self.inp
-    
-    def predict(self):
-        pass
-    
-class Binary(Predictor):
-    
-    def __init__(self):
-        pass
-    
+        return inp
+
+    @classmethod
     def predict(self, inpt, tmap, model, tokenizer, prep):
         model = NLP_package.load_model(model)
         inn = []
-        inn.append(self.preprocessing(inpt, prep).pop())
+        inn.append(self.__preprocessing(inpt, prep).pop())
         #print(inn)
         with open(tokenizer, 'rb') as handle:
             tokenizer = NLP_package.p.load(handle)
@@ -47,15 +43,38 @@ class Binary(Predictor):
         score = model.predict(tokenized_inpt)
         outpt = max(NLP_package.np.round(score).astype(int))
         outscore = max(score)
-     #   print(outscore)
-        self.inp = []
+        print(outscore)
         return(tmap[outpt[0]])
 
-class Multy(Predictor):
-    
-    def __init__(self):
-        pass
+class NonNeuro(Binary):
 
+    @classmethod
+    def __preprocessing(self, inpt, prep):
+        super().__preprocessing(inpt,prep)
+
+    @classmethod
+    def predict(self, inpt, tmap, model, tokenizer, prep):
+        with open(model, 'rb') as handle:
+            model = NLP_package.p.load(handle)
+
+        inn = []
+        inn.append(self.__preprocessing(inpt, prep).pop())
+
+        pr = NLP_package.TextPreprocessers.CommonPreprocessing()
+
+        with open(tokenizer, 'rb') as handle:
+            tokenizer = NLP_package.p.load(handle)
+            tokenized_inpt = tokenizer.transform(inn).toarray()
+            nb_x_test = tokenizer.transform(inn).toarray()
+
+        score = model.predict_proba(tokenized_inpt)
+
+        return(tmap[score.argmax(axis=-1)[0]])
+
+
+class Multy(IPredictor):
+
+    @classmethod
     def predict(self, inpt, tmap, model, tokenizer):
         model = NLP_package.load_model(model)
         self.inp = []
@@ -73,24 +92,3 @@ class Multy(Predictor):
       #  print(outpt)
         self.inp = []
         return outpt
-
-class NonNeuro(Predictor):
-    def __init__(self):
-        pass
-    def predict(self, inpt, tmap, model, tokenizer, prep):
-        with open(model, 'rb') as handle:
-            model = NLP_package.p.load(handle)
-
-        inn = []
-        inn.append(self.preprocessing(inpt, prep).pop())
-
-        pr = NLP_package.TextPreprocessers.CommonPreprocessing()
-
-        with open(tokenizer, 'rb') as handle:
-            tokenizer = NLP_package.p.load(handle)
-            tokenized_inpt = tokenizer.transform(inn).toarray()
-            nb_x_test = tokenizer.transform(inn).toarray()
-
-        score = model.predict_proba(tokenized_inpt)
-
-        return(tmap[score.argmax(axis=-1)[0]])

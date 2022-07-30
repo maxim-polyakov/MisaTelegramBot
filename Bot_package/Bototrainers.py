@@ -88,7 +88,7 @@ class NonNeuroTrain(Train):
         filemodel = './models/binary/himodel.pickle'
         filetokenizer = './tokenizers/binary/hivec.pickle'
         datasetfile = 'SELECT * FROM hiset'
-        recognizeddata = 'SELECT * FROM recognized_hi'
+        recognizeddata = 'SELECT * FROM recognized_hiset'
         trainer = Bot_package.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
         trainer.train('hi', 'train')
 
@@ -96,7 +96,7 @@ class NonNeuroTrain(Train):
         filemodel = './models/binary/thmodel.pickle'
         filetokenizer = './tokenizers/binary/thvec.pickle'
         datasetfile = 'SELECT * FROM thanksset'
-        recognizeddata = 'SELECT * FROM recognized_th'
+        recognizeddata = 'SELECT * FROM recognized_thhanksset'
 
         trainer = Bot_package.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
 
@@ -107,7 +107,7 @@ class NonNeuroTrain(Train):
         filemodel = './models/binary/multyclassmodel.pickle'
         filetokenizer = './tokenizers/binary/multvec.pickle'
         datasetfile = 'SELECT * FROM multyclasesset'
-        recognizeddata = 'SELECT * FROM recognized_multyclass'
+        recognizeddata = 'SELECT * FROM recognized_multyclasesset'
 
         trainer = Bot_package.Models.NonNeuro(filemodel,filetokenizer,datasetfile,recognizeddata)
 

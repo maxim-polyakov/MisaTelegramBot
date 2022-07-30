@@ -1,0 +1,9 @@
+.idea/
+__pychache__/
+Channels/
+/bot/__pychache__/
+/Bot_pachage/__pychache__/
+/NLP_pachage/__pychache__/
+/API_pachage/__pychache__/
+/Command_pachage/__pychache__/
+*.pyc

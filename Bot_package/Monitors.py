@@ -74,9 +74,9 @@ class MessageMonitor(Monitor):
         self.__emotionsrecognition(text)
 
         if (tstr.count('?') > 0):
-            if(self.__mpred.predict(text, self.__mapa.multymapa,
-                                    './models/multy/multyclassmodel.h5',
-                                    './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
+            if (self.__mpred.predict(text, self.__mapa.multymapa,
+                                     './models/multy/multyclassmodel.h5',
+                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Я в порядке " + + self.__emotion, parse_mode='html')
 
@@ -84,9 +84,9 @@ class MessageMonitor(Monitor):
                 self.__b_flag = 1
                 self.__qu_flag = 1
                 self.__mtext = tstr
-            elif(self.__mpred.predict(text, self.__mapa.multymapa,
-                                      './models/multy/multyclassmodel.h5',
-                                      './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
+            elif (self.__mpred.predict(text, self.__mapa.multymapa,
+                                       './models/multy/multyclassmodel.h5',
+                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Погода норм " + self.__emotion, parse_mode='html')
 
@@ -104,12 +104,12 @@ class MessageMonitor(Monitor):
                 self.__q__non_flag = 1
                 self.__qu_flag = 1
                 self.__mtext = tstr
-        elif(self.__checkcommands(tstr)):
+        elif (self.__checkcommands(tstr)):
 
-            if(self.__bpred.predict(text, self.__mapa.commandmapa,
-                                    './models/binary/commandmodel.h5',
-                                    './tokenizers/binary/thtokenizer.pickle',
-                                    'command') == "Команда"):
+            if (self.__bpred.predict(text, self.__mapa.commandmapa,
+                                     './models/binary/commandmodel.h5',
+                                     './tokenizers/binary/thtokenizer.pickle',
+                                     'command') == "Команда"):
                 self.__set_null()
                 command = Bot_package.Commands.Command(Bot_package.bot.boto, self.__message)
 
@@ -122,10 +122,10 @@ class MessageMonitor(Monitor):
                     parse_mode='html')
 
             self.__mtext = tstr
-        elif(self.__bpred.predict(text, self.__mapa.himapa,
-                                  './models/binary/himodel.h5',
-                                  './tokenizers/binary/hitokenizer.pickle',
-                                  '') == "Приветствие"):
+        elif (self.__bpred.predict(text, self.__mapa.himapa,
+                                   './models/binary/himodel.h5',
+                                   './tokenizers/binary/hitokenizer.pickle',
+                                   '') == "Приветствие"):
 
             ra = Bot_package.bot.Answers.RandomAnswer()
             Bot_package.bot.boto.send_message(
@@ -135,32 +135,32 @@ class MessageMonitor(Monitor):
             self.__hi_flag = 1
             self.__mtext = tstr
 
-        elif(self.__bpred.predict(text, self.__mapa.thmapa,
-                                  './models/binary/thmodel.h5',
-                                  './tokenizers/binary/thtokenizer.pickle',
-                                  '') == "Благодарность"):
+        elif (self.__bpred.predict(text, self.__mapa.thmapa,
+                                   './models/binary/thmodel.h5',
+                                   './tokenizers/binary/thtokenizer.pickle',
+                                   '') == "Благодарность"):
 
             Bot_package.bot.boto.send_message(self.__message.chat.id, "Не за что " + self.__emotion,
-                                  parse_mode='html')
+                                              parse_mode='html')
 
             self.__set_null()
             self.__th_flag = 1
             self.__mtext = tstr
         else:
-            if(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
-                                    './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
+            if (self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
+                                     './tokenizers/multy/multyclasstokenizer.pickle') == "Дело"):
                 Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Утверждение про дела " + self.__emotion, parse_mode='html')
-                
+
                 self.__set_null()
                 self.__b_flag = 1
                 self.__mtext = tstr
 
-            elif(self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
-                                      './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
+            elif (self.__mpred.predict(text, self.__mapa.multymapa, './models/multy/multyclassmodel.h5',
+                                       './tokenizers/multy/multyclasstokenizer.pickle') == "Погода"):
                 Bot_package.bot.boto.send_message(
                     self.__message.chat.id, "Утверждение про погоду " + self.__emotion, parse_mode='html')
-                
+
                 self.__set_null()
                 self.__weater_flag = 1
                 self.__mtext = tstr
@@ -186,10 +186,13 @@ class MessageMonitor(Monitor):
                       index=False, if_exists='append')
 
     def monitor(self):
+
         text = []
         lowertext = self.__message.text.lower()
         self.__todb(lowertext)
-        if(lowertext.count('миса') > 0 or lowertext.count('misa') > 0):
+
+        if(lowertext.count('миса') > 0 or lowertext.lower().count('misa') > 0):
+
             lowertext = lowertext.replace("миса ", '').replace("misa ", '')
             text.append(lowertext)
             self.__neurodesc(text, lowertext)
@@ -202,82 +205,78 @@ class MessageMonitor(Monitor):
                              "Приветствие", 'agenda', 'hi', 1)
             self.__be.hievaluate()
             self.__set_null()
-
         elif(self.__message.text == "👎" and self.__hi_flag == 1):
             self.ad.add(self.__mtext, 'recognized_hi',
                              "Не приветствие", 'agenda', 'hi', 0)
             self.__be.hievaluate()
             self.__set_null()
-
         elif(self.__message.text == "Вопрос без класса" and self.__qu_flag == 1):
+
             self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Нет классификации", 'agenda', 'questionclass', 0)
             self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
+
             self.__me.multyclassevaluate()
             self.__set_null()
-
         elif(self.__message.text == "Не вопрос" and self.__qu_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Нет классификации", 'agenda', 'questionclass', 0)
             self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Не вопрос", 0)
             self.__bt.quevaluate()
+
             Bot_package.bot.boto.send_message(
                 self.__message.chat.id, "Запомнила", parse_mode='html')
-            self.__set_null()
 
+            self.__set_null()
         elif(self.__message.text == "Погода" and self.__qu_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Погода", 'agenda', 'questionclass', 1)
             self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
-            self.__me.multyclassevaluate()
-            self.__set_null()
 
+            self.__me.multyclassevaluate()
+
+            self.__set_null()
         elif(self.__message.text == "Дело" and self.__qu_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_multyclass',
                              "Дело", 'agenda', 'questionclass', 1)
             self.__ad.quadd(self.__mtext, 'recognized_qu',
                                "Вопрос", 1)
+
             self.__me.multyclassevaluate()
+
             self.__bt.quevaluate()
             self.__set_null()
-
         elif(self.__message.text == "👍" and self.__command_flag == 1):
             self.__ad.commandadd(self.__mtext,
                                     'recognized_command',
                                     "Команда", 1)
             self.__bt.commandevaluate()
             self.__set_null()
-
         elif(self.__message.text == "👎" and self.__command_flag == 1):
             self.__ad.commandadd(self.__mtext, 'recognized_command',
                                     "Не команда", 0)
             self.__bt.commandevaluate()
             self.__set_null()
-
         elif(self.__message.text == "👍" and self.__th_flag == 1):
             self.__ad.add(
                 self.__mtext, 'recognized_th',
                 "Благодарность", 'agenda', 'thanks', 1)
             self.__set_null()
-
         elif(self.__message.text == "👎" and self.__th_flag == 1):
             self.__ad.add(self.__mtext, 'recognized_th',
                              "Не благодарность", 'agenda', 'thanks', 0)
             self.__bt.thevaluate()
             self.__set_null()
-
         elif(self.__message.text == "👍" and self.__non_flag == 1):
             self.__ad.add(
                 self.__mtext, 'non_recognized',
                 "Нет классификации", 'agenda', 'nonclass', 1)
             self.__set_null()
-
         elif(self.__message.text == "👎" and self.__non_flag == 1):
             self.__set_null()
-
         elif(self.__message.text == "👎"):
             Bot_package.bot.boto.send_message(self.__message.chat.id,
                                   "😒", parse_mode='html')

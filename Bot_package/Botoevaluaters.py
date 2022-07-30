@@ -25,7 +25,7 @@ class Binaryevaluate(Evaluate):
         filemodel = './models/binary/himodel.h5'
         filetokenizer = './tokenizers/binary/hitokenizer.pickle'
         datasetfile = 'SELECT * FROM hiset'
-        recognizeddata = 'SELECT * FROM recognized_hi'
+        recognizeddata = 'SELECT * FROM recognized_hiset'
         trainer =Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
                                         datasetfile, recognizeddata)
         trainer.train('hi', 'evaluate')
@@ -34,7 +34,7 @@ class Binaryevaluate(Evaluate):
         filemodel = './models/binary/qumodel.h5'
         filetokenizer = './tokenizers/binary/qutokenizer.pickle'
         datasetfile = 'SELECT * FROM questionset'
-        recognizeddata = 'SELECT * FROM recognized_qu'
+        recognizeddata = 'SELECT * FROM recognized_questionset'
         trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
                                         datasetfile, recognizeddata)
         trainer.train('question', 'evaluate')
@@ -43,7 +43,7 @@ class Binaryevaluate(Evaluate):
         filemodel = './models/binary/qumodel.h5'
         filetokenizer = './tokenizers/binary/thtokenizer.pickle'
         datasetfile = 'SELECT * FROM thanksset'
-        recognizeddata = 'SELECT * FROM recognized_th'
+        recognizeddata = 'SELECT * FROM recognized_thanksset'
         trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
                                         datasetfile, recognizeddata)
         trainer.train('thanks', 'evaluate')
@@ -52,7 +52,7 @@ class Binaryevaluate(Evaluate):
         filemodel = './models/binary/commandmodel.h5'
         filetokenizer = './tokenizers/binary/commandtokenizer.pickle'
         datasetfile = 'SELECT * FROM commandset'
-        recognizeddata = 'SELECT * FROM recognized_command'
+        recognizeddata = 'SELECT * FROM recognized_commandset'
         trainer = Bot_package.Models.BinaryLSTM(filemodel, filetokenizer,
                                         datasetfile, recognizeddata)
         trainer.train('command', 'evaluate')
@@ -67,7 +67,7 @@ class Multyevaluate(Evaluate):
         trainer = Bot_package.Models.Multy('./models/multy/multyclassmodel.h5',
                                 './tokenizers/multy/multyclasstokenizer.pickle',
                                 'SELECT * FROM multyclasesset',
-                                'SELECT * FROM recognized_multyclass')
+                                'SELECT * FROM recognized_multyclasesset')
         trainer.train('questionclass', 3, 'evaluate')
 
     def emotionsevaluate(self):
