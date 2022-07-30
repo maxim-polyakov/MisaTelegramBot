@@ -2,9 +2,6 @@ import NLP_package
 
 class Answer:
 
-    def __init__(self):
-        pass
-
     def answer(self):
         pass
 
@@ -17,13 +14,8 @@ class RandomAnswer(Answer):
     data = NLP_package.pd.concat([inpt])
     df = []
 
-
-    def __init__(self):
-        pass
-
     def answer(self):
 
-        outmapa = []
         for i in range(0, len(self.data['text'])-1):
             if(self.data['hi'][i] == 1):
                 self.df.append(self.data['text'][i])

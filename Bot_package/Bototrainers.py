@@ -1,8 +1,7 @@
 import Bot_package
 
 class Train:
-    def __init__(self):
-        pass
+
     def hitrain(self):
         pass
     def qutrain(self):

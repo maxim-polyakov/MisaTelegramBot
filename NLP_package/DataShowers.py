@@ -1,10 +1,8 @@
 import NLP_package
 
 
-class DataShower:
 
-    def __init__(self):
-        pass
+class DataShowerSns:
 
     def showdata(self, train, target):
         key_metrics = {'samples': len(train),

@@ -1,19 +1,14 @@
 import Bot_package
 
 class Cleaner:
-    def __init__(self):
-        pass
-    
+
     def clean(self):
         pass
     
 class CommonCleaner(Cleaner):
     
     __pr = Bot_package.TextPreprocessers.CommonPreprocessing()
-    
-    def __init__(self):
-        pass
-    
+
     def __init__(self, type_doc):
         self.type_doc = type_doc
     

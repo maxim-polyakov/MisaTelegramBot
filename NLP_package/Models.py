@@ -1,28 +1,28 @@
 import NLP_package
 
-class Model:
-    
-    EMBEDDING_VECTOR_LENGTH = 33
+class IModel(NLP_package.ABC):
 
-    def createmodel(self):
-        pass
-    
+    @NLP_package.abstractmethod
     def train(self):
         pass
     
 
-class BinaryLSTM(Model):
+class BinaryLSTM(IModel):
+
+    EMBEDDING_VECTOR_LENGTH = 33
+
 
     def __init__(self, filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
-        self.conn = NLP_package.psycopg2.connect(
+        BinaryLSTM.__conn = NLP_package.psycopg2.connect(
             "dbname=postgres user=postgres password=postgres")
-        self.filemodelname = filemodelname
-        self.tokenizerfilename = tokenizerfilename
-        self.dataselect = dataselect
-        self.recognizeddataselect = recognizeddataselect
+        BinaryLSTM.__filemodelname = filemodelname
+        BinaryLSTM.__tokenizerfilename = tokenizerfilename
+        BinaryLSTM.__dataselect = dataselect
+        BinaryLSTM.__recognizeddataselect = recognizeddataselect
 
-    def createmodel(self, tokenizer):
+    @classmethod
+    def __createmodel(self, tokenizer):
         optimzer = NLP_package.Adam(clipvalue=0.5)
         model = NLP_package.Sequential()
         model.add(NLP_package.Embedding(len(tokenizer.tokenizer.word_index) + 1,
@@ -41,12 +41,13 @@ class BinaryLSTM(Model):
 
         return model
 
+    @classmethod
     def train(self, target, mode):
 
-        recognizedtrain = NLP_package.pd.read_sql(self.recognizeddataselect, self.conn)
+        recognizedtrain = NLP_package.pd.read_sql(self.__recognizeddataselect, self.__conn)
         recognizedtrain.text = recognizedtrain.text.astype(str)
 
-        train = NLP_package.pd.read_sql(self.dataselect, self.conn)
+        train = NLP_package.pd.read_sql(self.__dataselect, self.__conn)
         train.text = train.text.astype(str)
 
         df = NLP_package.pd.concat([train, recognizedtrain])
@@ -59,7 +60,7 @@ class BinaryLSTM(Model):
             train, train[target], test_size=0.3, random_state=32)
 
         if(mode == 'evaluate'):
-            with open(self.tokenizerfilename, 'rb') as handle:
+            with open(self.__tokenizerfilename, 'rb') as handle:
                 tokenizer = NLP_package.p.load(handle)
         else:
             tokenizer = NLP_package.Tokenizers.CustomTokenizer(train_texts=X_train['text'])
@@ -69,7 +70,7 @@ class BinaryLSTM(Model):
         tokenized_X_val = tokenizer.vectorize_input(X_val['text'])
 
         if(mode == 'evaluate'):
-            model = NLP_package.load_model(self.filemodelname)
+            model = NLP_package.load_model(self.__filemodelname)
             
             es = NLP_package.EarlyStopping(patience=10, monitor='binary_accuracy',
                                            restore_best_weights=True)
@@ -82,7 +83,7 @@ class BinaryLSTM(Model):
                                 callbacks=[es]
                                 )
         else:
-            model = self.createmodel(tokenizer)
+            model = self.__createmodel(tokenizer)
             
             history = model.fit(tokenized_X_train, y_train,
                                 validation_data=(tokenized_X_val, y_val),
@@ -91,9 +92,9 @@ class BinaryLSTM(Model):
                                 verbose=2,
                                 )
 
-        model.save(self.filemodelname)
+        model.save(self.__filemodelname)
 
-        with open(self.tokenizerfilename, 'wb') as handle:
+        with open(self.__tokenizerfilename, 'wb') as handle:
             NLP_package.p.dump(tokenizer, handle,
                                protocol=NLP_package.p.HIGHEST_PROTOCOL)
 
@@ -118,18 +119,21 @@ class BinaryLSTM(Model):
         fig.savefig('./models/binary/results_training/' + 'resultstraining_binary.png')
 
 
-class MultyLSTM(Model):
+class MultyLSTM(IModel):
+
+    EMBEDDING_VECTOR_LENGTH = 33
 
     def __init__(self, filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
-        self.conn = NLP_package.psycopg2.connect(
+        MultyLSTM.__conn = NLP_package.psycopg2.connect(
             "dbname=postgres user=postgres password=postgres")
-        self.filemodelname = filemodelname
-        self.tokenizerfilename = tokenizerfilename
-        self.dataselect = dataselect
-        self.recognizeddataselect = recognizeddataselect
+        MultyLSTM.__filemodelname = filemodelname
+        MultyLSTM.__tokenizerfilename = tokenizerfilename
+        MultyLSTM.__dataselect = dataselect
+        MultyLSTM.__recognizeddataselect = recognizeddataselect
 
-    def createmodel(self, tokenizer, n_clases):
+    @classmethod
+    def __createmodel(self, tokenizer, n_clases):
         model = NLP_package.Sequential()
 
         optimzer = NLP_package.Adam(learning_rate=0.005)
@@ -145,12 +149,13 @@ class MultyLSTM(Model):
         model.compile(optimizer=optimzer, loss='categorical_crossentropy', metrics=['accuracy'])
         return model
 
+    @classmethod
     def train(self, target, n_clases, mode):
 
-        train = NLP_package.pd.read_sql(self.dataselect, self.conn)
+        train = NLP_package.pd.read_sql(self.__dataselect, self.__conn)
         train.text = train.text.astype(str)
         recognizedtrain = NLP_package.pd.read_sql(
-            self.recognizeddataselect, self.conn)
+            self.__recognizeddataselect, self.__conn)
         recognizedtrain.text = recognizedtrain.text.astype(str)
         df = NLP_package.pd.concat([train, recognizedtrain])
         train = df[~df[target].isna()]
@@ -163,7 +168,7 @@ class MultyLSTM(Model):
         print("Shape of Validation ", X_val.shape)
 
         if(mode == 'evaluate'):
-            with open(self.tokenizerfilename,
+            with open(self.__tokenizerfilename,
                       'rb') as handle:
                 tokenizer = NLP_package.p.load(handle)
         else:
@@ -183,7 +188,7 @@ class MultyLSTM(Model):
             es = NLP_package.EarlyStopping(patience=2, monitor='val_loss',
                                            restore_best_weights=True)
 
-            model = NLP_package.load_model(self.filemodelname)
+            model = NLP_package.load_model(self.__filemodelname)
             
             history = model.fit(tokenized_X_train, y_trainmatrix,
                                 batch_size=51, epochs=50,
@@ -191,38 +196,42 @@ class MultyLSTM(Model):
                                 verbose=2,
                                 callbacks=[es])
         else:
-            model = self.createmodel(tokenizer, n_clases)
+            model = self.__createmodel(tokenizer, n_clases)
 
             history = model.fit(tokenized_X_train, y_trainmatrix,
                                 batch_size=51, epochs=13,
                                 validation_data=(tokenized_X_val, y_valmatrix),
                                 verbose=2)
 
-        model.save(self.filemodelname)
+        model.save(self.__filemodelname)
 
-        with open(self.tokenizerfilename, 'wb') as handle:
+        with open(self.__tokenizerfilename, 'wb') as handle:
             NLP_package.p.dump(tokenizer, handle,
                                protocol=NLP_package.p.HIGHEST_PROTOCOL)
 
 
-class NonNeuro(Model):
+class NonNeuro(IModel):
+
+    EMBEDDING_VECTOR_LENGTH = 33
+
     def __init__(self,filemodelname, tokenizerfilename, dataselect,
                  recognizeddataselect):
-        self.conn = NLP_package.psycopg2.connect(
+        NonNeuro.__conn = NLP_package.psycopg2.connect(
             "dbname=postgres user=postgres password=postgres")
-        self.filemodelname = filemodelname
-        self.tokenizerfilename = tokenizerfilename
-        self.dataselect = dataselect
-        self.recognizeddataselect = recognizeddataselect
+        NonNeuro.__filemodelname = filemodelname
+        NonNeuro.__tokenizerfilename = tokenizerfilename
+        NonNeuro.__dataselect = dataselect
+        NonNeuro.__recognizeddataselect = recognizeddataselect
 
-
-    def createmodel(self):
+    @classmethod
+    def __createmodel(self):
         nb_model = NLP_package.MultinomialNB()
         return nb_model
 
+    @classmethod
     def train(self, target, mode):
-        train = NLP_package.pd.read_sql(self.dataselect, self.conn)
-        recognizedtrain = NLP_package.pd.read_sql(self.recognizeddataselect, self.conn)
+        train = NLP_package.pd.read_sql(self.__dataselect, self.__conn)
+        recognizedtrain = NLP_package.pd.read_sql(self.__recognizeddataselect, self.__conn)
         df = NLP_package.pd.concat([train, recognizedtrain])
 
         train = df[~df[target].isna()]
@@ -237,14 +246,14 @@ class NonNeuro(Model):
         nb_x = vec.fit_transform(nb_x).toarray()
         nb_x_test = vec.transform(nb_x_test).toarray()
 
-        nb_model = self.createmodel()
+        nb_model = self.__createmodel()
 
         nb_model.fit(nb_x, nb_y)
 
-        with open(self.tokenizerfilename, 'wb') as handle:
+        with open(self.__tokenizerfilename, 'wb') as handle:
             NLP_package.p.dump(vec, handle,
                                protocol=NLP_package.p.HIGHEST_PROTOCOL)
 
-        with open(self.filemodelname, 'wb') as handle:
+        with open(self.__filemodelname, 'wb') as handle:
             NLP_package.p.dump(nb_model, handle,
                                protocol=NLP_package.p.HIGHEST_PROTOCOL)
