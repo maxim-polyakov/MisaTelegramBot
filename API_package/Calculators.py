@@ -1,16 +1,14 @@
 import API_package
 
-class Calculator:
-    
-    def __init__(self):
-        pass
-    
+class Calculator(API_package.ABC):
+
+    @API_package.abstractmethod
     def find(self):
         pass
     
     
 class SympyCalculator(Calculator):
-    
+
     __pr = API_package.tp.QuestionPreprocessing()
     def __init__(self):
         pass
