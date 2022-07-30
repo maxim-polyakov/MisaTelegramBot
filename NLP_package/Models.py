@@ -1,16 +1,9 @@
 import NLP_package
-from NLP_package import Tokenizers
-
-
-
 
 class Model:
     
     EMBEDDING_VECTOR_LENGTH = 33
-    
-    def __init__(self):
-        pass
-    
+
     def createmodel(self):
         pass
     
@@ -69,7 +62,7 @@ class BinaryLSTM(Model):
             with open(self.tokenizerfilename, 'rb') as handle:
                 tokenizer = NLP_package.p.load(handle)
         else:
-            tokenizer = Tokenizers.CustomTokenizer(train_texts=X_train['text'])
+            tokenizer = NLP_package.Tokenizers.CustomTokenizer(train_texts=X_train['text'])
             # fit o the train
         tokenizer.train_tokenize()
         tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
@@ -174,7 +167,7 @@ class MultyLSTM(Model):
                       'rb') as handle:
                 tokenizer = NLP_package.p.load(handle)
         else:
-            tokenizer = Tokenizers.CustomTokenizer(train_texts=X_train['text'])
+            tokenizer = NLP_package.Tokenizers.CustomTokenizer(train_texts=X_train['text'])
             # fit o the train
         tokenizer.train_tokenize()
         tokenized_X_train = tokenizer.vectorize_input(X_train['text'])
